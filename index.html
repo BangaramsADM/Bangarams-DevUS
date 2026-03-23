@@ -493,10 +493,11 @@ footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(20
     <div class="gate-tagline">SILVER · GOLD · DIAMONDS</div>
   </div>
   <div class="gate-card">
-    <div class="gate-title">Private Preview</div>
-    <div class="gate-subtitle">This site is under review.<br>Enter the preview password to continue.</div>
-    <input type="password" id="gate-pwd" class="gate-input" placeholder="PASSWORD" maxlength="30" onkeydown="if(event.key==='Enter')checkPwd()">
-    <button class="gate-btn" onclick="checkPwd()">Enter Site</button>
+    <div class="gate-title">Staff Login</div>
+    <div class="gate-subtitle">Sign in to preview the Bangarams site</div>
+    <input type="text" id="gate-user" class="gate-input" placeholder="USERNAME" maxlength="60" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('gate-pwd').focus()">
+    <input type="password" id="gate-pwd" class="gate-input" placeholder="PASSWORD" maxlength="60" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="gate-btn" id="gate-submit" onclick="doLogin()">Enter Site</button>
     <div class="gate-error" id="gate-err"></div>
     <div class="gate-hint">Contact hello@bangarams.com for access</div>
   </div>
@@ -1021,27 +1022,54 @@ footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(20
   </div>
 </div>
 
+<script src="auth.js"></script>
 <script>
-/* ── PREVIEW GATE ── */
-const PREVIEW_PWD = 'bangarams2025'; // Change this to your preferred password
+/* ── AUTH GATE ── */
+async function doLogin() {
+  const user = document.getElementById('gate-user').value.trim();
+  const pwd  = document.getElementById('gate-pwd').value;
+  const err  = document.getElementById('gate-err');
+  const btn  = document.getElementById('gate-submit');
 
-function checkPwd() {
-  const val = document.getElementById('gate-pwd').value.trim().toLowerCase();
-  const err = document.getElementById('gate-err');
-  if (val === PREVIEW_PWD) {
-    document.getElementById('preview-gate').classList.add('hidden');
-    sessionStorage.setItem('bgUnlocked','1');
-    err.textContent = '';
+  err.textContent = '';
+  if (!user || !pwd) { err.textContent = 'Enter your username and password.'; return; }
+
+  btn.textContent = 'Signing in…'; btn.disabled = true;
+  const sess = await AUTH.login(user, pwd);
+  btn.textContent = 'Enter Site'; btn.disabled = false;
+
+  if (sess) {
+    if (sess.mustReset) { window.location.href = 'login.html'; return; }
+    unlockSite(sess);
   } else {
-    err.textContent = 'Incorrect password. Please try again.';
+    err.textContent = 'Invalid credentials. Please try again.';
     document.getElementById('gate-pwd').value = '';
     document.getElementById('gate-pwd').focus();
   }
 }
-// Auto-unlock if already unlocked this session
-if (sessionStorage.getItem('bgUnlocked') === '1') {
+
+function unlockSite(sess) {
   document.getElementById('preview-gate').classList.add('hidden');
+  // Inject staff badge into nav
+  const nav = document.querySelector('.nav-links');
+  if (nav && sess) {
+    const role = AUTH.ROLES[sess.role];
+    const li   = document.createElement('li');
+    li.innerHTML = `<a href="#" style="color:var(--mist);cursor:default;letter-spacing:.1em;" title="${role?.label||sess.role}">● ${sess.name.split(' ')[0]}</a>`;
+    nav.appendChild(li);
+    if (sess.role === 'site_admin') {
+      const adminLi = document.createElement('li');
+      adminLi.innerHTML = '<a href="admin.html" style="color:var(--gold)">Admin ↗</a>';
+      nav.appendChild(adminLi);
+    }
+  }
 }
+
+// Auto-unlock if session already active
+(function() {
+  const s = AUTH.session();
+  if (s) unlockSite(s);
+})();
 
 /* ── CURSOR ── */
 const cursor = document.getElementById('cursor');

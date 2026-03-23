@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangarams — User Administration</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C8973F; --gold-light:#E8C97A; --gold-pale:#F5E6C0; --gold-deep:#8A6420;
+  --ink:#1C1410; --ink-soft:#3D2E1E; --ink-deep:#0F0A04;
+  --mist:#A89880; --ivory:#FDFAF3;
+  --surface:#141008; --surface2:#1C1610; --surface3:#231C12;
+  --border:rgba(200,151,63,.12);
+}
+body{background:var(--surface); color:var(--gold-pale); font-family:'Raleway',sans-serif; font-size:14px; min-height:100vh;}
+
+/* ── HEADER ── */
+header{
+  background:var(--surface2); border-bottom:1px solid var(--border);
+  padding:0 32px; height:60px; display:flex; align-items:center;
+  justify-content:space-between; position:sticky; top:0; z-index:100;
+}
+.h-logo{display:flex; align-items:center; gap:14px; text-decoration:none;}
+.h-wordmark{
+  font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;
+  font-size:1.15rem; font-weight:700; color:var(--gold-light); letter-spacing:.12em;
+}
+.h-divider{width:1px; height:24px; background:var(--border);}
+.h-section{
+  font-family:'Cinzel',serif; font-size:.58rem; letter-spacing:.3em;
+  text-transform:uppercase; color:rgba(200,151,63,.55);
+}
+.h-right{display:flex; align-items:center; gap:16px;}
+.h-user{
+  font-size:.72rem; color:var(--mist); letter-spacing:.05em;
+  display:flex; align-items:center; gap:8px;
+}
+.h-avatar{
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(200,151,63,.15); display:flex; align-items:center;
+  justify-content:center; font-family:'Cinzel',serif; font-size:.65rem; color:var(--gold);
+}
+.h-btn{
+  background:transparent; border:1px solid var(--border);
+  color:var(--mist); padding:6px 14px;
+  font-family:'Cinzel',serif; font-size:.56rem; letter-spacing:.2em;
+  text-transform:uppercase; cursor:pointer; transition:all .3s; text-decoration:none; display:inline-block;
+}
+.h-btn:hover{border-color:var(--gold); color:var(--gold);}
+.h-btn-site{border-color:rgba(200,151,63,.3); color:var(--gold);}
+.h-btn-site:hover{background:rgba(200,151,63,.08);}
+
+/* ── MAIN ── */
+main{padding:32px 36px; max-width:1300px; margin:0 auto;}
+
+/* ── PAGE TITLE ── */
+.page-title{margin-bottom:32px;}
+.page-tag{
+  font-family:'Cinzel',serif; font-size:.56rem; letter-spacing:.4em;
+  text-transform:uppercase; color:rgba(200,151,63,.5); margin-bottom:6px;
+  display:flex; align-items:center; gap:10px;
+}
+.page-tag::before{content:''; display:block; width:18px; height:.5px; background:var(--gold);}
+.page-title h1{
+  font-family:'Cormorant Garamond',serif; font-size:2rem;
+  font-weight:300; color:var(--gold-pale); line-height:1.1;
+}
+
+/* ── STATS CARDS ── */
+.stats{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:32px;}
+.stat-card{
+  background:var(--surface2); border:1px solid var(--border);
+  padding:18px 20px; position:relative; overflow:hidden;
+}
+.stat-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--accent-color,var(--gold));
+}
+.stat-label{
+  font-family:'Cinzel',serif; font-size:.52rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--mist); margin-bottom:8px;
+}
+.stat-value{
+  font-family:'Cormorant Garamond',serif; font-size:2rem;
+  font-weight:300; color:var(--accent-color,var(--gold-pale)); line-height:1;
+}
+.stat-sub{font-size:.65rem; color:rgba(168,152,128,.5); margin-top:4px; letter-spacing:.05em;}
+
+/* ── CONTROLS ── */
+.controls{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px;}
+.search-wrap{position:relative; flex:1; max-width:320px;}
+.search-wrap input{
+  width:100%; background:var(--surface2); border:1px solid var(--border);
+  padding:9px 12px 9px 36px; color:var(--gold-pale);
+  font-family:'Raleway',sans-serif; font-size:.85rem; outline:none;
+  transition:border-color .3s;
+}
+.search-wrap input:focus{border-color:rgba(200,151,63,.4);}
+.search-wrap input::placeholder{color:rgba(168,152,128,.35);}
+.search-icon{
+  position:absolute; left:11px; top:50%; transform:translateY(-50%);
+  color:rgba(168,152,128,.4); font-size:.85rem;
+}
+.btn-add{
+  background:var(--gold); color:var(--ink); border:none;
+  padding:10px 22px; font-family:'Cinzel',serif; font-size:.62rem;
+  letter-spacing:.22em; text-transform:uppercase; cursor:pointer; transition:background .3s;
+}
+.btn-add:hover{background:var(--gold-light);}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--surface2); border:1px solid var(--border); overflow:auto;}
+table{width:100%; border-collapse:collapse;}
+thead th{
+  font-family:'Cinzel',serif; font-size:.54rem; letter-spacing:.22em;
+  text-transform:uppercase; color:rgba(200,151,63,.5); padding:14px 16px;
+  text-align:left; border-bottom:1px solid var(--border);
+  white-space:nowrap; background:var(--surface3);
+}
+tbody tr{border-bottom:1px solid rgba(200,151,63,.06); transition:background .2s;}
+tbody tr:hover{background:rgba(200,151,63,.04);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:14px 16px; vertical-align:middle;}
+
+/* ── AVATAR ── */
+.t-avatar{
+  width:34px; height:34px; border-radius:50%; display:flex;
+  align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:.75rem; font-weight:600;
+  flex-shrink:0;
+}
+.t-cell-user{display:flex; align-items:center; gap:10px;}
+.t-name{font-size:.88rem; color:var(--gold-pale);}
+.t-username{font-size:.7rem; color:rgba(168,152,128,.6); letter-spacing:.04em;}
+
+/* ── ROLE BADGE ── */
+.role-badge{
+  display:inline-block; padding:3px 10px; font-family:'Cinzel',serif;
+  font-size:.52rem; letter-spacing:.16em; text-transform:uppercase;
+  border:1px solid; white-space:nowrap;
+}
+
+/* ── STATUS ── */
+.status-toggle{
+  display:flex; align-items:center; gap:7px; cursor:pointer;
+  background:none; border:none; padding:0;
+}
+.status-dot{
+  width:8px; height:8px; border-radius:50%; flex-shrink:0;
+  transition:background .3s;
+}
+.status-dot.active{background:#7FB069;}
+.status-dot.inactive{background:rgba(220,80,80,.5);}
+.status-label{font-size:.7rem; color:var(--mist); letter-spacing:.05em;}
+
+/* ── ACTION BUTTONS ── */
+.t-actions{display:flex; gap:6px; flex-wrap:wrap;}
+.act-btn{
+  padding:5px 12px; border:1px solid; background:transparent;
+  font-family:'Cinzel',serif; font-size:.5rem; letter-spacing:.16em;
+  text-transform:uppercase; cursor:pointer; transition:all .25s; white-space:nowrap;
+}
+.act-edit{border-color:rgba(200,151,63,.35); color:rgba(200,151,63,.7);}
+.act-edit:hover{border-color:var(--gold); color:var(--gold); background:rgba(200,151,63,.06);}
+.act-reset{border-color:rgba(184,200,216,.3); color:rgba(184,200,216,.6);}
+.act-reset:hover{border-color:#B8C8D8; color:#B8C8D8; background:rgba(184,200,216,.06);}
+.act-del{border-color:rgba(220,80,80,.25); color:rgba(220,80,80,.5);}
+.act-del:hover{border-color:rgba(220,80,80,.6); color:rgba(220,80,80,.7); background:rgba(220,80,80,.06);}
+
+.t-email{font-size:.78rem; color:rgba(168,152,128,.7);}
+.t-date{font-size:.72rem; color:rgba(168,152,128,.45); white-space:nowrap;}
+.t-never{font-size:.7rem; color:rgba(168,152,128,.28); font-style:italic;}
+
+/* ── MODAL OVERLAY ── */
+.overlay{
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(10,6,2,.85); align-items:center; justify-content:center;
+  padding:24px;
+}
+.overlay.open{display:flex;}
+.modal{
+  background:var(--surface2); border:1px solid rgba(200,151,63,.18);
+  padding:40px; width:100%; max-width:460px; position:relative;
+  max-height:90vh; overflow-y:auto;
+}
+.modal-close{
+  position:absolute; top:16px; right:16px; background:none; border:none;
+  color:rgba(168,152,128,.5); font-size:1.2rem; cursor:pointer; line-height:1;
+}
+.modal-close:hover{color:var(--gold);}
+.modal-tag{
+  font-family:'Cinzel',serif; font-size:.56rem; letter-spacing:.38em;
+  text-transform:uppercase; color:rgba(200,151,63,.5); margin-bottom:6px;
+}
+.modal-title{
+  font-family:'Cormorant Garamond',serif; font-size:1.6rem;
+  font-weight:300; color:var(--gold-pale); margin-bottom:28px;
+}
+
+/* ── MODAL FORM ── */
+.m-field{margin-bottom:18px;}
+.m-field label{
+  display:block; font-family:'Cinzel',serif; font-size:.54rem;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:rgba(200,151,63,.5); margin-bottom:7px;
+}
+.m-field input, .m-field select{
+  width:100%; background:rgba(200,151,63,.04);
+  border:1px solid rgba(200,151,63,.16); padding:11px 14px;
+  color:var(--gold-pale); font-family:'Raleway',sans-serif;
+  font-size:.88rem; outline:none; transition:border-color .3s;
+  -webkit-appearance:none; appearance:none;
+}
+.m-field input:focus, .m-field select:focus{border-color:rgba(200,151,63,.45);}
+.m-field input::placeholder{color:rgba(168,152,128,.3);}
+.m-field select option{background:#1C1610; color:var(--gold-pale);}
+.m-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+
+.m-btn{
+  width:100%; background:var(--gold); color:var(--ink); border:none;
+  padding:13px 20px; font-family:'Cinzel',serif; font-size:.62rem;
+  letter-spacing:.25em; text-transform:uppercase; cursor:pointer;
+  transition:background .3s; margin-top:8px;
+}
+.m-btn:hover{background:var(--gold-light);}
+.m-btn:disabled{background:rgba(200,151,63,.35); cursor:not-allowed;}
+.m-btn-ghost{
+  width:100%; background:transparent; color:var(--mist);
+  border:1px solid rgba(200,151,63,.15); padding:11px 20px;
+  font-family:'Cinzel',serif; font-size:.58rem; letter-spacing:.22em;
+  text-transform:uppercase; cursor:pointer; transition:all .3s; margin-top:6px;
+}
+.m-btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+.m-err{font-size:.7rem; color:rgba(220,80,80,.7); margin-top:10px; text-align:center;}
+
+/* ── TEMP PASSWORD BOX ── */
+.temp-pwd-box{
+  background:rgba(200,151,63,.07); border:1px solid rgba(200,151,63,.2);
+  padding:18px; margin:20px 0; text-align:center;
+}
+.temp-pwd-label{
+  font-family:'Cinzel',serif; font-size:.54rem; letter-spacing:.25em;
+  text-transform:uppercase; color:rgba(200,151,63,.55); margin-bottom:10px;
+}
+.temp-pwd-value{
+  font-family:'Courier New',monospace; font-size:1.15rem;
+  color:var(--gold-light); letter-spacing:.12em; word-break:break-all;
+}
+.copy-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  margin-top:12px; background:none; border:1px solid rgba(200,151,63,.3);
+  color:rgba(200,151,63,.6); padding:6px 16px;
+  font-family:'Cinzel',serif; font-size:.54rem; letter-spacing:.18em;
+  text-transform:uppercase; cursor:pointer; transition:all .3s;
+}
+.copy-btn:hover{border-color:var(--gold); color:var(--gold);}
+.temp-note{
+  font-size:.72rem; color:rgba(168,152,128,.5);
+  line-height:1.6; font-family:'Cormorant Garamond',serif;
+  font-style:italic; margin-top:10px;
+}
+
+/* ── DELETE CONFIRM ── */
+.del-warn{
+  background:rgba(220,80,80,.06); border:1px solid rgba(220,80,80,.18);
+  padding:16px; margin:16px 0; font-size:.88rem;
+  color:rgba(220,80,80,.7); font-family:'Cormorant Garamond',serif;
+  font-style:italic; line-height:1.6; text-align:center;
+}
+.m-btn-del{
+  width:100%; background:rgba(220,80,80,.15); color:rgba(220,100,100,.85);
+  border:1px solid rgba(220,80,80,.35); padding:12px;
+  font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.22em;
+  text-transform:uppercase; cursor:pointer; transition:all .3s; margin-top:8px;
+}
+.m-btn-del:hover{background:rgba(220,80,80,.25); border-color:rgba(220,80,80,.55);}
+
+/* ── EMPTY STATE ── */
+.empty-row td{text-align:center; padding:40px; color:rgba(168,152,128,.4); font-style:italic;}
+
+@media(max-width:900px){
+  main{padding:20px 16px;}
+  .stats{grid-template-columns:repeat(3,1fr);}
+  .t-actions{flex-direction:column;}
+  header{padding:0 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="index.html" class="h-logo">
+    <span class="h-wordmark">BANGARAMS</span>
+    <span class="h-divider"></span>
+    <span class="h-section">User Administration</span>
+  </a>
+  <div class="h-right">
+    <a href="index.html" class="h-btn h-btn-site">View Site →</a>
+    <div class="h-user">
+      <div class="h-avatar" id="h-avatar">?</div>
+      <span id="h-username">–</span>
+    </div>
+    <button class="h-btn" onclick="AUTH.logout()">Sign Out</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── PAGE TITLE ── -->
+  <div class="page-title">
+    <div class="page-tag">Administration</div>
+    <h1>User Accounts</h1>
+  </div>
+
+  <!-- ── STATS ── -->
+  <div class="stats" id="stats-row">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- ── CONTROLS ── -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search-input" placeholder="Search users…" oninput="renderTable()">
+    </div>
+    <button class="btn-add" onclick="openAddModal()">+ Add User</button>
+  </div>
+
+  <!-- ── TABLE ── -->
+  <div class="table-wrap">
+    <table id="users-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        <!-- filled by JS -->
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+<!-- ── ADD / EDIT USER ── -->
+<div class="overlay" id="modal-user">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-user')">✕</button>
+    <div class="modal-tag" id="mu-tag">New Account</div>
+    <div class="modal-title" id="mu-title">Add User</div>
+
+    <div class="m-row">
+      <div class="m-field">
+        <label>Full Name</label>
+        <input type="text" id="mu-name" placeholder="Priya Sharma">
+      </div>
+      <div class="m-field">
+        <label>Username</label>
+        <input type="text" id="mu-username" placeholder="priya">
+      </div>
+    </div>
+    <div class="m-field">
+      <label>Email Address</label>
+      <input type="email" id="mu-email" placeholder="priya@bangarams.com">
+    </div>
+    <div class="m-field">
+      <label>Role</label>
+      <select id="mu-role">
+        <option value="site_admin">Site Admin</option>
+        <option value="artisan_ramouji">Artisan · Ramouji</option>
+        <option value="artisan_kira">Artisan · Kira</option>
+        <option value="support">Support</option>
+        <option value="sales">Sales</option>
+      </select>
+    </div>
+
+    <input type="hidden" id="mu-id">
+    <button class="m-btn" id="mu-submit" onclick="submitUser()">Save User →</button>
+    <button class="m-btn-ghost" onclick="closeModal('modal-user')">Cancel</button>
+    <div class="m-err" id="mu-err"></div>
+  </div>
+</div>
+
+<!-- ── RESET PASSWORD RESULT ── -->
+<div class="overlay" id="modal-reset">
+  <div class="modal" style="max-width:400px; text-align:center;">
+    <button class="modal-close" onclick="closeModal('modal-reset')">✕</button>
+    <div class="modal-tag">Password Reset</div>
+    <div class="modal-title" id="mr-name" style="margin-bottom:8px;"></div>
+    <p style="font-size:.82rem; color:var(--mist); margin-bottom:4px; font-family:'Cormorant Garamond',serif; font-style:italic;">
+      A temporary password has been generated.
+    </p>
+
+    <div class="temp-pwd-box">
+      <div class="temp-pwd-label">Temporary Password</div>
+      <div class="temp-pwd-value" id="mr-pwd"></div>
+      <button class="copy-btn" onclick="copyTempPwd()">⎘ Copy</button>
+    </div>
+
+    <div class="temp-note">
+      Share this securely with the user. They will be required to set a new password on their next login.
+    </div>
+
+    <button class="m-btn" onclick="closeModal('modal-reset')" style="margin-top:20px;">Done</button>
+  </div>
+</div>
+
+<!-- ── DELETE CONFIRM ── -->
+<div class="overlay" id="modal-delete">
+  <div class="modal" style="max-width:380px; text-align:center;">
+    <button class="modal-close" onclick="closeModal('modal-delete')">✕</button>
+    <div class="modal-tag">Confirm Delete</div>
+    <div class="modal-title" id="md-name"></div>
+    <div class="del-warn" id="md-warn"></div>
+    <button class="m-btn-del" onclick="confirmDelete()">Delete Account →</button>
+    <button class="m-btn-ghost" onclick="closeModal('modal-delete')">Cancel</button>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+// ── AUTH GUARD ──
+const ME = AUTH.requireAuth(['site_admin']);
+if (ME) {
+  const initials = ME.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('h-avatar').textContent   = initials;
+  document.getElementById('h-username').textContent = ME.name;
+}
+
+// ── ROLE HELPERS ──
+function roleBadge(role) {
+  const r = AUTH.ROLES[role] || { label: role, color:'#A89880', bg:'rgba(168,152,128,.12)' };
+  return `<span class="role-badge" style="color:${r.color};border-color:${r.color}40;background:${r.bg}">${r.label}</span>`;
+}
+
+function avatarStyle(role) {
+  const r = AUTH.ROLES[role] || { color:'#A89880', bg:'rgba(168,152,128,.12)' };
+  return `background:${r.bg};color:${r.color};`;
+}
+
+function fmtDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ' '
+       + d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+}
+
+function initials(name) {
+  return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+}
+
+// ── STATS ──
+function renderStats() {
+  const users = AUTH.getUsers();
+  const row   = document.getElementById('stats-row');
+
+  const counts = { total: users.length, active: users.filter(u=>u.active).length };
+  Object.keys(AUTH.ROLES).forEach(r => { counts[r] = users.filter(u=>u.role===r).length; });
+
+  const cards = [
+    { label:'Total Accounts', value: counts.total,          sub:'All users',      color:'var(--gold)' },
+    { label:'Active',         value: counts.active,         sub:'Can log in',     color:'#7FB069' },
+    { label:'Artisans',       value: (counts.artisan_ramouji||0)+(counts.artisan_kira||0), sub:'Ramouji + Kira', color:'#A8B4BC' },
+    { label:'Support',        value: counts.support||0,     sub:'Support team',   color:'#7FB069' },
+    { label:'Sales',          value: counts.sales||0,       sub:'Sales team',     color:'#9B72CF' },
+  ];
+
+  row.innerHTML = cards.map(c => `
+    <div class="stat-card" style="--accent-color:${c.color}">
+      <div class="stat-label">${c.label}</div>
+      <div class="stat-value">${c.value}</div>
+      <div class="stat-sub">${c.sub}</div>
+    </div>`).join('');
+}
+
+// ── TABLE ──
+function renderTable() {
+  const q     = document.getElementById('search-input').value.toLowerCase();
+  const users = AUTH.getUsers().filter(u =>
+    !q || u.name.toLowerCase().includes(q) || u.username.toLowerCase().includes(q) ||
+    u.email.toLowerCase().includes(q) || (AUTH.ROLES[u.role]?.label||'').toLowerCase().includes(q)
+  );
+  const tbody = document.getElementById('table-body');
+
+  if (!users.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">No users found</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = users.map(u => `
+    <tr id="row-${u.id}">
+      <td>
+        <div class="t-cell-user">
+          <div class="t-avatar" style="${avatarStyle(u.role)}">${initials(u.name)}</div>
+          <div>
+            <div class="t-name">${esc(u.name)}</div>
+            <div class="t-username">@${esc(u.username)}</div>
+          </div>
+        </div>
+      </td>
+      <td><span class="t-email">${esc(u.email)}</span></td>
+      <td>${roleBadge(u.role)}</td>
+      <td>
+        <button class="status-toggle" onclick="toggleStatus('${u.id}')" title="${u.active?'Click to disable':'Click to enable'}">
+          <div class="status-dot ${u.active?'active':'inactive'}"></div>
+          <span class="status-label">${u.active?'Active':'Inactive'}</span>
+        </button>
+      </td>
+      <td>
+        ${u.lastLogin
+          ? `<span class="t-date">${fmtDate(u.lastLogin)}</span>`
+          : `<span class="t-never">Never</span>`}
+      </td>
+      <td>
+        <div class="t-actions">
+          <button class="act-btn act-edit"  onclick="openEditModal('${u.id}')">Edit</button>
+          <button class="act-btn act-reset" onclick="doReset('${u.id}')">Reset Pwd</button>
+          ${u.id !== ME.id
+            ? `<button class="act-btn act-del" onclick="openDeleteModal('${u.id}')">Delete</button>`
+            : ''}
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function refresh() { renderStats(); renderTable(); }
+
+// ── STATUS TOGGLE ──
+function toggleStatus(id) {
+  if (id === ME.id) { alert('You cannot disable your own account.'); return; }
+  const users = AUTH.getUsers();
+  const u     = users.find(u=>u.id===id);
+  if (!u) return;
+  AUTH.updateUser(id, { active: !u.active });
+  refresh();
+}
+
+// ── ADD MODAL ──
+function openAddModal() {
+  document.getElementById('mu-tag').textContent   = 'New Account';
+  document.getElementById('mu-title').textContent = 'Add User';
+  document.getElementById('mu-submit').textContent = 'Create User →';
+  document.getElementById('mu-id').value   = '';
+  document.getElementById('mu-name').value = '';
+  document.getElementById('mu-username').value = '';
+  document.getElementById('mu-email').value = '';
+  document.getElementById('mu-role').value  = 'sales';
+  document.getElementById('mu-err').textContent = '';
+  openModal('modal-user');
+  setTimeout(()=>document.getElementById('mu-name').focus(), 100);
+}
+
+// ── EDIT MODAL ──
+function openEditModal(id) {
+  const u = AUTH.getUsers().find(u=>u.id===id);
+  if (!u) return;
+  document.getElementById('mu-tag').textContent   = 'Edit Account';
+  document.getElementById('mu-title').textContent = u.name;
+  document.getElementById('mu-submit').textContent = 'Save Changes →';
+  document.getElementById('mu-id').value       = u.id;
+  document.getElementById('mu-name').value     = u.name;
+  document.getElementById('mu-username').value = u.username;
+  document.getElementById('mu-email').value    = u.email;
+  document.getElementById('mu-role').value     = u.role;
+  document.getElementById('mu-err').textContent = '';
+  openModal('modal-user');
+  setTimeout(()=>document.getElementById('mu-name').focus(), 100);
+}
+
+// ── SUBMIT USER ──
+async function submitUser() {
+  const id       = document.getElementById('mu-id').value;
+  const name     = document.getElementById('mu-name').value.trim();
+  const username = document.getElementById('mu-username').value.trim().toLowerCase();
+  const email    = document.getElementById('mu-email').value.trim().toLowerCase();
+  const role     = document.getElementById('mu-role').value;
+  const err      = document.getElementById('mu-err');
+  const btn      = document.getElementById('mu-submit');
+
+  err.textContent = '';
+  if (!name || !username || !email || !role) { err.textContent = 'All fields are required.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = 'Invalid email address.'; return; }
+
+  // Check username/email uniqueness
+  const existing = AUTH.getUsers().filter(u => u.id !== id);
+  if (existing.find(u=>u.username===username)) { err.textContent = 'Username already taken.'; return; }
+  if (existing.find(u=>u.email===email))        { err.textContent = 'Email already in use.'; return; }
+
+  btn.textContent = 'Saving…'; btn.disabled = true;
+
+  if (id) {
+    AUTH.updateUser(id, { name, username, email, role });
+    closeModal('modal-user');
+    refresh();
+  } else {
+    const result = await AUTH.addUser({ name, username, email, role });
+    closeModal('modal-user');
+    refresh();
+    // Show temp password
+    document.getElementById('mr-name').textContent = name;
+    document.getElementById('mr-pwd').textContent  = result.tempPwd;
+    openModal('modal-reset');
+  }
+
+  btn.textContent = btn.id === 'mu-submit' ? 'Save Changes →' : 'Create User →';
+  btn.disabled = false;
+}
+
+// ── RESET PASSWORD ──
+async function doReset(id) {
+  const u = AUTH.getUsers().find(u=>u.id===id);
+  if (!u) return;
+  const btn = document.querySelector(`#row-${id} .act-reset`);
+  if (btn) { btn.textContent = '…'; btn.disabled = true; }
+
+  const tmp = await AUTH.resetPassword(id);
+
+  if (btn) { btn.textContent = 'Reset Pwd'; btn.disabled = false; }
+
+  document.getElementById('mr-name').textContent = u.name;
+  document.getElementById('mr-pwd').textContent  = tmp;
+  openModal('modal-reset');
+}
+
+function copyTempPwd() {
+  const pwd = document.getElementById('mr-pwd').textContent;
+  navigator.clipboard.writeText(pwd).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✓ Copied';
+    setTimeout(()=>{ btn.innerHTML = '⎘ Copy'; }, 1800);
+  });
+}
+
+// ── DELETE ──
+let _deleteTarget = null;
+function openDeleteModal(id) {
+  const u = AUTH.getUsers().find(u=>u.id===id);
+  if (!u) return;
+  _deleteTarget = id;
+  document.getElementById('md-name').textContent = u.name;
+  document.getElementById('md-warn').textContent =
+    `This will permanently delete "${u.name}" (@${u.username}). This action cannot be undone.`;
+  openModal('modal-delete');
+}
+function confirmDelete() {
+  if (!_deleteTarget) return;
+  AUTH.deleteUser(_deleteTarget);
+  _deleteTarget = null;
+  closeModal('modal-delete');
+  refresh();
+}
+
+// ── MODAL HELPERS ──
+function openModal(id)  { document.getElementById(id).classList.add('open');    document.body.style.overflow='hidden'; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) closeModal(o.id); });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(o=>closeModal(o.id));
+});
+
+// ── INIT ──
+refresh();
+</script>
+</body>
+</html>
