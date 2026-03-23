@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bangarams Design Catalog — Custom Indian Bridal Jewelry. Silver, Gold & Diamonds by Ramouji and Kira.">
+<title>Bangarams — Design Catalog</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C8973F;--gold-light:#E8C97A;--gold-pale:#F5E6C0;--gold-deep:#8A6420;
+  --silver:#A8B4BC;--silver-light:#D4DDE2;
+  --diamond:#B8C8D8;--diamond-ice:#E4EEF5;
+  --ivory:#FDFAF3;--cream:#F7F0E0;
+  --ink:#1C1410;--ink-soft:#3D2E1E;--ink-deep:#0F0A04;
+  --mist:#A89880;
+}
+body{background:var(--ivory);color:var(--ink);font-family:'Raleway',sans-serif;font-weight:300;font-size:15px;line-height:1.7;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 56px;background:rgba(253,250,243,.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(200,151,63,.12);}
+.nav-logo{text-decoration:none;}
+.nav-wordmark{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.25rem;font-weight:700;color:var(--ink);letter-spacing:.12em;}
+.nav-right{display:flex;align-items:center;gap:18px;}
+.nav-link{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;transition:color .3s;}
+.nav-link:hover{color:var(--gold);}
+.nav-cta{background:var(--ink);color:var(--gold-pale);padding:8px 18px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;transition:background .3s;}
+.nav-cta:hover{background:var(--gold);}
+
+/* ── HERO ── */
+.catalog-hero{padding:72px 56px 48px;border-bottom:1px solid rgba(200,151,63,.1);}
+.hero-tag{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);opacity:.8;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.hero-tag::before{content:'';display:block;width:24px;height:.5px;background:var(--gold);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4vw,3.8rem);font-weight:300;line-height:1.08;color:var(--ink);margin-bottom:14px;}
+.hero-title em{font-style:italic;color:var(--gold-deep);}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--mist);max-width:560px;line-height:1.9;}
+
+/* ── FILTERS ── */
+.filters{padding:22px 56px;background:var(--cream);border-bottom:1px solid rgba(200,151,63,.1);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.filter-label{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(200,151,63,.55);}
+.filter-chip{padding:7px 16px;border:1px solid rgba(200,151,63,.18);background:transparent;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .25s;}
+.filter-chip:hover{border-color:rgba(200,151,63,.4);color:var(--ink);}
+.filter-chip.active{background:var(--gold);border-color:var(--gold);color:var(--ink);}
+.filter-divider{width:1px;height:20px;background:rgba(200,151,63,.15);}
+select.filter-sel{background:transparent;border:1px solid rgba(200,151,63,.18);padding:7px 14px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none;}
+select.filter-sel:focus{border-color:rgba(200,151,63,.4);}
+.results-count{margin-left:auto;font-size:.75rem;color:rgba(168,152,128,.6);font-family:'Cormorant Garamond',serif;font-style:italic;}
+
+/* ── GRID ── */
+.catalog-grid-wrap{padding:48px 56px;}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:28px;}
+.design-card{background:var(--ivory);border:1px solid rgba(200,151,63,.08);overflow:hidden;cursor:pointer;transition:transform .4s,box-shadow .4s;}
+.design-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px rgba(28,20,16,.08);}
+.card-img{aspect-ratio:4/3;background:linear-gradient(145deg,var(--cream),rgba(200,151,63,.06));position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.design-card:hover .card-img img{transform:scale(1.04);}
+.card-img-ph{font-size:3rem;opacity:.18;}
+.card-supplier-tag{position:absolute;top:10px;left:10px;background:rgba(28,20,16,.65);backdrop-filter:blur(6px);color:var(--gold-pale);padding:4px 10px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;}
+.card-featured{position:absolute;top:10px;right:10px;background:var(--gold);color:var(--ink);padding:3px 9px;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.18em;text-transform:uppercase;}
+.card-body{padding:18px;}
+.card-cat{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:4px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--ink);margin-bottom:6px;line-height:1.2;}
+.card-meta{font-size:.75rem;color:var(--mist);margin-bottom:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.card-price{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--gold);}
+.card-chips{display:flex;flex-wrap:wrap;gap:4px;}
+.chip-m{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border:1px solid;}
+.no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mist);}
+.no-results p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;}
+
+/* ══ MODAL ══ */
+.modal-ov{display:none;position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.75);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
+.modal-ov.open{display:flex;}
+.modal{background:var(--ivory);max-width:860px;width:100%;margin:auto;position:relative;}
+.modal-close{position:absolute;top:14px;right:14px;background:rgba(28,20,16,.06);border:none;width:32px;height:32px;font-size:1rem;cursor:pointer;color:var(--mist);z-index:2;transition:all .3s;}
+.modal-close:hover{background:rgba(200,151,63,.15);color:var(--gold);}
+
+/* Modal layout */
+.modal-inner{display:grid;grid-template-columns:1fr 1fr;}
+.modal-left{background:var(--cream);}
+.modal-gallery{position:relative;aspect-ratio:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--cream),rgba(200,151,63,.06));}
+.gallery-img{width:100%;height:100%;object-fit:cover;}
+.gallery-ph{font-size:4rem;opacity:.15;}
+.gallery-video{width:100%;aspect-ratio:16/9;border:none;}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:100%;display:flex;justify-content:space-between;padding:0 10px;pointer-events:none;}
+.gallery-nav button{pointer-events:all;background:rgba(28,20,16,.5);color:#fff;border:none;width:32px;height:32px;cursor:pointer;font-size:1rem;transition:background .3s;}
+.gallery-nav button:hover{background:rgba(200,151,63,.7);}
+.gallery-dots{display:flex;gap:6px;justify-content:center;padding:12px;}
+.gallery-dot{width:6px;height:6px;border-radius:50%;background:rgba(200,151,63,.25);border:none;cursor:pointer;padding:0;}
+.gallery-dot.active{background:var(--gold);}
+.modal-supplier{padding:16px 18px;border-top:1px solid rgba(200,151,63,.1);display:flex;align-items:center;gap:10px;}
+.ms-avatar{width:36px;height:36px;border-radius:50%;background:rgba(200,151,63,.12);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);flex-shrink:0;}
+.ms-name{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--ink);}
+.ms-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);}
+
+.modal-right{padding:28px;overflow-y:auto;max-height:90vh;}
+.m-cat{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(200,151,63,.6);margin-bottom:6px;}
+.m-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--ink);margin-bottom:12px;line-height:1.1;}
+.m-price{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--gold);margin-bottom:6px;}
+.m-meta{font-size:.78rem;color:var(--mist);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;}
+.m-desc{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--ink-soft);line-height:1.9;margin-bottom:20px;}
+.m-divider{height:1px;background:rgba(200,151,63,.12);margin:20px 0;}
+
+/* Customization builder */
+.cust-section-title{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.35em;text-transform:uppercase;color:rgba(200,151,63,.55);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.cust-section-title::before{content:'';display:block;width:14px;height:.5px;background:rgba(200,151,63,.4);}
+.cust-options{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.cust-opt{padding:7px 14px;border:1px solid rgba(200,151,63,.18);background:transparent;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .25s;}
+.cust-opt:hover{border-color:rgba(200,151,63,.4);color:var(--ink);}
+.cust-opt.selected{background:rgba(200,151,63,.12);border-color:var(--gold);color:var(--ink);}
+.cust-field{margin-bottom:14px;}
+.cust-field label{display:block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:7px;}
+.cust-field input,.cust-field textarea,.cust-field select{width:100%;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.14);padding:10px 13px;color:var(--ink);font-family:'Raleway',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.cust-field input:focus,.cust-field textarea:focus,.cust-field select:focus{border-color:rgba(200,151,63,.45);}
+.cust-field textarea{resize:vertical;min-height:70px;}
+.cust-field select option{background:var(--ivory);}
+.cad-note{background:rgba(200,151,63,.05);border-left:2px solid rgba(200,151,63,.3);padding:10px 14px;font-size:.78rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;margin-bottom:16px;line-height:1.6;}
+
+/* CTA buttons */
+.cta-row{display:flex;gap:10px;margin-top:20px;flex-direction:column;}
+.btn-wa-cta{background:#25D366;color:#fff;border:none;padding:14px 24px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .3s;}
+.btn-wa-cta:hover{background:#128C7E;}
+.btn-consult{background:var(--ink);color:var(--gold-pale);border:none;padding:13px 24px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:background .3s;}
+.btn-consult:hover{background:var(--gold);}
+
+/* Consultation slot picker */
+.consult-section{margin-top:20px;}
+.slot-picker{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0;}
+.slot-btn{padding:6px 14px;border:1px solid rgba(200,151,63,.18);background:transparent;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .25s;}
+.slot-btn:hover{border-color:rgba(200,151,63,.4);color:var(--ink);}
+.slot-btn.selected{background:rgba(200,151,63,.12);border-color:var(--gold);color:var(--ink);}
+.slot-date-head{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-top:12px;margin-bottom:6px;}
+.contact-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+
+@media(max-width:720px){
+  .modal-inner{grid-template-columns:1fr;}
+  nav{padding:12px 20px;}
+  .catalog-hero,.catalog-grid-wrap{padding:40px 20px;}
+  .filters{padding:16px 20px;}
+  .contact-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><span class="nav-wordmark">BANGARAMS</span></a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-link">← Back to Site</a>
+    <a href="index.html#consult" class="nav-cta">Book Consultation</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="catalog-hero">
+  <div class="hero-tag">Custom Jewelry Catalog</div>
+  <h1 class="hero-title">Crafted <em>by hand.</em><br>Designed for you.</h1>
+  <p class="hero-desc">Browse designs by Ramouji and Kira. Every piece is custom-made — choose your metal, finish, and stones. Request a quote directly via WhatsApp, zero back-and-forth with the owner.</p>
+</div>
+
+<!-- FILTERS -->
+<div class="filters" id="filter-bar">
+  <span class="filter-label">By</span>
+  <button class="filter-chip active" onclick="setFilter('supplier','all',this)">All Makers</button>
+  <button class="filter-chip" onclick="setFilter('supplier','ramouji',this)">Ramouji</button>
+  <button class="filter-chip" onclick="setFilter('supplier','kira',this)">Kira</button>
+  <div class="filter-divider"></div>
+  <select class="filter-sel" id="cat-filter" onchange="setFilter('category',this.value)">
+    <option value="">All Categories</option>
+  </select>
+  <select class="filter-sel" id="metal-filter" onchange="setFilter('metal',this.value)">
+    <option value="">All Metals</option>
+  </select>
+  <span class="results-count" id="results-count"></span>
+</div>
+
+<!-- GRID -->
+<div class="catalog-grid-wrap">
+  <div class="catalog-grid" id="catalog-grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-ov" id="modal-ov" onclick="handleOvClick(event)">
+  <div class="modal" id="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-inner">
+
+      <!-- LEFT: Gallery + Supplier -->
+      <div class="modal-left">
+        <div class="modal-gallery" id="gallery"></div>
+        <div class="gallery-dots" id="gallery-dots"></div>
+        <div class="modal-supplier" id="modal-supplier"></div>
+      </div>
+
+      <!-- RIGHT: Details + Customization -->
+      <div class="modal-right" id="modal-right">
+        <!-- filled by JS -->
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="store.js"></script>
+<script>
+
+/* ════════════════════════════════════════
+   FILTERS & RENDER
+════════════════════════════════════════ */
+const _filters = { supplier:'all', category:'', metal:'' };
+
+// Populate filter dropdowns
+(function() {
+  const catSel   = document.getElementById('cat-filter');
+  const metalSel = document.getElementById('metal-filter');
+  STORE.CATEGORIES.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); });
+  Object.entries(STORE.METALS).forEach(([k,v]) => { const o=document.createElement('option'); o.value=k; o.textContent=v.short; metalSel.appendChild(o); });
+})();
+
+function setFilter(key, val, btn) {
+  _filters[key] = val;
+  if (btn && key === 'supplier') {
+    document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  renderGrid();
+}
+
+function renderGrid() {
+  let designs = STORE.getPublicDesigns();
+  if (_filters.supplier !== 'all') designs = designs.filter(d => d.supplierId === _filters.supplier);
+  if (_filters.category) designs = designs.filter(d => d.category === _filters.category);
+  if (_filters.metal)    designs = designs.filter(d => d.metals && d.metals.includes(_filters.metal));
+
+  const grid = document.getElementById('catalog-grid');
+  document.getElementById('results-count').textContent = `${designs.length} design${designs.length!==1?'s':''}`;
+
+  if (!designs.length) {
+    grid.innerHTML = `<div class="no-results"><p>No designs match your filters. Try broadening your search.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = designs.map(d => {
+    const img    = d.images && d.images.length
+      ? `<img src="${esc(STORE.resolveImgSrc(d.images[0]))}" alt="${esc(d.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-img-ph>💍</span>'">`
+      : `<span class="card-img-ph">💍</span>`;
+    const chips  = (d.metals||[]).slice(0,2).map(m =>
+      `<span class="chip-m" style="color:${STORE.METALS[m]?.color||'#A89880'};border-color:${STORE.METALS[m]?.color||'#A89880'}30">${STORE.METALS[m]?.short||m}</span>`
+    ).join('');
+    const prof   = STORE.getProfile(d.supplierId);
+    return `
+    <div class="design-card" onclick="openModal('${d.id}')">
+      <div class="card-img">
+        ${img}
+        <div class="card-supplier-tag">${esc(prof.name)}</div>
+        ${d.featured ? '<div class="card-featured">Featured</div>' : ''}
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${esc(d.category)}</div>
+        <div class="card-title">${esc(d.title)}</div>
+        <div class="card-meta">
+          ${d.weight ? '<span>⚖ '+esc(d.weight)+'</span>' : ''}
+          ${d.leadTime ? '<span>⏱ '+esc(d.leadTime)+'</span>' : ''}
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="card-price">${d.basePrice ? 'From $'+d.basePrice.toLocaleString() : 'Custom Quote'}</div>
+          <div class="card-chips">${chips}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   MODAL
+════════════════════════════════════════ */
+let _activeDesign   = null;
+let _galleryItems   = [];
+let _galleryIdx     = 0;
+let _selectedMetal  = '';
+let _selectedFinish = '';
+let _selectedStone  = '';
+let _selectedSlot   = null;
+
+async function openModal(id) {
+  const d = STORE.getDesignById(id);
+  if (!d) return;
+  _activeDesign   = d;
+  _selectedMetal  = d.metals  && d.metals.length  ? d.metals[0]  : '';
+  _selectedFinish = d.finishes && d.finishes.length ? d.finishes[0] : '';
+  _selectedStone  = d.stones  && d.stones.length  ? d.stones[0]  : '';
+  _selectedSlot   = null;
+
+  const prof = STORE.getProfile(d.supplierId);
+
+  // Build gallery items: video first, then images
+  _galleryItems = [];
+  if (d.videoUrl) {
+    const embed = STORE.ytEmbedUrl(d.videoUrl);
+    if (embed) _galleryItems.push({ type:'video', src:embed });
+  }
+  for (const img of (d.images||[])) {
+    if (img.type === 'idb') {
+      const url = await STORE.idb.getURL(img.src);
+      if (url) _galleryItems.push({ type:'img', src:url });
+    } else {
+      _galleryItems.push({ type:'img', src: STORE.resolveImgSrc(img) });
+    }
+  }
+
+  _galleryIdx = 0;
+  renderGallery();
+
+  // Supplier info
+  const initials = prof.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('modal-supplier').innerHTML = `
+    <div class="ms-avatar">${esc(initials)}</div>
+    <div>
+      <div class="ms-name">${esc(prof.name)}</div>
+      <div class="ms-tag">${esc(prof.tagline||'')}</div>
+    </div>`;
+
+  // Right panel
+  document.getElementById('modal-right').innerHTML = buildRightPanel(d, prof);
+
+  document.getElementById('modal-ov').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderGallery() {
+  const el  = document.getElementById('gallery');
+  const dot = document.getElementById('gallery-dots');
+  if (!_galleryItems.length) {
+    el.innerHTML = '<span class="gallery-ph">💍</span>';
+    dot.innerHTML = '';
+    return;
+  }
+  const item = _galleryItems[_galleryIdx];
+  if (item.type === 'video') {
+    el.innerHTML = `<iframe class="gallery-video" src="${esc(item.src)}" allowfullscreen></iframe>`;
+  } else {
+    el.innerHTML = `
+      <img class="gallery-img" src="${esc(item.src)}" alt="">
+      ${_galleryItems.length > 1 ? `
+      <div class="gallery-nav">
+        <button onclick="galleryNav(-1)">‹</button>
+        <button onclick="galleryNav(1)">›</button>
+      </div>` : ''}`;
+  }
+  dot.innerHTML = _galleryItems.map((_, i) =>
+    `<button class="gallery-dot ${i===_galleryIdx?'active':''}" onclick="galleryNav(${i}-${_galleryIdx})"></button>`
+  ).join('');
+}
+
+function galleryNav(dir) {
+  _galleryIdx = (_galleryIdx + dir + _galleryItems.length) % _galleryItems.length;
+  renderGallery();
+}
+
+function buildRightPanel(d, prof) {
+  const metalOpts  = (d.metals  ||[]).map(k => `<button class="cust-opt ${_selectedMetal===k?'selected':''}" onclick="selectOpt('metal','${k}',this)">${esc(STORE.METALS[k]?.short||k)}</button>`).join('');
+  const finishOpts = (d.finishes||[]).map(k => `<button class="cust-opt ${_selectedFinish===k?'selected':''}" onclick="selectOpt('finish','${k}',this)">${esc(STORE.FINISHES[k]||k)}</button>`).join('');
+  const stoneOpts  = (d.stones  ||[]).map(k => `<button class="cust-opt ${_selectedStone===k?'selected':''}" onclick="selectOpt('stone','${k}',this)">${esc(STORE.STONES[k]||k)}</button>`).join('');
+  const cadNote    = d.cadFee ? `<div class="cad-note">CAD design changes: <strong>$${d.cadFee} per revision round</strong>. The first design is included in your quote.</div>` : '';
+  const suppInit   = prof.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  return `
+    <div class="m-cat">${esc(d.category)}</div>
+    <div class="m-title">${esc(d.title)}</div>
+    ${d.basePrice ? `<div class="m-price">From $${d.basePrice.toLocaleString()} <span style="font-size:.75rem;color:var(--mist);">(depending on metal & stones)</span></div>` : '<div class="m-price" style="font-size:.95rem;">Custom Quote</div>'}
+    <div class="m-meta">
+      ${d.weight   ? `<span>⚖ ${esc(d.weight)}</span>`   : ''}
+      ${d.leadTime ? `<span>⏱ ${esc(d.leadTime)}</span>` : ''}
+    </div>
+    <p class="m-desc">${esc(d.description).replace(/\n/g,'<br>')}</p>
+
+    <div class="m-divider"></div>
+    <div class="cust-section-title">Customise Your Piece</div>
+
+    ${metalOpts  ? `<div style="margin-bottom:16px;"><div class="cust-section-title" style="font-size:.5rem;margin-bottom:8px;">Metal</div><div class="cust-options" id="opts-metal">${metalOpts}</div></div>` : ''}
+    ${finishOpts ? `<div style="margin-bottom:16px;"><div class="cust-section-title" style="font-size:.5rem;margin-bottom:8px;">Finish</div><div class="cust-options" id="opts-finish">${finishOpts}</div></div>` : ''}
+    ${stoneOpts  ? `<div style="margin-bottom:16px;"><div class="cust-section-title" style="font-size:.5rem;margin-bottom:8px;">Stone</div><div class="cust-options" id="opts-stone">${stoneOpts}</div></div>` : ''}
+
+    ${cadNote}
+
+    <div class="cust-field">
+      <label>Additional Notes</label>
+      <textarea id="c-notes" placeholder="Sizes, special requests, inspiration photos description, outfit colours…"></textarea>
+    </div>
+    <div class="cust-field">
+      <label>Your Budget</label>
+      <select id="c-budget">
+        <option value="">— Select —</option>
+        ${STORE.BUDGET_RANGES.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="m-divider"></div>
+    <div class="cust-section-title">Your Contact</div>
+    <div class="contact-row">
+      <div class="cust-field">
+        <label>Your Name</label>
+        <input type="text" id="c-name" placeholder="Priya Sharma">
+      </div>
+      <div class="cust-field">
+        <label>Phone / WhatsApp</label>
+        <input type="tel" id="c-phone" placeholder="+1 (404) 000-0000">
+      </div>
+    </div>
+    <div class="cust-field">
+      <label>Email (optional)</label>
+      <input type="email" id="c-email" placeholder="priya@email.com">
+    </div>
+
+    <div class="cta-row">
+      <button class="btn-wa-cta" onclick="sendViaWhatsApp()">💬 Request via WhatsApp</button>
+      <button class="btn-consult" onclick="toggleConsultSection()">📅 Book a Consultation</button>
+    </div>
+
+    <!-- Consultation Section (hidden by default) -->
+    <div class="consult-section" id="consult-section" style="display:none;">
+      <div class="m-divider"></div>
+      <div class="cust-section-title">Choose a Consultation Slot</div>
+      <div id="slot-area">Loading available slots…</div>
+      <div id="slot-confirm" style="display:none;margin-top:14px;">
+        <div style="background:rgba(200,151,63,.08);border:1px solid rgba(200,151,63,.2);padding:12px 16px;font-size:.82rem;color:var(--mist);margin-bottom:12px;">
+          Selected: <strong id="selected-slot-label" style="color:var(--ink);"></strong>
+        </div>
+        <button class="btn-wa-cta" onclick="bookViaWhatsApp()">💬 Confirm Booking via WhatsApp</button>
+      </div>
+    </div>`;
+}
+
+function selectOpt(type, val, btn) {
+  if (type === 'metal')  _selectedMetal  = val;
+  if (type === 'finish') _selectedFinish = val;
+  if (type === 'stone')  _selectedStone  = val;
+  document.querySelectorAll(`#opts-${type} .cust-opt`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function sendViaWhatsApp() {
+  const d     = _activeDesign;
+  const prof  = STORE.getProfile(d.supplierId);
+  if (!prof.whatsapp || prof.whatsapp.includes('9999999')) {
+    alert('WhatsApp number not yet configured. Please contact hello@bangarams.com.');
+    return;
+  }
+  const opts  = {
+    metal:  _selectedMetal,
+    finish: _selectedFinish,
+    stone:  _selectedStone,
+    notes:  document.getElementById('c-notes')?.value || '',
+    budget: document.getElementById('c-budget')?.value || '',
+    customerName:  document.getElementById('c-name')?.value  || '',
+    customerPhone: document.getElementById('c-phone')?.value || '',
+    customerEmail: document.getElementById('c-email')?.value || '',
+  };
+  const msg  = STORE.buildWAMessage(d, opts);
+  const url  = STORE.buildWAUrl(d, opts);
+  // Save inquiry record
+  STORE.createInquiry({
+    designId:d.id, designTitle:d.title, supplierId:d.supplierId,
+    selections:{ Metal:STORE.METALS[opts.metal]?.short||opts.metal, Finish:STORE.FINISHES[opts.finish]||opts.finish, Stone:STORE.STONES[opts.stone]||opts.stone },
+    notes:opts.notes, budget:opts.budget,
+    customerName:opts.customerName, customerPhone:opts.customerPhone, customerEmail:opts.customerEmail,
+    waMessage:msg,
+  });
+  window.open(url, '_blank');
+}
+
+let _slotsLoaded = false;
+function toggleConsultSection() {
+  const sec = document.getElementById('consult-section');
+  if (!sec) return;
+  const isHidden = sec.style.display === 'none';
+  sec.style.display = isHidden ? 'block' : 'none';
+  if (isHidden && !_slotsLoaded) { loadSlots(); _slotsLoaded = true; }
+}
+
+function loadSlots() {
+  const d     = _activeDesign;
+  const slots = STORE.getOpenSlots(d.supplierId);
+  const area  = document.getElementById('slot-area');
+  if (!slots.length) {
+    area.innerHTML = `<p style="font-size:.82rem;color:var(--mist);font-style:italic;font-family:'Cormorant Garamond',serif;">No open slots in the next 3 weeks. Please reach out via WhatsApp to arrange a time.</p>`;
+    return;
+  }
+  // Group by date
+  const byDate = {};
+  slots.forEach(s => { if (!byDate[s.date]) byDate[s.date] = []; byDate[s.date].push(s); });
+
+  let html = '';
+  Object.entries(byDate).slice(0,7).forEach(([date, daySlots]) => {
+    const d = new Date(date + 'T12:00:00');
+    const label = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    html += `<div class="slot-date-head">${label}</div><div class="slot-picker">`;
+    html += daySlots.map(s => `<button class="slot-btn" onclick="selectSlot('${s.date}','${s.time}',this)">${esc(s.time)}</button>`).join('');
+    html += '</div>';
+  });
+  area.innerHTML = html;
+}
+
+function selectSlot(date, time, btn) {
+  document.querySelectorAll('#slot-area .slot-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  _selectedSlot = { date, time };
+  const d = new Date(date + 'T12:00:00');
+  document.getElementById('selected-slot-label').textContent =
+    d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}) + ' at ' + time;
+  document.getElementById('slot-confirm').style.display = 'block';
+}
+
+function bookViaWhatsApp() {
+  if (!_selectedSlot) return;
+  const d    = _activeDesign;
+  const prof = STORE.getProfile(d.supplierId);
+  if (!prof.whatsapp || prof.whatsapp.includes('9999999')) {
+    alert('WhatsApp number not yet configured. Please contact hello@bangarams.com.');
+    return;
+  }
+  const opts = {
+    metal:_selectedMetal, finish:_selectedFinish, stone:_selectedStone,
+    notes:        document.getElementById('c-notes')?.value  || '',
+    budget:       document.getElementById('c-budget')?.value || '',
+    customerName: document.getElementById('c-name')?.value   || '',
+    customerPhone:document.getElementById('c-phone')?.value  || '',
+    customerEmail:document.getElementById('c-email')?.value  || '',
+    requestedDate:_selectedSlot.date,
+    requestedTime:_selectedSlot.time,
+  };
+  const msg = STORE.buildWAMessage(d, opts);
+  STORE.createInquiry({
+    designId:d.id, designTitle:d.title, supplierId:d.supplierId,
+    requestedDate:_selectedSlot.date, requestedTime:_selectedSlot.time,
+    selections:{ Metal:STORE.METALS[opts.metal]?.short||opts.metal, Finish:STORE.FINISHES[opts.finish]||opts.finish, Stone:STORE.STONES[opts.stone]||opts.stone },
+    notes:opts.notes, budget:opts.budget,
+    customerName:opts.customerName, customerPhone:opts.customerPhone, customerEmail:opts.customerEmail,
+    waMessage:msg,
+  });
+  window.open(STORE.buildWAUrl(d, opts), '_blank');
+}
+
+function closeModal() {
+  document.getElementById('modal-ov').classList.remove('open');
+  document.body.style.overflow = '';
+  _activeDesign = null; _galleryItems = []; _slotsLoaded = false; _selectedSlot = null;
+}
+function handleOvClick(e) { if (e.target === document.getElementById('modal-ov')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── INIT ── */
+renderGrid();
+</script>
+</body>
+</html>

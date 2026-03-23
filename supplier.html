@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangarams — Supplier Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C8973F;--gold-light:#E8C97A;--gold-pale:#F5E6C0;--gold-deep:#8A6420;
+  --silver:#A8B4BC;--silver-light:#D4DDE2;
+  --ink:#1C1410;--ink-deep:#0F0A04;--mist:#A89880;
+  --surface:#141008;--surface2:#1C1610;--surface3:#231C12;
+  --border:rgba(200,151,63,.12);
+  --green:#7FB069;--red:rgba(220,80,80,.7);
+}
+body{background:var(--surface);color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:14px;min-height:100vh;}
+
+/* ── HEADER ── */
+header{background:var(--surface2);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.h-logo{display:flex;align-items:center;gap:14px;text-decoration:none;}
+.h-wordmark{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.15rem;font-weight:700;color:var(--gold-light);letter-spacing:.12em;}
+.h-divider{width:1px;height:24px;background:var(--border);}
+.h-section{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(200,151,63,.55);}
+.h-right{display:flex;align-items:center;gap:12px;}
+.h-badge{display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--mist);}
+.h-avatar{width:30px;height:30px;border-radius:50%;background:rgba(200,151,63,.15);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);}
+.h-btn{background:transparent;border:1px solid var(--border);color:var(--mist);padding:6px 14px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;}
+.h-btn:hover{border-color:var(--gold);color:var(--gold);}
+.badge-count{background:rgba(220,80,80,.7);color:#fff;border-radius:9px;padding:1px 6px;font-size:.6rem;font-family:'Cinzel',serif;min-width:18px;text-align:center;}
+
+/* ── TABS ── */
+.tabs{background:var(--surface2);border-bottom:1px solid var(--border);padding:0 32px;display:flex;gap:0;}
+.tab-btn{padding:14px 22px;background:none;border:none;border-bottom:2px solid transparent;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px;}
+.tab-btn:hover{color:var(--gold-pale);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-panel{display:none;padding:32px 36px;max-width:1300px;margin:0 auto;}
+.tab-panel.active{display:block;}
+
+/* ── SECTION HEADER ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--gold-pale);}
+.sec-tag{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:4px;}
+
+/* ── BUTTONS ── */
+.btn-gold{background:var(--gold);color:var(--ink);border:none;padding:10px 22px;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:background .3s;}
+.btn-gold:hover{background:var(--gold-light);}
+.btn-ghost{background:transparent;color:var(--mist);border:1px solid var(--border);padding:9px 18px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(220,80,80,.25);padding:6px 12px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.btn-danger:hover{background:rgba(220,80,80,.08);border-color:var(--red);}
+.btn-sm{padding:6px 14px;font-size:.54rem;}
+
+/* ── DESIGN CARDS ── */
+.designs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;}
+.design-card{background:var(--surface2);border:1px solid var(--border);overflow:hidden;transition:border-color .3s;}
+.design-card:hover{border-color:rgba(200,151,63,.3);}
+.card-img-wrap{aspect-ratio:4/3;background:var(--surface3);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.card-img-ph{font-size:2.5rem;opacity:.2;}
+.card-status-dot{position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;}
+.card-body{padding:14px;}
+.card-cat{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:4px;}
+.card-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold-pale);margin-bottom:6px;}
+.card-meta{font-size:.72rem;color:var(--mist);margin-bottom:12px;line-height:1.5;}
+.card-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
+.chip{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border:1px solid;}
+.card-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.act-btn{padding:5px 12px;border:1px solid;background:transparent;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;}
+.act-edit{border-color:rgba(200,151,63,.35);color:rgba(200,151,63,.7);}
+.act-edit:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,151,63,.06);}
+.act-toggle{border-color:rgba(127,176,105,.35);color:rgba(127,176,105,.7);}
+.act-toggle:hover{border-color:var(--green);color:var(--green);background:rgba(127,176,105,.06);}
+.act-toggle.off{border-color:rgba(220,80,80,.3);color:rgba(220,80,80,.6);}
+.act-toggle.off:hover{border-color:var(--red);color:var(--red);}
+.act-del{border-color:rgba(220,80,80,.25);color:rgba(220,80,80,.5);}
+.act-del:hover{border-color:var(--red);color:var(--red);background:rgba(220,80,80,.06);}
+.empty-state{text-align:center;padding:60px 20px;color:rgba(168,152,128,.4);}
+.empty-state p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;}
+
+/* ── DRAWER (design form) ── */
+.drawer-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(10,6,2,.7);}
+.drawer-overlay.open{display:block;}
+.drawer{position:fixed;top:0;right:0;width:min(600px,100vw);height:100vh;background:var(--surface2);border-left:1px solid rgba(200,151,63,.2);overflow-y:auto;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:301;}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:24px 28px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:18px;}
+.drawer-tag{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:4px;}
+.drawer-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--gold-pale);}
+.drawer-close{background:none;border:none;color:rgba(168,152,128,.5);font-size:1.3rem;cursor:pointer;line-height:1;}
+.drawer-close:hover{color:var(--gold);}
+.drawer-body{padding:24px 28px;}
+.d-section{margin-bottom:28px;}
+.d-section-title{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.32em;text-transform:uppercase;color:rgba(200,151,63,.45);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.d-section-title::before{content:'';display:block;height:.5px;width:16px;background:rgba(200,151,63,.3);}
+.d-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.d-field{margin-bottom:16px;}
+.d-field label{display:block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:7px;}
+.d-field input,.d-field select,.d-field textarea{width:100%;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.16);padding:10px 13px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s;-webkit-appearance:none;appearance:none;}
+.d-field input:focus,.d-field select:focus,.d-field textarea:focus{border-color:rgba(200,151,63,.45);}
+.d-field input::placeholder,.d-field textarea::placeholder{color:rgba(168,152,128,.3);}
+.d-field textarea{resize:vertical;min-height:90px;}
+.d-field select option{background:var(--surface2);}
+.d-hint{font-size:.65rem;color:rgba(168,152,128,.4);margin-top:5px;line-height:1.5;}
+
+/* Checkboxes */
+.check-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.check-item{display:flex;align-items:center;gap:7px;cursor:pointer;}
+.check-item input[type=checkbox]{display:none;}
+.check-label{border:1px solid rgba(200,151,63,.2);padding:5px 12px;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,151,63,.55);transition:all .25s;cursor:pointer;}
+.check-item input:checked + .check-label{background:rgba(200,151,63,.15);border-color:var(--gold);color:var(--gold);}
+
+/* Image upload area */
+.img-upload-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.img-slot{width:80px;height:80px;border:1px dashed rgba(200,151,63,.25);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;flex-shrink:0;}
+.img-slot img{width:100%;height:100%;object-fit:cover;}
+.img-slot-ph{font-size:1.4rem;color:rgba(168,152,128,.2);}
+.img-slot .img-remove{position:absolute;top:2px;right:2px;background:rgba(10,6,2,.7);border:none;color:rgba(220,80,80,.7);font-size:.75rem;cursor:pointer;padding:2px 5px;line-height:1;}
+.img-add-btn{width:80px;height:80px;border:1px dashed rgba(200,151,63,.25);background:none;color:rgba(200,151,63,.3);font-size:1.8rem;cursor:pointer;transition:all .3s;flex-shrink:0;}
+.img-add-btn:hover{border-color:rgba(200,151,63,.5);color:rgba(200,151,63,.6);}
+
+/* Drawer footer */
+.drawer-footer{padding:18px 28px;border-top:1px solid var(--border);display:flex;gap:10px;}
+.d-err{font-size:.7rem;color:rgba(220,80,80,.7);margin-top:8px;}
+
+/* ── AVAILABILITY GRID ── */
+.avail-grid-wrap{overflow-x:auto;}
+table.avail-grid{border-collapse:collapse;min-width:600px;}
+.avail-grid th{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);padding:10px 12px;border-bottom:1px solid var(--border);text-align:center;background:var(--surface3);}
+.avail-grid th:first-child{text-align:left;min-width:100px;}
+.avail-grid td{padding:4px 6px;text-align:center;}
+.slot-btn{width:52px;height:32px;border:1px solid rgba(200,151,63,.12);background:transparent;cursor:pointer;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(168,152,128,.35);transition:all .25s;border-radius:2px;}
+.slot-btn.on{background:rgba(127,176,105,.15);border-color:rgba(127,176,105,.4);color:rgba(127,176,105,.9);}
+.slot-btn:hover{border-color:rgba(200,151,63,.4);color:rgba(200,151,63,.7);}
+.time-label{font-size:.68rem;color:var(--mist);padding-right:8px;white-space:nowrap;text-align:left;}
+.avail-controls{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+.avail-info{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;color:rgba(168,152,128,.55);}
+
+/* Blocked dates */
+.blocked-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.blocked-chip{display:flex;align-items:center;gap:6px;background:rgba(220,80,80,.06);border:1px solid rgba(220,80,80,.2);padding:4px 10px;font-size:.72rem;color:rgba(220,100,100,.7);}
+.blocked-chip button{background:none;border:none;color:rgba(220,80,80,.5);cursor:pointer;font-size:.8rem;line-height:1;padding:0;}
+
+/* ── INQUIRIES ── */
+.inquiry-list{display:flex;flex-direction:column;gap:14px;}
+.inq-card{background:var(--surface2);border:1px solid var(--border);padding:20px;}
+.inq-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.inq-ref{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.45);}
+.inq-design{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold-pale);}
+.inq-customer{font-size:.8rem;color:var(--mist);margin-bottom:8px;}
+.inq-selections{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.sel-tag{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border:1px solid rgba(200,151,63,.18);color:rgba(200,151,63,.6);}
+.inq-notes{font-size:.8rem;color:rgba(168,152,128,.6);font-style:italic;margin-bottom:10px;line-height:1.6;}
+.inq-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.btn-wa{background:#25D366;color:#fff;border:none;padding:8px 18px;font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:background .3s;}
+.btn-wa:hover{background:#128C7E;}
+.status-badge{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;padding:3px 10px;border:1px solid;}
+.st-pending{border-color:rgba(200,151,63,.3);color:rgba(200,151,63,.7);background:rgba(200,151,63,.06);}
+.st-confirmed{border-color:rgba(127,176,105,.35);color:rgba(127,176,105,.8);background:rgba(127,176,105,.06);}
+.st-closed{border-color:rgba(168,152,128,.2);color:rgba(168,152,128,.45);}
+.st-quoted{border-color:rgba(184,200,216,.3);color:rgba(184,200,216,.6);}
+select.status-select{background:var(--surface3);border:1px solid var(--border);color:var(--gold-pale);padding:5px 10px;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.12em;outline:none;}
+
+/* ── PROFILE ── */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:700px;}
+.p-field{margin-bottom:18px;}
+.p-field label{display:block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:7px;}
+.p-field input,.p-field textarea{width:100%;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.16);padding:11px 14px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s;}
+.p-field input:focus,.p-field textarea:focus{border-color:rgba(200,151,63,.45);}
+.p-field textarea{min-height:80px;resize:vertical;}
+.p-hint{font-size:.65rem;color:rgba(168,152,128,.4);margin-top:5px;}
+.active-toggle{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(200,151,63,.04);border:1px solid var(--border);margin-bottom:20px;}
+.toggle-track{width:42px;height:22px;background:rgba(168,152,128,.2);border-radius:11px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+.toggle-track.on{background:var(--green);}
+.toggle-track::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .3s;}
+.toggle-track.on::after{transform:translateX(20px);}
+.toggle-label{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold-pale);}
+.toggle-sub{font-size:.7rem;color:var(--mist);}
+
+/* ── OVERLAY MODAL ── */
+.modal-ov{display:none;position:fixed;inset:0;z-index:400;background:rgba(10,6,2,.8);align-items:center;justify-content:center;padding:24px;}
+.modal-ov.open{display:flex;}
+.modal-box{background:var(--surface2);border:1px solid rgba(200,151,63,.18);padding:36px;max-width:420px;width:100%;position:relative;text-align:center;}
+.modal-box .close{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(168,152,128,.5);font-size:1.1rem;cursor:pointer;}
+.modal-box .close:hover{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="h-logo">
+    <span class="h-wordmark">BANGARAMS</span>
+    <span class="h-divider"></span>
+    <span class="h-section">Supplier Portal</span>
+  </a>
+  <div class="h-right">
+    <a href="designs.html" class="h-btn" target="_blank">View Catalog ↗</a>
+    <div class="h-badge">
+      <div class="h-avatar" id="h-avatar">?</div>
+      <span id="h-name">–</span>
+    </div>
+    <button class="h-btn" onclick="AUTH.logout()">Sign Out</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('catalog',this)">My Catalog</button>
+  <button class="tab-btn" onclick="switchTab('availability',this)">Availability</button>
+  <button class="tab-btn" onclick="switchTab('inquiries',this)" id="tab-inq">
+    Inquiries <span class="badge-count" id="inq-badge" style="display:none">0</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab('profile',this)">Profile</button>
+</div>
+
+<!-- ══ TAB: CATALOG ══ -->
+<div class="tab-panel active" id="tab-catalog">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">My Designs</div>
+      <div class="sec-title">Design Catalog</div>
+    </div>
+    <button class="btn-gold" onclick="openDrawer()">+ Add Design</button>
+  </div>
+  <div class="designs-grid" id="designs-grid"></div>
+</div>
+
+<!-- ══ TAB: AVAILABILITY ══ -->
+<div class="tab-panel" id="tab-availability">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Consultation Scheduling</div>
+      <div class="sec-title">Availability</div>
+    </div>
+    <button class="btn-gold" onclick="saveAvailability()">Save Availability</button>
+  </div>
+
+  <div class="active-toggle" id="accepting-toggle" onclick="toggleAccepting()">
+    <div class="toggle-track" id="accepting-track"></div>
+    <div>
+      <div class="toggle-label" id="accepting-label">Accepting Bookings</div>
+      <div class="toggle-sub" id="accepting-sub">Customers can request consultation slots</div>
+    </div>
+  </div>
+
+  <div class="avail-controls">
+    <div class="avail-info">Click slots to toggle open ✓ / closed. Green = available to customers.</div>
+    <button class="btn-ghost btn-sm" onclick="quickSet('weekdays')">Weekdays 10–5</button>
+    <button class="btn-ghost btn-sm" onclick="quickSet('weekend')">Weekends 10–4</button>
+    <button class="btn-ghost btn-sm" onclick="quickSet('clear')">Clear All</button>
+  </div>
+
+  <div class="avail-grid-wrap">
+    <table class="avail-grid" id="avail-table"></table>
+  </div>
+
+  <div style="margin-top:28px;">
+    <div class="d-section-title">Block Specific Dates</div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+      <input type="date" id="block-date-input" style="background:var(--surface3);border:1px solid var(--border);color:var(--gold-pale);padding:8px 12px;font-family:'Raleway',sans-serif;font-size:.85rem;outline:none;">
+      <button class="btn-ghost btn-sm" onclick="addBlockDate()">+ Block Date</button>
+    </div>
+    <div class="blocked-list" id="blocked-list"></div>
+  </div>
+</div>
+
+<!-- ══ TAB: INQUIRIES ══ -->
+<div class="tab-panel" id="tab-inquiries">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Customer Requests</div>
+      <div class="sec-title">Inquiries</div>
+    </div>
+    <div style="font-size:.75rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;">
+      Customers contact you directly via WhatsApp. This is your reference log.
+    </div>
+  </div>
+  <div class="inquiry-list" id="inquiry-list"></div>
+</div>
+
+<!-- ══ TAB: PROFILE ══ -->
+<div class="tab-panel" id="tab-profile">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Supplier Settings</div>
+      <div class="sec-title">My Profile</div>
+    </div>
+    <button class="btn-gold" onclick="saveProfile()">Save Profile</button>
+  </div>
+  <div class="profile-grid">
+    <div>
+      <div class="p-field">
+        <label>Display Name</label>
+        <input type="text" id="p-name" placeholder="Ramouji">
+      </div>
+      <div class="p-field">
+        <label>Tagline</label>
+        <input type="text" id="p-tagline" placeholder="Master Goldsmith · Custom Gold & Silver">
+      </div>
+      <div class="p-field">
+        <label>WhatsApp Number <span style="color:rgba(200,151,63,.4);font-family:'Raleway',sans-serif;letter-spacing:0;text-transform:none;font-size:.65rem;">(digits only, incl. country code)</span></label>
+        <input type="tel" id="p-wa" placeholder="14044440001">
+        <div class="p-hint">e.g. 14045551234 for US number +1 (404) 555-1234</div>
+      </div>
+    </div>
+    <div>
+      <div class="p-field">
+        <label>Bio / About</label>
+        <textarea id="p-bio" placeholder="Tell customers about your craft, experience, speciality…"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DESIGN DRAWER ══ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-tag" id="dr-tag">New Design</div>
+      <div class="drawer-title" id="dr-title">Add Design</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+    <input type="hidden" id="dr-id">
+
+    <!-- Basic Info -->
+    <div class="d-section">
+      <div class="d-section-title">Design Details</div>
+      <div class="d-row">
+        <div class="d-field">
+          <label>Design Title *</label>
+          <input type="text" id="dr-title-input" placeholder="Lakshmi Temple Haram">
+        </div>
+        <div class="d-field">
+          <label>Category *</label>
+          <select id="dr-category">
+            <option value="">— Select —</option>
+          </select>
+        </div>
+      </div>
+      <div class="d-field">
+        <label>Description *</label>
+        <textarea id="dr-desc" placeholder="Describe the design, craftsmanship, occasions it suits, any special features…" style="min-height:110px;"></textarea>
+      </div>
+      <div class="d-row">
+        <div class="d-field">
+          <label>Weight Estimate</label>
+          <input type="text" id="dr-weight" placeholder="e.g. 32–38g approx">
+        </div>
+        <div class="d-field">
+          <label>Lead Time</label>
+          <input type="text" id="dr-lead" placeholder="e.g. 5–7 weeks">
+        </div>
+      </div>
+      <div class="d-row">
+        <div class="d-field">
+          <label>Starting Price (USD)</label>
+          <input type="number" id="dr-price" placeholder="2800" min="0">
+        </div>
+        <div class="d-field">
+          <label>CAD Revision Fee / round</label>
+          <input type="number" id="dr-cad" placeholder="75" min="0">
+          <div class="d-hint">Charge for each round of CAD design changes requested by customer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media -->
+    <div class="d-section">
+      <div class="d-section-title">Photos & Video</div>
+      <div class="d-field">
+        <label>Upload Photos (up to 5)</label>
+        <div class="img-upload-row" id="dr-img-row"></div>
+        <input type="file" id="dr-file-input" accept="image/*" multiple style="display:none" onchange="handleImageUpload(this)">
+        <div class="d-hint">Or paste Google Drive / direct image URLs below. <strong>Google Drive links:</strong> share publicly before pasting.</div>
+      </div>
+      <div class="d-field" id="dr-url-fields">
+        <label>Image URLs (paste links, one per line)</label>
+        <textarea id="dr-img-urls" placeholder="https://drive.google.com/file/d/…&#10;https://…" style="min-height:70px;font-size:.75rem;"></textarea>
+      </div>
+      <div class="d-field">
+        <label>YouTube Video URL (optional)</label>
+        <input type="url" id="dr-video" placeholder="https://www.youtube.com/watch?v=…">
+      </div>
+    </div>
+
+    <!-- Customization Options -->
+    <div class="d-section">
+      <div class="d-section-title">Customization Options Offered</div>
+      <div class="d-field">
+        <label>Metals Available</label>
+        <div class="check-grid" id="dr-metals"></div>
+      </div>
+      <div class="d-field">
+        <label>Finishes Available</label>
+        <div class="check-grid" id="dr-finishes"></div>
+      </div>
+      <div class="d-field">
+        <label>Stone Options</label>
+        <div class="check-grid" id="dr-stones"></div>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn-gold" id="dr-save-btn" onclick="saveDesign()">Save Design →</button>
+    <button class="btn-ghost" onclick="closeDrawer()">Cancel</button>
+    <div class="d-err" id="dr-err"></div>
+  </div>
+</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-ov" id="del-modal">
+  <div class="modal-box">
+    <button class="close" onclick="closeDelModal()">✕</button>
+    <div style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:6px;">Confirm Delete</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold-pale);margin-bottom:12px;" id="del-design-name"></div>
+    <div style="font-size:.82rem;color:rgba(220,80,80,.65);background:rgba(220,80,80,.06);border:1px solid rgba(220,80,80,.15);padding:12px;margin-bottom:20px;font-style:italic;font-family:'Cormorant Garamond',serif;">
+      This design will be permanently removed from the catalog.
+    </div>
+    <button class="btn-danger" style="width:100%;padding:11px;" onclick="confirmDelete()">Delete Design →</button>
+    <button class="btn-ghost" style="width:100%;margin-top:8px;" onclick="closeDelModal()">Cancel</button>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="store.js"></script>
+<script>
+/* ── AUTH ── */
+const ME = AUTH.requireAuth(['artisan_ramouji','artisan_kira','site_admin']);
+const SID = ME ? (ME.role === 'site_admin' ? 'ramouji' : ME.username) : null;
+if (ME) {
+  const init = ME.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('h-avatar').textContent = init;
+  document.getElementById('h-name').textContent   = ME.name;
+}
+
+/* ── TABS ── */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'catalog')      renderCatalog();
+  if (id === 'availability') renderAvailGrid();
+  if (id === 'inquiries')    renderInquiries();
+  if (id === 'profile')      loadProfile();
+}
+
+/* ══════════════════════════════════
+   CATALOG TAB
+══════════════════════════════════ */
+function renderCatalog() {
+  const designs = STORE.getDesignsBySupplier(SID);
+  const grid    = document.getElementById('designs-grid');
+  if (!designs.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><p>No designs yet. Click "+ Add Design" to create your first piece.</p></div>`;
+    return;
+  }
+  grid.innerHTML = designs.map(d => {
+    const img = d.images && d.images.length
+      ? `<img src="${esc(STORE.resolveImgSrc(d.images[0]))}" onerror="this.style.display='none';">`
+      : `<span class="card-img-ph">💍</span>`;
+    const metals  = (d.metals||[]).map(m => `<span class="chip" style="color:${STORE.METALS[m]?.color||'#A89880'};border-color:${STORE.METALS[m]?.color||'#A89880'}40">${STORE.METALS[m]?.short||m}</span>`).join('');
+    const stones  = (d.stones||[]).slice(0,2).map(s => `<span class="chip" style="color:rgba(184,200,216,.7);border-color:rgba(184,200,216,.2)">${STORE.STONES[s]||s}</span>`).join('');
+    return `
+    <div class="design-card" id="dc-${d.id}">
+      <div class="card-img-wrap">
+        ${img}
+        <div class="card-status-dot" style="background:${d.active?'#7FB069':'rgba(220,80,80,.5)'}"></div>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${esc(d.category)}</div>
+        <div class="card-title">${esc(d.title)}</div>
+        <div class="card-meta">${d.weight ? '⚖ '+esc(d.weight) : ''} ${d.leadTime ? '· ⏱ '+esc(d.leadTime) : ''}${d.basePrice ? ' · From $'+d.basePrice.toLocaleString() : ''}</div>
+        <div class="card-chips">${metals}${stones}</div>
+        <div class="card-actions">
+          <button class="act-btn act-edit" onclick="openDrawer('${d.id}')">Edit</button>
+          <button class="act-btn act-toggle ${d.active?'':'off'}" onclick="toggleActive('${d.id}')">${d.active?'Active':'Inactive'}</button>
+          <button class="act-btn act-del" onclick="openDelModal('${d.id}','${esc(d.title)}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleActive(id) {
+  const d = STORE.getDesignById(id);
+  if (!d) return;
+  STORE.updateDesign(id, { active:!d.active }, SID);
+  renderCatalog();
+}
+
+/* ══════════════════════════════════
+   DRAWER (Add / Edit Design)
+══════════════════════════════════ */
+function populateDrawerOptions() {
+  // Categories
+  const catSel = document.getElementById('dr-category');
+  if (catSel.options.length <= 1)
+    STORE.CATEGORIES.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); });
+
+  // Metals checkboxes
+  const mWrap = document.getElementById('dr-metals');
+  if (!mWrap.children.length)
+    Object.entries(STORE.METALS).forEach(([k,v]) => {
+      mWrap.insertAdjacentHTML('beforeend',
+        `<label class="check-item"><input type="checkbox" name="metal" value="${k}"><span class="check-label" style="--c:${v.color}">${v.short}</span></label>`);
+    });
+
+  // Finishes
+  const fWrap = document.getElementById('dr-finishes');
+  if (!fWrap.children.length)
+    Object.entries(STORE.FINISHES).forEach(([k,v]) => {
+      fWrap.insertAdjacentHTML('beforeend',
+        `<label class="check-item"><input type="checkbox" name="finish" value="${k}"><span class="check-label">${v}</span></label>`);
+    });
+
+  // Stones
+  const sWrap = document.getElementById('dr-stones');
+  if (!sWrap.children.length)
+    Object.entries(STORE.STONES).forEach(([k,v]) => {
+      sWrap.insertAdjacentHTML('beforeend',
+        `<label class="check-item"><input type="checkbox" name="stone" value="${k}"><span class="check-label">${v}</span></label>`);
+    });
+}
+
+function openDrawer(id) {
+  populateDrawerOptions();
+  resetDrawerForm();
+  if (id) {
+    const d = STORE.getDesignById(id);
+    if (!d) return;
+    document.getElementById('dr-tag').textContent          = 'Edit Design';
+    document.getElementById('dr-title').textContent        = d.title;
+    document.getElementById('dr-id').value                 = d.id;
+    document.getElementById('dr-title-input').value        = d.title;
+    document.getElementById('dr-category').value           = d.category;
+    document.getElementById('dr-desc').value               = d.description;
+    document.getElementById('dr-weight').value             = d.weight || '';
+    document.getElementById('dr-lead').value               = d.leadTime || '';
+    document.getElementById('dr-price').value              = d.basePrice || '';
+    document.getElementById('dr-cad').value                = d.cadFee || '';
+    document.getElementById('dr-video').value              = d.videoUrl || '';
+    // URL images
+    const urlImgs = (d.images||[]).filter(i=>i.type==='url'||i.type==='gdrive').map(i=>i.src);
+    document.getElementById('dr-img-urls').value           = urlImgs.join('\n');
+    // Render uploaded image slots
+    renderImgSlots(d.images || []);
+    // Check options
+    (d.metals  ||[]).forEach(k => { const el=document.querySelector(`input[name=metal][value="${k}"]`); if(el) el.checked=true; });
+    (d.finishes||[]).forEach(k => { const el=document.querySelector(`input[name=finish][value="${k}"]`); if(el) el.checked=true; });
+    (d.stones  ||[]).forEach(k => { const el=document.querySelector(`input[name=stone][value="${k}"]`); if(el) el.checked=true; });
+  } else {
+    document.getElementById('dr-tag').textContent   = 'New Design';
+    document.getElementById('dr-title').textContent = 'Add Design';
+    renderImgSlots([]);
+  }
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('dr-title-input').focus(), 350);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function resetDrawerForm() {
+  ['dr-id','dr-title-input','dr-desc','dr-weight','dr-lead','dr-price','dr-cad','dr-video','dr-img-urls'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('dr-category').value = '';
+  document.querySelectorAll('#drawer input[type=checkbox]').forEach(c => c.checked = false);
+  document.getElementById('dr-err').textContent = '';
+  _idbUploads = [];
+}
+
+let _idbUploads = []; // {key, src:objectURL} for new uploads in this session
+
+function renderImgSlots(images) {
+  const row = document.getElementById('dr-img-row');
+  const idbImgs = images.filter(i => i.type === 'idb');
+  row.innerHTML = '';
+  idbImgs.forEach(img => {
+    row.insertAdjacentHTML('beforeend', `
+      <div class="img-slot" data-idb="${img.src}">
+        <img src="" data-idb-key="${img.src}" alt="">
+        <button class="img-remove" onclick="removeImgSlot(this,'${img.src}')">✕</button>
+      </div>`);
+    STORE.idb.getURL(img.src).then(url => {
+      const el = row.querySelector(`img[data-idb-key="${img.src}"]`);
+      if (el && url) el.src = url;
+    });
+  });
+  row.insertAdjacentHTML('beforeend', `<button class="img-add-btn" onclick="document.getElementById('dr-file-input').click()">+</button>`);
+}
+
+async function handleImageUpload(input) {
+  const files = Array.from(input.files).slice(0, 5);
+  for (const file of files) {
+    const key = await STORE.idb.compressAndSave(file);
+    const url = await STORE.idb.getURL(key);
+    _idbUploads.push({ key, url });
+    const row = document.getElementById('dr-img-row');
+    row.querySelector('.img-add-btn').insertAdjacentHTML('beforebegin', `
+      <div class="img-slot" data-idb="${key}">
+        <img src="${url}" alt="">
+        <button class="img-remove" onclick="removeImgSlot(this,'${key}')">✕</button>
+      </div>`);
+  }
+  input.value = '';
+}
+
+function removeImgSlot(btn, key) {
+  _idbUploads = _idbUploads.filter(u => u.key !== key);
+  STORE.idb.remove(key);
+  btn.closest('.img-slot').remove();
+}
+
+async function saveDesign() {
+  const err   = document.getElementById('dr-err');
+  const btn   = document.getElementById('dr-save-btn');
+  err.textContent = '';
+  const title    = document.getElementById('dr-title-input').value.trim();
+  const category = document.getElementById('dr-category').value;
+  const desc     = document.getElementById('dr-desc').value.trim();
+  if (!title || !category || !desc) { err.textContent = 'Title, category, and description are required.'; return; }
+
+  const metals  = [...document.querySelectorAll('input[name=metal]:checked')].map(c=>c.value);
+  const finishes= [...document.querySelectorAll('input[name=finish]:checked')].map(c=>c.value);
+  const stones  = [...document.querySelectorAll('input[name=stone]:checked')].map(c=>c.value);
+
+  // Build image list
+  const urlLines = document.getElementById('dr-img-urls').value.split('\n').map(u=>u.trim()).filter(Boolean);
+  const urlImages = urlLines.map(u => ({ type: u.includes('drive.google.com') ? 'gdrive' : 'url', src:u }));
+  const idbImages = _idbUploads.map(u => ({ type:'idb', src:u.key }));
+  const images    = [...idbImages, ...urlImages];
+
+  const data = {
+    title, category, description:desc,
+    weight:   document.getElementById('dr-weight').value.trim(),
+    leadTime: document.getElementById('dr-lead').value.trim(),
+    basePrice: parseInt(document.getElementById('dr-price').value) || 0,
+    cadFee:    parseInt(document.getElementById('dr-cad').value)   || 0,
+    videoUrl:  document.getElementById('dr-video').value.trim(),
+    images, metals, finishes, stones,
+  };
+
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  const editId = document.getElementById('dr-id').value;
+  if (editId) {
+    STORE.updateDesign(editId, data, SID);
+  } else {
+    STORE.addDesign(data, SID);
+  }
+  btn.textContent = 'Save Design →'; btn.disabled = false;
+  closeDrawer();
+  renderCatalog();
+  _idbUploads = [];
+}
+
+let _delId = null;
+function openDelModal(id, name) { _delId=id; document.getElementById('del-design-name').textContent=name; document.getElementById('del-modal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDelModal()        { document.getElementById('del-modal').classList.remove('open'); document.body.style.overflow=''; _delId=null; }
+function confirmDelete()        { if(_delId){ STORE.deleteDesign(_delId,SID); renderCatalog(); } closeDelModal(); }
+
+/* ══════════════════════════════════
+   AVAILABILITY TAB
+══════════════════════════════════ */
+let _avail = null;
+
+function renderAvailGrid() {
+  _avail = STORE.getAvailability(SID);
+  // Accepting toggle
+  const track = document.getElementById('accepting-track');
+  const label = document.getElementById('accepting-label');
+  const sub   = document.getElementById('accepting-sub');
+  track.className = 'toggle-track' + (_avail.accepting !== false ? ' on' : '');
+  label.textContent = _avail.accepting !== false ? 'Accepting Bookings' : 'Paused — Not Accepting Bookings';
+  sub.textContent   = _avail.accepting !== false ? 'Customers can request consultation slots' : 'Customers see you as unavailable';
+
+  // Build grid
+  const table = document.getElementById('avail-table');
+  let html = '<thead><tr><th>Time</th>';
+  STORE.DAYS.forEach(d => html += `<th>${d}</th>`);
+  html += '</tr></thead><tbody>';
+  STORE.TIME_SLOTS.forEach(t => {
+    html += `<tr><td class="time-label">${t}</td>`;
+    STORE.DAYS.forEach(d => {
+      const key = `${d}-${t}`;
+      const on  = _avail.slots && _avail.slots[key];
+      html += `<td><button class="slot-btn ${on?'on':''}" onclick="toggleSlot('${key}',this)">${on?'✓':'—'}</button></td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody>';
+  table.innerHTML = html;
+
+  renderBlockedDates();
+}
+
+function toggleSlot(key, btn) {
+  if (!_avail.slots) _avail.slots = {};
+  _avail.slots[key] = !_avail.slots[key];
+  btn.classList.toggle('on', !!_avail.slots[key]);
+  btn.textContent = _avail.slots[key] ? '✓' : '—';
+}
+
+function toggleAccepting() {
+  if (!_avail) _avail = STORE.getAvailability(SID);
+  _avail.accepting = !(_avail.accepting !== false);
+  renderAvailGrid();
+}
+
+function quickSet(mode) {
+  if (!_avail) _avail = STORE.getAvailability(SID);
+  if (!_avail.slots) _avail.slots = {};
+  if (mode === 'clear') { _avail.slots = {}; }
+  else if (mode === 'weekdays') {
+    _avail.slots = {};
+    ['Mon','Tue','Wed','Thu','Fri'].forEach(d =>
+      ['10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM'].forEach(t => { _avail.slots[`${d}-${t}`]=true; })
+    );
+  } else if (mode === 'weekend') {
+    ['Sat','Sun'].forEach(d =>
+      ['10:00 AM','11:00 AM','12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM'].forEach(t => { _avail.slots[`${d}-${t}`]=true; })
+    );
+  }
+  renderAvailGrid();
+}
+
+function addBlockDate() {
+  const input = document.getElementById('block-date-input');
+  const val   = input.value;
+  if (!val) return;
+  if (!_avail.blocked) _avail.blocked = [];
+  if (!_avail.blocked.includes(val)) { _avail.blocked.push(val); _avail.blocked.sort(); }
+  input.value = '';
+  renderBlockedDates();
+}
+
+function removeBlockDate(date) {
+  _avail.blocked = (_avail.blocked||[]).filter(d => d !== date);
+  renderBlockedDates();
+}
+
+function renderBlockedDates() {
+  const list = document.getElementById('blocked-list');
+  list.innerHTML = (_avail.blocked||[]).map(d =>
+    `<div class="blocked-chip">${d} <button onclick="removeBlockDate('${d}')">✕</button></div>`
+  ).join('') || '<span style="font-size:.72rem;color:rgba(168,152,128,.3);font-style:italic;">No blocked dates</span>';
+}
+
+function saveAvailability() {
+  if (!_avail) return;
+  STORE.saveAvailability(SID, _avail);
+  const btn = document.querySelector('#tab-availability .btn-gold');
+  btn.textContent = '✓ Saved'; setTimeout(() => { btn.textContent = 'Save Availability'; }, 2000);
+}
+
+/* ══════════════════════════════════
+   INQUIRIES TAB
+══════════════════════════════════ */
+function renderInquiries() {
+  const inqs = STORE.getInquiries(SID);
+  const newCount = inqs.filter(i => i.status === 'pending').length;
+  const badge = document.getElementById('inq-badge');
+  badge.textContent = newCount; badge.style.display = newCount ? 'inline' : 'none';
+
+  const list = document.getElementById('inquiry-list');
+  if (!inqs.length) {
+    list.innerHTML = `<div class="empty-state"><p>No inquiries yet. Share your catalog link with customers!</p></div>`;
+    return;
+  }
+  list.innerHTML = inqs.map(inq => {
+    const stClass = { pending:'st-pending', confirmed:'st-confirmed', closed:'st-closed', quoted:'st-quoted' }[inq.status] || 'st-pending';
+    const sels = Object.entries(inq.selections || {}).map(([k,v]) => `<span class="sel-tag">${esc(k)}: ${esc(v)}</span>`).join('');
+    const date  = new Date(inq.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return `
+    <div class="inq-card">
+      <div class="inq-head">
+        <div>
+          <div class="inq-ref">${esc(inq.id)} · ${date}</div>
+          <div class="inq-design">${esc(inq.designTitle||'General Inquiry')}</div>
+        </div>
+        <span class="status-badge ${stClass}">${inq.status}</span>
+      </div>
+      <div class="inq-customer">
+        <strong>${esc(inq.customerName||'—')}</strong>
+        ${inq.customerPhone ? ' · 📱 '+esc(inq.customerPhone) : ''}
+        ${inq.customerEmail ? ' · ✉ '+esc(inq.customerEmail) : ''}
+        ${inq.budget ? ' · 💰 '+esc(inq.budget) : ''}
+      </div>
+      ${sels ? `<div class="inq-selections">${sels}</div>` : ''}
+      ${inq.notes ? `<div class="inq-notes">"${esc(inq.notes)}"</div>` : ''}
+      ${inq.requestedDate ? `<div style="font-size:.75rem;color:rgba(200,151,63,.55);margin-bottom:8px;">📅 Requested: ${esc(inq.requestedDate)} at ${esc(inq.requestedTime||'')}</div>` : ''}
+      <div class="inq-actions">
+        ${inq.waMessage ? `<a class="btn-wa" href="${STORE.waUrl(STORE.getProfile(SID).whatsapp, inq.waMessage)}" target="_blank">💬 Reply on WhatsApp</a>` : ''}
+        <select class="status-select" onchange="updateInqStatus('${inq.id}',this.value)">
+          <option value="pending"  ${inq.status==='pending'  ?'selected':''}>Pending</option>
+          <option value="quoted"   ${inq.status==='quoted'   ?'selected':''}>Quoted</option>
+          <option value="confirmed"${inq.status==='confirmed'?'selected':''}>Confirmed</option>
+          <option value="closed"   ${inq.status==='closed'   ?'selected':''}>Closed</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateInqStatus(id, status) {
+  STORE.updateInquiry(id, { status }, SID);
+  renderInquiries();
+}
+
+/* ══════════════════════════════════
+   PROFILE TAB
+══════════════════════════════════ */
+function loadProfile() {
+  const p = STORE.getProfile(SID);
+  document.getElementById('p-name').value    = p.name || '';
+  document.getElementById('p-tagline').value = p.tagline || '';
+  document.getElementById('p-wa').value      = p.whatsapp || '';
+  document.getElementById('p-bio').value     = p.bio || '';
+}
+
+function saveProfile() {
+  STORE.saveProfile(SID, {
+    name:     document.getElementById('p-name').value.trim(),
+    tagline:  document.getElementById('p-tagline').value.trim(),
+    whatsapp: document.getElementById('p-wa').value.trim(),
+    bio:      document.getElementById('p-bio').value.trim(),
+  });
+  const btn = document.querySelector('#tab-profile .btn-gold');
+  btn.textContent = '✓ Saved'; setTimeout(() => { btn.textContent = 'Save Profile'; }, 2000);
+}
+
+/* ── UTILS ── */
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Inquiry badge on load
+(function() {
+  const inqs = STORE.getInquiries(SID);
+  const n = inqs.filter(i=>i.status==='pending').length;
+  const badge = document.getElementById('inq-badge');
+  badge.textContent = n; badge.style.display = n ? 'inline' : 'none';
+})();
+
+/* ── INIT ── */
+renderCatalog();
+</script>
+</body>
+</html>
