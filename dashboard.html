@@ -168,9 +168,39 @@ td{padding:12px 14px;vertical-align:middle;}
 .price-usd{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--gold-pale);}
 .price-inr{font-size:.72rem;color:rgba(168,152,128,.55);}
 
+/* ── CATALOG ── */
+.pub-badge-live{color:#7FB069;border-color:rgba(127,176,105,.3);background:rgba(127,176,105,.06);}
+.pub-badge-draft{color:rgba(168,152,128,.6);border-color:rgba(168,152,128,.2);background:transparent;}
+.design-thumb{width:42px;height:42px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;background:var(--surface3);}
+.design-thumb-ph{width:42px;height:42px;border:1px solid var(--border);background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.cat-modal{max-width:860px;}
+.cat-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.li-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
+.li-row input{flex:1;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.15);padding:8px 11px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.85rem;outline:none;}
+.li-row input:focus{border-color:rgba(200,151,63,.45);}
+.li-rm{background:none;border:none;color:rgba(220,80,80,.5);cursor:pointer;font-size:.9rem;padding:4px 7px;transition:color .2s;}
+.li-rm:hover{color:rgba(220,80,80,.9);}
+.cb-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.cb-item{display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid rgba(200,151,63,.15);cursor:pointer;font-size:.75rem;color:var(--mist);transition:all .2s;user-select:none;}
+.cb-item:hover{border-color:rgba(200,151,63,.4);color:var(--gold-pale);}
+.cb-item input[type=checkbox]{accent-color:var(--gold);cursor:pointer;}
+.pub-toggle-row{display:flex;align-items:center;gap:16px;padding:14px 16px;border:1px solid rgba(200,151,63,.15);background:rgba(200,151,63,.04);margin-top:6px;}
+.pub-toggle-label{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,151,63,.6);}
+.pub-status{font-size:.82rem;font-family:'Cormorant Garamond',serif;font-style:italic;}
+.toggle-sw{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle-sw input{opacity:0;width:0;height:0;}
+.toggle-sw .slider{position:absolute;inset:0;background:rgba(168,152,128,.2);border:1px solid rgba(168,152,128,.3);cursor:pointer;transition:.3s;}
+.toggle-sw .slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:rgba(168,152,128,.6);transition:.3s;}
+.toggle-sw input:checked + .slider{background:rgba(127,176,105,.18);border-color:rgba(127,176,105,.4);}
+.toggle-sw input:checked + .slider::before{background:var(--green);transform:translateX(20px);}
+.img-url-row{display:flex;gap:6px;align-items:center;margin-bottom:6px;}
+.img-url-row input{flex:1;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.15);padding:8px 11px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.82rem;outline:none;}
+.img-url-row input:focus{border-color:rgba(200,151,63,.45);}
+
 @media(max-width:900px){
   .sidebar{display:none;}
   .summary-row{grid-template-columns:repeat(3,1fr);}
+  .cat-form-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -198,7 +228,7 @@ td{padding:12px 14px;vertical-align:middle;}
       <div class="h-avatar" id="h-avatar">?</div>
       <span id="h-name">–</span>
     </div>
-    <a href="supplier.html" class="h-btn">Catalog ↗</a>
+    <a class="h-btn" onclick="showPanel('catalog',document.querySelector('[data-sid=catalog]'))" style="cursor:pointer">My Designs</a>
     <button class="h-btn" onclick="AUTH.logout()">Sign Out</button>
   </div>
 </header>
@@ -258,6 +288,12 @@ td{padding:12px 14px;vertical-align:middle;}
     </a>
     <a class="sb-item" onclick="showPanel('shipping',this)">
       <span class="sb-icon">◇</span> Shipping
+    </a>
+
+    <div class="sb-section">Catalog</div>
+    <a class="sb-item" data-sid="catalog" onclick="showPanel('catalog',this)">
+      <span class="sb-icon">◈</span> My Designs
+      <span class="sb-badge gold" id="sb-cat-badge" style="display:none">0</span>
     </a>
 
     <div class="sb-section" id="sb-admin-section" style="display:none">Admin</div>
@@ -377,6 +413,25 @@ td{padding:12px 14px;vertical-align:middle;}
         <table>
           <thead><tr><th>Order</th><th>Customer</th><th>Address</th><th>Instructions</th><th>Tracking</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="shipping-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ CATALOG ══ -->
+    <div class="panel" id="panel-catalog">
+      <div class="page-head">
+        <div class="page-tag">Product Catalog</div>
+        <div class="page-title" id="cat-title">My Designs</div>
+      </div>
+      <div class="summary-row" id="cat-stats" style="grid-template-columns:repeat(3,1fr);max-width:560px;margin-bottom:24px;"></div>
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <span class="tbl-title">All Designs</span>
+          <button class="h-btn" onclick="openDesignForm()">+ Add New Design</button>
+        </div>
+        <table>
+          <thead><tr><th></th><th>Design</th><th>Category</th><th>Metals / Stones</th><th>Base Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="catalog-body"></tbody>
         </table>
       </div>
     </div>
@@ -574,6 +629,100 @@ td{padding:12px 14px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- Design Add/Edit Modal -->
+<div class="ov" id="ov-design">
+  <div class="modal cat-modal">
+    <button class="modal-close" onclick="closeOv('ov-design')">✕</button>
+    <div class="modal-tag" id="des-modal-tag">New Design</div>
+    <div class="modal-title" id="des-modal-title">Add Design</div>
+    <input type="hidden" id="des-edit-id">
+
+    <div class="cat-form-grid">
+      <!-- LEFT COLUMN -->
+      <div>
+        <div class="m-field">
+          <label>Title</label>
+          <input id="des-title" type="text" placeholder="e.g. Lakshmi Temple Haram">
+        </div>
+        <div class="m-field">
+          <label>Category</label>
+          <select id="des-cat"></select>
+        </div>
+        <div class="m-field">
+          <label>Description</label>
+          <textarea id="des-desc" style="min-height:100px;" placeholder="Describe the design, craftsmanship, occasion, customisation notes…"></textarea>
+        </div>
+        <div class="m-row">
+          <div class="m-field"><label>Weight (approx)</label><input id="des-weight" type="text" placeholder="32–38g approx"></div>
+          <div class="m-field"><label>Lead Time</label><input id="des-lead" type="text" placeholder="5–7 weeks"></div>
+        </div>
+        <div class="m-row">
+          <div class="m-field"><label>Base Price (USD)</label><input id="des-price" type="number" placeholder="2800"></div>
+          <div class="m-field"><label>Making Charges (USD)</label><input id="des-making" type="number" placeholder="300"></div>
+        </div>
+        <div class="m-field">
+          <label>CAD Revision Fee (USD per revision)</label>
+          <input id="des-cad" type="number" placeholder="75">
+        </div>
+        <!-- Custom Line Items -->
+        <div class="m-field">
+          <label>Additional Line Items</label>
+          <div id="des-li-rows"></div>
+          <button type="button" onclick="addDesignLineItem()" class="m-btn-ghost" style="width:auto;padding:7px 16px;margin-top:4px;font-size:.52rem;">+ Add Line Item</button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div>
+        <div class="m-field">
+          <label>Metals Available</label>
+          <div class="cb-group" id="des-metals"></div>
+        </div>
+        <div class="m-field">
+          <label>Finishes Available</label>
+          <div class="cb-group" id="des-finishes"></div>
+        </div>
+        <div class="m-field">
+          <label>Stone Options</label>
+          <div class="cb-group" id="des-stones"></div>
+        </div>
+        <div class="m-field">
+          <label>Photo URLs <span style="font-size:.62rem;color:rgba(168,152,128,.4);font-family:'Raleway',sans-serif;text-transform:none;letter-spacing:0;">(direct URL or Google Drive share link)</span></label>
+          <div class="img-url-row"><input id="des-img1" type="url" placeholder="https://… or Google Drive share link"></div>
+          <div class="img-url-row"><input id="des-img2" type="url" placeholder="Second image (optional)"></div>
+          <div class="img-url-row"><input id="des-img3" type="url" placeholder="Third image (optional)"></div>
+        </div>
+        <div class="m-field">
+          <label>Upload Photo</label>
+          <input id="des-file" type="file" accept="image/*" style="color:var(--mist);font-size:.8rem;width:100%;" onchange="previewUpload(this)">
+          <div id="des-file-preview" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+          <div class="m-hint">Compressed to 900px wide &amp; stored locally</div>
+        </div>
+        <div class="m-field">
+          <label>YouTube / Video URL</label>
+          <input id="des-video" type="url" placeholder="https://youtube.com/watch?v=… or youtu.be/…">
+        </div>
+      </div>
+    </div>
+
+    <!-- Publish Toggle -->
+    <div class="pub-toggle-row">
+      <div>
+        <div class="pub-toggle-label">Visibility</div>
+        <div class="pub-status" id="des-pub-status">Draft — not visible on public catalog</div>
+      </div>
+      <label class="toggle-sw" style="margin-left:auto;">
+        <input type="checkbox" id="des-published" onchange="updatePubStatus()">
+        <span class="slider"></span>
+      </label>
+      <span style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.18em;color:rgba(168,152,128,.5);">Publish Live</span>
+    </div>
+
+    <button class="m-btn" onclick="saveDesign()" style="margin-top:16px;">Save Design →</button>
+    <div class="m-err" id="des-err"></div>
+  </div>
+</div>
+
 <script src="auth.js"></script>
 <script src="store.js"></script>
 <script src="orders.js"></script>
@@ -636,7 +785,8 @@ function showPanel(id, el) {
   document.getElementById('panel-'+id).classList.add('active');
   if(el) el.classList.add('active');
   const renders = { overview:renderOverview, orders:renderOrders, invoices:renderInvoices,
-                    payments:renderPayments, revisions:renderRevisions, shipping:renderShipping, approvals:renderApprovals };
+                    payments:renderPayments, revisions:renderRevisions, shipping:renderShipping,
+                    approvals:renderApprovals, catalog:renderCatalog };
   if(renders[id]) renders[id]();
 }
 
@@ -1193,6 +1343,232 @@ function saveManualPrices() {
   });
   renderPriceBanner(p);
   closeOv('ov-prices');
+}
+
+/* ════════════════════════════════════════
+   CATALOG
+════════════════════════════════════════ */
+function getCatalogSid() {
+  // Suppliers see only their own; admin sees selected supplier or all
+  if (!IS_ADMIN) return ME.username;
+  return VIEW_SID; // 'all', 'ramouji', or 'kira'
+}
+
+function renderCatalog() {
+  const sid = getCatalogSid();
+  const designs = sid === 'all' ? STORE.getDesigns() : STORE.getDesignsBySupplier(sid);
+  const live  = designs.filter(d => d.published).length;
+  const draft = designs.filter(d => !d.published).length;
+
+  document.getElementById('cat-title').textContent =
+    sid === 'all' ? 'All Supplier Designs' : (STORE.getProfile(sid).name + ' — Designs');
+
+  document.getElementById('cat-stats').innerHTML = [
+    { label:'Total', val:designs.length, sub:'in catalog', color:'var(--gold)' },
+    { label:'Live',  val:live,           sub:'public catalog', color:'var(--green)' },
+    { label:'Draft', val:draft,          sub:'not yet published', color:'rgba(168,152,128,.6)' },
+  ].map(c=>`<div class="sum-card">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${c.color}"></div>
+    <div class="sum-label">${c.label}</div>
+    <div class="sum-val" style="color:${c.color}">${c.val}</div>
+    <div class="sum-sub">${c.sub}</div>
+  </div>`).join('');
+
+  const setB = (id,n) => { const el=document.getElementById(id); if(el){el.textContent=n;el.style.display=n?'inline':'none';} };
+  setB('sb-cat-badge', draft);
+
+  document.getElementById('catalog-body').innerHTML = designs.length ? designs.map(d => {
+    const thumb = (d.images && d.images[0])
+      ? `<img class="design-thumb" src="${esc(STORE.resolveImgSrc(d.images[0]))}" onerror="this.style.display='none'">`
+      : `<div class="design-thumb-ph">◈</div>`;
+    const metals = (d.metals||[]).map(m => STORE.METALS[m]?.short || m).join(', ');
+    const stones = (d.stones||[]).filter(s=>s!=='none').map(s=>(STORE.STONES[s]||s).split(' ')[0]).join(', ');
+    const pubBadge = d.published
+      ? `<span class="badge pub-badge-live">Live</span>`
+      : `<span class="badge pub-badge-draft">Draft</span>`;
+    const canEdit = IS_ADMIN || d.supplierId === ME.username;
+    return `<tr>
+      <td style="width:50px;">${thumb}</td>
+      <td>
+        <div class="td-name">${esc(d.title)}</div>
+        ${IS_ADMIN && sid==='all' ? '<div style="margin-top:3px;">'+supplierTag(d.supplierId)+'</div>' : ''}
+        <div class="td-sub">${esc((d.description||'').slice(0,60))}${(d.description||'').length>60?'…':''}</div>
+      </td>
+      <td><div class="td-sub">${esc(d.category||'—')}</div></td>
+      <td>
+        <div class="td-sub">${metals||'—'}</div>
+        ${stones?`<div class="td-sub" style="margin-top:2px;">${stones}</div>`:''}
+      </td>
+      <td>
+        <div class="td-price" style="color:var(--gold);">$${(d.basePrice||0).toLocaleString()}</div>
+        ${d.makingCharges?`<div class="td-sub">+$${d.makingCharges} making</div>`:''}
+        ${d.cadFee?`<div class="td-sub">CAD $${d.cadFee}/rev</div>`:''}
+      </td>
+      <td>${pubBadge}</td>
+      <td><div class="td-actions">
+        ${canEdit ? `<button class="act act-g" onclick="openDesignForm('${d.id}')">Edit</button>` : ''}
+        ${canEdit ? (d.published
+          ? `<button class="act act-r" onclick="togglePublish('${d.id}','${d.supplierId}',false)">Unpublish</button>`
+          : `<button class="act act-green" onclick="togglePublish('${d.id}','${d.supplierId}',true)">Publish Live</button>`)
+          : ''}
+        ${canEdit ? `<button class="act act-r" onclick="confirmDeleteDesign('${d.id}','${d.supplierId}')">Delete</button>` : ''}
+      </div></td>
+    </tr>`;
+  }).join('') : '<tr class="empty-row"><td colspan="7">No designs yet — add your first design above</td></tr>';
+}
+
+function togglePublish(id, sid, pub) {
+  if (pub) STORE.publishDesign(id, sid); else STORE.unpublishDesign(id, sid);
+  renderCatalog();
+}
+
+function confirmDeleteDesign(id, sid) {
+  if (!confirm('Delete this design? This cannot be undone.')) return;
+  STORE.deleteDesign(id, sid);
+  renderCatalog();
+}
+
+/* ── Design Form ── */
+let _desUploadKeys = []; // IDB keys for newly uploaded files
+
+function openDesignForm(editId) {
+  _desUploadKeys = [];
+  document.getElementById('des-edit-id').value = editId || '';
+  document.getElementById('des-modal-tag').textContent  = editId ? 'Edit Design' : 'New Design';
+  document.getElementById('des-modal-title').textContent = editId ? 'Edit Design' : 'Add New Design';
+  document.getElementById('des-err').textContent = '';
+  document.getElementById('des-file-preview').innerHTML = '';
+
+  // Populate category select
+  const catSel = document.getElementById('des-cat');
+  catSel.innerHTML = STORE.CATEGORIES.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+
+  // Populate metal checkboxes
+  document.getElementById('des-metals').innerHTML = Object.entries(STORE.METALS).map(([k,v])=>
+    `<label class="cb-item"><input type="checkbox" value="${k}" name="des-metal"> ${esc(v.short)}</label>`).join('');
+  // Populate finish checkboxes
+  document.getElementById('des-finishes').innerHTML = Object.entries(STORE.FINISHES).map(([k,v])=>
+    `<label class="cb-item"><input type="checkbox" value="${k}" name="des-finish"> ${esc(v)}</label>`).join('');
+  // Populate stone checkboxes
+  document.getElementById('des-stones').innerHTML = Object.entries(STORE.STONES).map(([k,v])=>
+    `<label class="cb-item"><input type="checkbox" value="${k}" name="des-stone"> ${esc(v)}</label>`).join('');
+
+  // Clear line items
+  document.getElementById('des-li-rows').innerHTML = '';
+
+  if (editId) {
+    const d = STORE.getDesignById(editId);
+    if (!d) return;
+    document.getElementById('des-title').value   = d.title || '';
+    document.getElementById('des-desc').value    = d.description || '';
+    document.getElementById('des-weight').value  = d.weight || '';
+    document.getElementById('des-lead').value    = d.leadTime || '';
+    document.getElementById('des-price').value   = d.basePrice || '';
+    document.getElementById('des-making').value  = d.makingCharges || '';
+    document.getElementById('des-cad').value     = d.cadFee || '';
+    document.getElementById('des-video').value   = d.videoUrl || '';
+    catSel.value = d.category || STORE.CATEGORIES[0];
+    // Checkboxes
+    (d.metals||[]).forEach(v => { const el = document.querySelector(`[name=des-metal][value="${v}"]`); if(el) el.checked=true; });
+    (d.finishes||[]).forEach(v => { const el = document.querySelector(`[name=des-finish][value="${v}"]`); if(el) el.checked=true; });
+    (d.stones||[]).forEach(v => { const el = document.querySelector(`[name=des-stone][value="${v}"]`); if(el) el.checked=true; });
+    // Image URLs
+    const urlImgs = (d.images||[]).filter(i=>i.type==='url'||i.type==='gdrive');
+    document.getElementById('des-img1').value = urlImgs[0]?.src || '';
+    document.getElementById('des-img2').value = urlImgs[1]?.src || '';
+    document.getElementById('des-img3').value = urlImgs[2]?.src || '';
+    // Line items
+    (d.lineItems||[]).forEach(li => addDesignLineItem(li.label, li.amountUSD));
+    // Publish state
+    document.getElementById('des-published').checked = !!d.published;
+    updatePubStatus();
+  } else {
+    ['des-title','des-desc','des-weight','des-lead','des-price','des-making','des-cad','des-video','des-img1','des-img2','des-img3'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.value='';
+    });
+    document.getElementById('des-published').checked = false;
+    updatePubStatus();
+  }
+  openOv('ov-design');
+}
+
+function updatePubStatus() {
+  const pub = document.getElementById('des-published').checked;
+  document.getElementById('des-pub-status').textContent = pub
+    ? 'Live — visible on public catalog'
+    : 'Draft — not visible on public catalog';
+  document.getElementById('des-pub-status').style.color = pub ? 'var(--green)' : 'rgba(168,152,128,.55)';
+}
+
+function addDesignLineItem(label, amount) {
+  const row = document.createElement('div');
+  row.className = 'li-row';
+  row.innerHTML = `<input type="text" placeholder="Label (e.g. Certification fee)" value="${esc(label||'')}">
+    <input type="number" placeholder="USD" value="${amount||''}" style="max-width:100px;">
+    <button class="li-rm" onclick="this.parentElement.remove()">✕</button>`;
+  document.getElementById('des-li-rows').appendChild(row);
+}
+
+function previewUpload(input) {
+  const preview = document.getElementById('des-file-preview');
+  preview.innerHTML = `<span style="font-size:.72rem;color:rgba(168,152,128,.5);">Compressing…</span>`;
+  STORE.idb.compressAndSave(input.files[0]).then(key => {
+    _desUploadKeys.push(key);
+    preview.innerHTML = `<span style="font-size:.72rem;color:var(--green);">✓ Photo saved (${key.slice(-8)})</span>`;
+  }).catch(() => { preview.innerHTML = `<span style="font-size:.72rem;color:rgba(220,80,80,.7);">Upload failed</span>`; });
+}
+
+async function saveDesign() {
+  const title = document.getElementById('des-title').value.trim();
+  if (!title) { document.getElementById('des-err').textContent = 'Title is required.'; return; }
+
+  const metals   = [...document.querySelectorAll('[name=des-metal]:checked')].map(e=>e.value);
+  const finishes = [...document.querySelectorAll('[name=des-finish]:checked')].map(e=>e.value);
+  const stones   = [...document.querySelectorAll('[name=des-stone]:checked')].map(e=>e.value);
+
+  // Build images array
+  const images = [];
+  ['des-img1','des-img2','des-img3'].forEach(id => {
+    const v = document.getElementById(id).value.trim();
+    if (!v) return;
+    const type = v.includes('drive.google.com') || v.includes('docs.google.com') ? 'gdrive' : 'url';
+    images.push({ type, src:v });
+  });
+  _desUploadKeys.forEach(k => images.push({ type:'idb', src:k }));
+
+  // Build line items
+  const lineItems = [];
+  document.querySelectorAll('#des-li-rows .li-row').forEach(row => {
+    const inputs = row.querySelectorAll('input');
+    const label = inputs[0].value.trim();
+    const amount = parseFloat(inputs[1].value) || 0;
+    if (label) lineItems.push({ label, amountUSD:amount });
+  });
+
+  const data = {
+    title,
+    category:    document.getElementById('des-cat').value,
+    description: document.getElementById('des-desc').value.trim(),
+    weight:      document.getElementById('des-weight').value.trim(),
+    leadTime:    document.getElementById('des-lead').value.trim(),
+    basePrice:   parseFloat(document.getElementById('des-price').value) || 0,
+    makingCharges: parseFloat(document.getElementById('des-making').value) || 0,
+    cadFee:      parseFloat(document.getElementById('des-cad').value) || 0,
+    videoUrl:    document.getElementById('des-video').value.trim(),
+    metals, finishes, stones, images, lineItems,
+    published:   document.getElementById('des-published').checked,
+  };
+
+  const editId = document.getElementById('des-edit-id').value;
+  const sid = IS_ADMIN ? (VIEW_SID === 'all' ? ME.username : VIEW_SID) : ME.username;
+
+  if (editId) {
+    STORE.updateDesign(editId, data, sid);
+  } else {
+    STORE.addDesign(data, sid);
+  }
+  closeOv('ov-design');
+  renderCatalog();
 }
 
 /* ── RENDER ALL ── */

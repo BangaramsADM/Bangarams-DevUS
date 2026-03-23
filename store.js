@@ -191,14 +191,21 @@ const STORE = (() => {
     return list;
   }
 
-  function getPublicDesigns() { return (_rawDesigns() || []).filter(d => d.active); }
+  function getPublicDesigns() { return (_rawDesigns() || []).filter(d => d.published && d.active); }
   function getDesignById(id)   { return (_rawDesigns() || []).find(d => d.id === id) || null; }
   function getDesignsBySupplier(sid) { return (_rawDesigns() || []).filter(d => d.supplierId === sid); }
+
+  function publishDesign(id, sid) {
+    return updateDesign(id, { published:true }, sid);
+  }
+  function unpublishDesign(id, sid) {
+    return updateDesign(id, { published:false }, sid);
+  }
 
   function addDesign(data, sid) {
     const list = _rawDesigns() || [];
     const id   = 'DES-' + Date.now();
-    const d    = { id, supplierId:sid, ...data, active:true, featured:false,
+    const d    = { id, supplierId:sid, ...data, active:true, published:false, featured:false,
                    createdAt:new Date().toISOString(), updatedAt:new Date().toISOString() };
     list.unshift(d);
     _saveDesigns(list);
@@ -240,7 +247,7 @@ const STORE = (() => {
         metals:['gold_22k','silver'], finishes:['plain','antique'],
         stones:['none','cz','moissanite'],
         basePrice:2800, cadFee:75,
-        active:true, featured:true, createdAt:now, updatedAt:now
+        active:true, published:true, featured:true, createdAt:now, updatedAt:now
       },
       {
         id:'DES-SEED-2', supplierId:'ramouji',
@@ -251,7 +258,7 @@ const STORE = (() => {
         metals:['gold_22k','gold_18k'], finishes:['antique','plain'],
         stones:['cz','moissanite'],
         basePrice:480, cadFee:50,
-        active:true, featured:false, createdAt:now, updatedAt:now
+        active:true, published:true, featured:false, createdAt:now, updatedAt:now
       },
       {
         id:'DES-SEED-3', supplierId:'kira',
@@ -273,7 +280,7 @@ const STORE = (() => {
         metals:['gold_18k','gold_14k'], finishes:['plain','rhodium'],
         stones:['lab_diamond','natural_diamond'],
         basePrice:2800, cadFee:100,
-        active:true, featured:false, createdAt:now, updatedAt:now
+        active:true, published:true, featured:false, createdAt:now, updatedAt:now
       },
     ]);
   }
@@ -394,7 +401,7 @@ const STORE = (() => {
     METALS, FINISHES, STONES, CATEGORIES, BUDGET_RANGES, TIME_SLOTS, DAYS,
     getProfile, saveProfile,
     getDesigns, getPublicDesigns, getDesignById, getDesignsBySupplier,
-    addDesign, updateDesign, deleteDesign,
+    addDesign, updateDesign, deleteDesign, publishDesign, unpublishDesign,
     getAvailability, saveAvailability, getOpenSlots,
     getInquiries, createInquiry, updateInquiry,
     buildWAMessage, buildWAUrl, waUrl,

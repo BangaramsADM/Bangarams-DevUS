@@ -203,7 +203,8 @@ input.error-field{border-color:rgba(220,80,80,.5);}
 (function() {
   const s = AUTH.session();
   if (s && !s.mustReset) {
-    window.location.href = s.role === 'site_admin' ? 'admin.html' : 'index.html';
+    const artisan = ['artisan_ramouji','artisan_kira'].includes(s.role);
+    window.location.href = s.role === 'site_admin' ? 'admin.html' : artisan ? 'dashboard.html' : 'index.html';
   }
 })();
 
@@ -230,7 +231,8 @@ async function doLogin() {
   if (sess.mustReset) {
     showResetPanel(sess);
   } else {
-    window.location.href = sess.role === 'site_admin' ? 'admin.html' : 'index.html';
+    const artisan = ['artisan_ramouji','artisan_kira'].includes(sess.role);
+    window.location.href = sess.role === 'site_admin' ? 'admin.html' : artisan ? 'dashboard.html' : 'index.html';
   }
 }
 
@@ -278,7 +280,8 @@ async function doChangePwd() {
   if (done) {
     ok.textContent = 'Password updated! Redirecting…';
     setTimeout(() => {
-      window.location.href = sess.role === 'site_admin' ? 'admin.html' : 'index.html';
+      const artisan = ['artisan_ramouji','artisan_kira'].includes(sess.role);
+      window.location.href = sess.role === 'site_admin' ? 'admin.html' : artisan ? 'dashboard.html' : 'index.html';
     }, 1400);
   } else {
     err.textContent = 'Something went wrong. Please try again.';
