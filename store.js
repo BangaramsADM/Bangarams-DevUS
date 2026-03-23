@@ -160,8 +160,8 @@ const STORE = (() => {
      SUPPLIER PROFILES
   ════════════════════════════════════════ */
   const DEFAULTS = {
-    ramouji: { name:'Ramouji', tagline:'Master Goldsmith · Custom Gold & Silver', whatsapp:'19999999991', bio:'30+ years crafting heirloom gold and silver jewelry from Hyderabad.', active:true },
-    kira:    { name:'Kira',    tagline:'Certified Diamond Specialist',             whatsapp:'19999999992', bio:'GIA-trained diamond specialist. Lab-grown and natural, IGI/GIA certified.', active:true },
+    ramouji: { name:'Ramouji', tagline:'Master Goldsmith · Custom Gold & Silver', whatsapp:'14045550101', bio:'30+ years crafting heirloom gold and silver jewelry from Hyderabad.', active:true },
+    kira:    { name:'Kira',    tagline:'Certified Diamond Specialist',             whatsapp:'14045550102', bio:'GIA-trained diamond specialist. Lab-grown and natural, IGI/GIA certified.', active:true },
   };
 
   function getProfiles() { return JSON.parse(localStorage.getItem(K.profiles) || '{}'); }

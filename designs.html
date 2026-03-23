@@ -444,8 +444,8 @@ function selectOpt(type, val, btn) {
 function sendViaWhatsApp() {
   const d     = _activeDesign;
   const prof  = STORE.getProfile(d.supplierId);
-  if (!prof.whatsapp || prof.whatsapp.includes('9999999')) {
-    alert('WhatsApp number not yet configured. Please contact hello@bangarams.com.');
+  if (!prof.whatsapp) {
+    alert('WhatsApp number not yet configured for this supplier. Please contact hello@bangarams.com.');
     return;
   }
   const opts  = {
@@ -517,8 +517,8 @@ function bookViaWhatsApp() {
   if (!_selectedSlot) return;
   const d    = _activeDesign;
   const prof = STORE.getProfile(d.supplierId);
-  if (!prof.whatsapp || prof.whatsapp.includes('9999999')) {
-    alert('WhatsApp number not yet configured. Please contact hello@bangarams.com.');
+  if (!prof.whatsapp) {
+    alert('WhatsApp number not yet configured for this supplier. Please contact hello@bangarams.com.');
     return;
   }
   const opts = {
