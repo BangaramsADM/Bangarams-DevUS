@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangarams — Supplier Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C8973F;--gold-light:#E8C97A;--gold-pale:#F5E6C0;--gold-deep:#8A6420;
+  --silver:#A8B4BC;--ink:#1C1410;--ink-deep:#0F0A04;--mist:#A89880;
+  --surface:#141008;--surface2:#1C1610;--surface3:#231C12;--surface4:#2A2218;
+  --border:rgba(200,151,63,.12);--green:#7FB069;--red:rgba(220,80,80,.7);
+  --blue:#4A90D9;
+}
+body{background:var(--surface);color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:14px;min-height:100vh;display:flex;flex-direction:column;}
+
+/* ── HEADER ── */
+header{background:var(--surface2);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.h-left{display:flex;align-items:center;gap:14px;}
+.h-wordmark{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.1rem;font-weight:700;color:var(--gold-light);letter-spacing:.12em;text-decoration:none;}
+.h-div{width:1px;height:22px;background:var(--border);}
+.h-section{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(200,151,63,.5);}
+.h-right{display:flex;align-items:center;gap:10px;}
+.h-btn{background:transparent;border:1px solid var(--border);color:var(--mist);padding:6px 13px;font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block;}
+.h-btn:hover,.h-btn.active{border-color:var(--gold);color:var(--gold);}
+.h-avatar{width:28px;height:28px;border-radius:50%;background:rgba(200,151,63,.15);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.6rem;color:var(--gold);flex-shrink:0;}
+.supplier-sel{background:var(--surface3);border:1px solid var(--border);color:var(--gold-pale);padding:6px 12px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.14em;outline:none;cursor:pointer;}
+.supplier-sel option{background:var(--surface2);}
+
+/* ── PRICE BANNER ── */
+.price-banner{background:var(--ink-deep);border-bottom:1px solid var(--border);padding:8px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;flex-shrink:0;}
+.pb-item{display:flex;align-items:center;gap:8px;font-size:.72rem;}
+.pb-label{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(168,152,128,.5);}
+.pb-val{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gold-pale);}
+.pb-sub{font-size:.65rem;color:rgba(168,152,128,.5);}
+.pb-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.pb-dot.live{background:var(--green);animation:pulse 2s infinite;}
+.pb-dot.stale{background:rgba(220,80,80,.6);}
+.pb-dot.manual{background:var(--gold);opacity:.7;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.pb-update{margin-left:auto;font-size:.62rem;color:rgba(168,152,128,.3);white-space:nowrap;}
+.pb-edit{background:none;border:1px solid rgba(200,151,63,.2);color:rgba(200,151,63,.4);padding:3px 10px;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.pb-edit:hover{border-color:var(--gold);color:var(--gold);}
+.currency-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);}
+.cur-btn{padding:4px 12px;background:transparent;border:none;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;color:var(--mist);cursor:pointer;transition:all .2s;}
+.cur-btn.active{background:rgba(200,151,63,.15);color:var(--gold);}
+
+/* ── LAYOUT ── */
+.layout{display:flex;flex:1;min-height:0;}
+
+/* ── SIDEBAR ── */
+.sidebar{width:220px;background:var(--surface2);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;overflow-y:auto;}
+.sb-section{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(168,152,128,.3);padding:16px 20px 6px;margin-top:8px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:all .2s;font-family:'Raleway',sans-serif;font-size:.8rem;color:rgba(168,152,128,.7);border-left:2px solid transparent;text-decoration:none;}
+.sb-item:hover{color:var(--gold-pale);background:rgba(200,151,63,.04);}
+.sb-item.active{color:var(--gold);background:rgba(200,151,63,.06);border-left-color:var(--gold);}
+.sb-icon{font-size:1rem;width:18px;text-align:center;}
+.sb-badge{margin-left:auto;background:rgba(220,80,80,.7);color:#fff;border-radius:9px;padding:1px 6px;font-size:.55rem;font-family:'Cinzel',serif;min-width:16px;text-align:center;}
+.sb-badge.gold{background:rgba(200,151,63,.6);}
+
+/* ── MAIN ── */
+main{flex:1;overflow-y:auto;padding:28px 32px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── PAGE TITLE ── */
+.page-head{margin-bottom:24px;}
+.page-tag{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.page-tag::before{content:'';display:block;width:14px;height:.5px;background:var(--gold);}
+.page-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--gold-pale);}
+
+/* ── SUMMARY CARDS ── */
+.summary-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;}
+.sum-card{background:var(--surface2);border:1px solid var(--border);padding:16px 18px;position:relative;overflow:hidden;}
+.sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.sum-label{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);margin-bottom:8px;}
+.sum-val{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;line-height:1;}
+.sum-sub{font-size:.65rem;color:rgba(168,152,128,.45);margin-top:4px;}
+
+/* ── TABLE ── */
+.tbl-wrap{background:var(--surface2);border:1px solid var(--border);overflow-x:auto;margin-bottom:24px;}
+.tbl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+.tbl-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(200,151,63,.6);}
+table{width:100%;border-collapse:collapse;}
+thead th{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(200,151,63,.45);padding:11px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface3);white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(200,151,63,.05);transition:background .2s;}
+tbody tr:hover{background:rgba(200,151,63,.03);}
+tbody tr:last-child{border-bottom:none;}
+td{padding:12px 14px;vertical-align:middle;}
+.td-name{font-size:.85rem;color:var(--gold-pale);}
+.td-sub{font-size:.68rem;color:rgba(168,152,128,.55);margin-top:2px;}
+.td-price{font-family:'Cormorant Garamond',serif;font-size:1rem;}
+.td-date{font-size:.7rem;color:rgba(168,152,128,.5);white-space:nowrap;}
+.td-actions{display:flex;gap:5px;flex-wrap:wrap;}
+.act{padding:4px 10px;border:1px solid;background:transparent;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:all .22s;white-space:nowrap;}
+.act-g{border-color:rgba(200,151,63,.35);color:rgba(200,151,63,.7);}
+.act-g:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,151,63,.06);}
+.act-b{border-color:rgba(74,144,217,.35);color:rgba(74,144,217,.7);}
+.act-b:hover{border-color:var(--blue);color:var(--blue);background:rgba(74,144,217,.06);}
+.act-green{border-color:rgba(127,176,105,.35);color:rgba(127,176,105,.7);}
+.act-green:hover{border-color:var(--green);color:var(--green);background:rgba(127,176,105,.06);}
+.act-r{border-color:rgba(220,80,80,.3);color:rgba(220,80,80,.6);}
+.act-r:hover{border-color:var(--red);color:var(--red);background:rgba(220,80,80,.06);}
+.empty-row td{text-align:center;padding:36px;color:rgba(168,152,128,.35);font-style:italic;}
+
+/* ── STATUS / BADGES ── */
+.badge{display:inline-block;padding:3px 10px;font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;border:1px solid;}
+.supplier-tag{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 8px;border:1px solid;display:inline-block;}
+.tag-ramouji{color:var(--gold);border-color:rgba(200,151,63,.3);}
+.tag-kira{color:var(--silver);border-color:rgba(168,180,188,.3);}
+
+/* ── PIPELINE ── */
+.pipeline{display:flex;align-items:center;gap:0;margin-bottom:24px;flex-wrap:wrap;}
+.pipe-step{display:flex;align-items:center;}
+.pipe-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.pipe-label{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-top:1px solid;border-bottom:1px solid;}
+.pipe-line{width:24px;height:1px;background:rgba(200,151,63,.15);}
+.pipe-step:first-child .pipe-label{border-left:1px solid;}
+.pipe-step:last-child .pipe-label{border-right:1px solid;}
+
+/* ── GOLD DELTA INDICATOR ── */
+.gold-delta{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;padding:3px 8px;border-radius:2px;}
+.delta-up{background:rgba(220,80,80,.08);color:rgba(220,80,80,.8);border:1px solid rgba(220,80,80,.2);}
+.delta-dn{background:rgba(127,176,105,.08);color:rgba(127,176,105,.8);border:1px solid rgba(127,176,105,.2);}
+.delta-eq{background:rgba(168,152,128,.06);color:rgba(168,152,128,.5);border:1px solid rgba(168,152,128,.15);}
+
+/* ── MODAL ── */
+.ov{display:none;position:fixed;inset:0;z-index:300;background:rgba(10,6,2,.82);align-items:center;justify-content:center;padding:20px;}
+.ov.open{display:flex;}
+.modal{background:var(--surface2);border:1px solid rgba(200,151,63,.18);padding:36px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:rgba(168,152,128,.5);font-size:1.1rem;cursor:pointer;}
+.modal-close:hover{color:var(--gold);}
+.modal-tag{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.38em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:5px;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--gold-pale);margin-bottom:24px;}
+.m-field{margin-bottom:16px;}
+.m-field label{display:block;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:6px;}
+.m-field input,.m-field textarea,.m-field select{width:100%;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.15);padding:10px 13px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s;}
+.m-field input:focus,.m-field textarea:focus,.m-field select:focus{border-color:rgba(200,151,63,.45);}
+.m-field select option{background:var(--surface2);}
+.m-field textarea{resize:vertical;min-height:70px;}
+.m-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.m-hint{font-size:.65rem;color:rgba(168,152,128,.4);margin-top:5px;line-height:1.5;}
+.m-info-box{background:rgba(200,151,63,.06);border:1px solid rgba(200,151,63,.15);padding:14px 16px;margin-bottom:18px;font-size:.82rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;line-height:1.7;}
+.m-info-box strong{color:var(--gold-pale);font-style:normal;}
+.m-btn{width:100%;background:var(--gold);color:var(--ink);border:none;padding:13px;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:background .3s;margin-top:6px;}
+.m-btn:hover{background:var(--gold-light);}
+.m-btn-ghost{width:100%;background:transparent;color:var(--mist);border:1px solid var(--border);padding:11px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;margin-top:6px;transition:all .3s;}
+.m-btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.m-btn-approve{background:rgba(127,176,105,.15);color:rgba(127,176,105,.9);border:1px solid rgba(127,176,105,.3);}
+.m-btn-approve:hover{background:rgba(127,176,105,.25);}
+.m-btn-reject{background:rgba(220,80,80,.1);color:rgba(220,80,80,.8);border:1px solid rgba(220,80,80,.25);}
+.m-btn-reject:hover{background:rgba(220,80,80,.2);}
+.m-err{font-size:.7rem;color:rgba(220,80,80,.7);margin-top:8px;}
+
+/* ── ACTIVITY FEED ── */
+.feed{display:flex;flex-direction:column;gap:10px;}
+.feed-item{background:var(--surface2);border:1px solid var(--border);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;}
+.feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.feed-content{flex:1;}
+.feed-title{font-size:.82rem;color:var(--gold-pale);margin-bottom:2px;}
+.feed-sub{font-size:.7rem;color:rgba(168,152,128,.6);}
+.feed-time{font-size:.65rem;color:rgba(168,152,128,.35);white-space:nowrap;}
+
+/* ── INR TOGGLE DISPLAY ── */
+.dual-price{display:flex;flex-direction:column;gap:1px;}
+.price-usd{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--gold-pale);}
+.price-inr{font-size:.72rem;color:rgba(168,152,128,.55);}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .summary-row{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-left">
+    <a href="index.html" class="h-wordmark">BANGARAMS</a>
+    <div class="h-div"></div>
+    <span class="h-section">Supplier Dashboard</span>
+  </div>
+  <div class="h-right">
+    <!-- Admin-only supplier selector -->
+    <select class="supplier-sel" id="supplier-sel" style="display:none" onchange="switchSupplier(this.value)">
+      <option value="all">All Suppliers</option>
+      <option value="ramouji">Ramouji</option>
+      <option value="kira">Kira</option>
+    </select>
+    <div class="currency-toggle">
+      <button class="cur-btn active" id="cur-usd" onclick="setCurrency('usd')">USD</button>
+      <button class="cur-btn" id="cur-inr" onclick="setCurrency('inr')">INR</button>
+    </div>
+    <div class="h-btn" id="h-user" style="display:flex;align-items:center;gap:7px;">
+      <div class="h-avatar" id="h-avatar">?</div>
+      <span id="h-name">–</span>
+    </div>
+    <a href="supplier.html" class="h-btn">Catalog ↗</a>
+    <button class="h-btn" onclick="AUTH.logout()">Sign Out</button>
+  </div>
+</header>
+
+<!-- PRICE BANNER -->
+<div class="price-banner" id="price-banner">
+  <div class="pb-item">
+    <div class="pb-dot" id="price-dot"></div>
+    <div>
+      <div class="pb-label">Gold</div>
+      <div class="pb-val" id="pb-gold">–</div>
+      <div class="pb-sub" id="pb-gold-sub">–</div>
+    </div>
+  </div>
+  <div class="pb-item">
+    <div>
+      <div class="pb-label">Silver</div>
+      <div class="pb-val" id="pb-silver">–</div>
+      <div class="pb-sub" id="pb-silver-sub">–</div>
+    </div>
+  </div>
+  <div class="pb-item">
+    <div>
+      <div class="pb-label">USD → INR</div>
+      <div class="pb-val" id="pb-fx">–</div>
+    </div>
+  </div>
+  <div class="pb-update" id="pb-updated">Fetching prices…</div>
+  <button class="pb-edit" id="pb-edit-btn" onclick="openPriceModal()" style="display:none">Edit Prices</button>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-section">Overview</div>
+    <a class="sb-item active" onclick="showPanel('overview',this)">
+      <span class="sb-icon">◈</span> Dashboard
+    </a>
+
+    <div class="sb-section">Operations</div>
+    <a class="sb-item" onclick="showPanel('orders',this)">
+      <span class="sb-icon">◇</span> Orders
+      <span class="sb-badge gold" id="sb-orders-badge" style="display:none">0</span>
+    </a>
+    <a class="sb-item" onclick="showPanel('invoices',this)">
+      <span class="sb-icon">◈</span> Invoices
+      <span class="sb-badge" id="sb-inv-badge" style="display:none">0</span>
+    </a>
+    <a class="sb-item" onclick="showPanel('payments',this)">
+      <span class="sb-icon">◇</span> Customer Payments
+    </a>
+    <a class="sb-item" onclick="showPanel('revisions',this)">
+      <span class="sb-icon">◈</span> Price Revisions
+      <span class="sb-badge" id="sb-rev-badge" style="display:none">0</span>
+    </a>
+    <a class="sb-item" onclick="showPanel('shipping',this)">
+      <span class="sb-icon">◇</span> Shipping
+    </a>
+
+    <div class="sb-section" id="sb-admin-section" style="display:none">Admin</div>
+    <a class="sb-item" id="sb-approvals" onclick="showPanel('approvals',this)" style="display:none">
+      <span class="sb-icon">◈</span> Approvals
+      <span class="sb-badge" id="sb-appr-badge" style="display:none">0</span>
+    </a>
+  </nav>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="panel active" id="panel-overview">
+      <div class="page-head">
+        <div class="page-tag">Supplier Dashboard</div>
+        <div class="page-title" id="ov-title">Overview</div>
+      </div>
+
+      <div class="summary-row" id="summary-row"></div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div>
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Recent Orders</span></div>
+            <table><thead><tr><th>Order</th><th>Customer</th><th>Value</th><th>Status</th></tr></thead>
+            <tbody id="ov-orders-body"></tbody></table>
+          </div>
+        </div>
+        <div>
+          <div class="tbl-wrap">
+            <div class="tbl-head"><span class="tbl-title">Activity Feed</span></div>
+            <div class="feed" id="activity-feed" style="padding:14px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ORDERS ══ -->
+    <div class="panel" id="panel-orders">
+      <div class="page-head">
+        <div class="page-tag">Order Management</div>
+        <div class="page-title">Orders</div>
+      </div>
+
+      <!-- Status pipeline legend -->
+      <div class="pipeline" id="pipeline-legend"></div>
+
+      <div class="tbl-wrap">
+        <div class="tbl-head">
+          <span class="tbl-title">All Orders</span>
+          <button class="h-btn" onclick="openNewOrderModal()">+ New Order</button>
+        </div>
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Design</th><th>Spec</th><th>Booked Price</th><th>Gold Δ</th><th>Booked</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="orders-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ INVOICES ══ -->
+    <div class="panel" id="panel-invoices">
+      <div class="page-head">
+        <div class="page-tag">Billing</div>
+        <div class="page-title">Supplier Invoices</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-head"><span class="tbl-title">Invoices</span></div>
+        <table>
+          <thead><tr><th>Invoice</th><th>Order</th><th>Customer</th><th>Gold Used</th><th>Amount</th><th>Submitted</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="invoices-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ PAYMENTS ══ -->
+    <div class="panel" id="panel-payments">
+      <div class="page-head">
+        <div class="page-tag">Customer Collections</div>
+        <div class="page-title">Customer Payments</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-head"><span class="tbl-title">Payment Log</span></div>
+        <table>
+          <thead><tr><th>Ref</th><th>Order</th><th>Customer</th><th>Total Due</th><th>Deposit Paid</th><th>Balance Due</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody id="payments-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ PRICE REVISIONS ══ -->
+    <div class="panel" id="panel-revisions">
+      <div class="page-head">
+        <div class="page-tag">Pricing</div>
+        <div class="page-title">Price Revision Requests</div>
+      </div>
+      <div style="background:rgba(200,151,63,.05);border:1px solid rgba(200,151,63,.15);padding:14px 18px;margin-bottom:20px;font-size:.82rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;line-height:1.7;">
+        If gold / silver prices have moved significantly since a booking was made, you can request a price revision. The admin will review and approve or adjust before informing the customer.
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-head"><span class="tbl-title">Revision Requests</span></div>
+        <table>
+          <thead><tr><th>Ref</th><th>Order</th><th>Customer</th><th>Original Price</th><th>Requested Price</th><th>Gold at Booking</th><th>Gold Now</th><th>Reason</th><th>Status</th></tr></thead>
+          <tbody id="revisions-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ SHIPPING ══ -->
+    <div class="panel" id="panel-shipping">
+      <div class="page-head">
+        <div class="page-tag">Logistics</div>
+        <div class="page-title">Shipping</div>
+      </div>
+      <div class="tbl-wrap">
+        <div class="tbl-head"><span class="tbl-title">Ready to Ship / In Transit</span></div>
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Address</th><th>Instructions</th><th>Tracking</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="shipping-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ APPROVALS (Admin only) ══ -->
+    <div class="panel" id="panel-approvals">
+      <div class="page-head">
+        <div class="page-tag">Admin</div>
+        <div class="page-title">Pending Approvals</div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-bottom:24px;">
+        <div class="tbl-head"><span class="tbl-title">Invoices Awaiting Approval</span></div>
+        <table>
+          <thead><tr><th>Invoice</th><th>Supplier</th><th>Order</th><th>Gold Used</th><th>Amount</th><th>Submitted</th><th>Actions</th></tr></thead>
+          <tbody id="appr-inv-body"></tbody>
+        </table>
+      </div>
+
+      <div class="tbl-wrap" style="margin-bottom:24px;">
+        <div class="tbl-head"><span class="tbl-title">Price Revision Requests</span></div>
+        <table>
+          <thead><tr><th>Ref</th><th>Supplier</th><th>Order</th><th>Current Price</th><th>Requested</th><th>Gold Δ</th><th>Reason</th><th>Actions</th></tr></thead>
+          <tbody id="appr-rev-body"></tbody>
+        </table>
+      </div>
+
+      <div class="tbl-wrap">
+        <div class="tbl-head"><span class="tbl-title">Mark Customer Payment Received</span></div>
+        <table>
+          <thead><tr><th>Order</th><th>Supplier</th><th>Customer</th><th>Total</th><th>Deposit</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="appr-pay-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- Order Detail / Update -->
+<div class="ov" id="ov-order">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-order')">✕</button>
+    <div class="modal-tag">Order Detail</div>
+    <div class="modal-title" id="ord-modal-title">Order</div>
+    <div id="ord-modal-body"></div>
+  </div>
+</div>
+
+<!-- New Order -->
+<div class="ov" id="ov-new-order">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-new-order')">✕</button>
+    <div class="modal-tag" id="no-tag">New Order</div>
+    <div class="modal-title">Convert Inquiry to Order</div>
+    <div class="m-row">
+      <div class="m-field"><label>Customer Name</label><input id="no-name" type="text" placeholder="Priya Sharma"></div>
+      <div class="m-field"><label>Customer Phone</label><input id="no-phone" type="tel" placeholder="+1 (404) 000-0000"></div>
+    </div>
+    <div class="m-field"><label>Customer Email</label><input id="no-email" type="email" placeholder="priya@email.com"></div>
+    <div class="m-row">
+      <div class="m-field"><label>Design / Item</label><input id="no-design" type="text" placeholder="Lakshmi Temple Haram"></div>
+      <div class="m-field"><label>Metal</label>
+        <select id="no-metal">
+          <option value="gold_22k">22K Gold</option><option value="gold_18k">18K Gold</option>
+          <option value="gold_14k">14K Gold</option><option value="silver">Silver</option>
+        </select>
+      </div>
+    </div>
+    <div class="m-row">
+      <div class="m-field"><label>Finish</label><select id="no-finish"><option value="plain">Plain Polish</option><option value="antique">Antique</option><option value="rhodium">Rhodium</option><option value="matte">Matte</option></select></div>
+      <div class="m-field"><label>Stone</label><select id="no-stone"><option value="none">No Stone</option><option value="cz">CZ</option><option value="moissanite">Moissanite</option><option value="lab_diamond">Lab Diamond</option><option value="natural_diamond">Natural Diamond</option></select></div>
+    </div>
+    <div class="m-field"><label>Specifications</label><textarea id="no-spec" placeholder="Size, length, weight, special requests…"></textarea></div>
+    <div class="m-row">
+      <div class="m-field"><label>Quoted Price (USD)</label><input id="no-price" type="number" placeholder="2800"></div>
+      <div class="m-field"><label>Est. Weight</label><input id="no-weight" type="text" placeholder="32–38g"></div>
+    </div>
+    <div class="m-field"><label>Shipping Address</label><input id="no-addr" type="text" placeholder="123 Main St, Alpharetta GA 30004"></div>
+    <div id="no-price-info" class="m-info-box" style="margin-top:4px;"></div>
+    <button class="m-btn" onclick="submitNewOrder()">Create Order →</button>
+    <div class="m-err" id="no-err"></div>
+  </div>
+</div>
+
+<!-- Invoice -->
+<div class="ov" id="ov-invoice">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-invoice')">✕</button>
+    <div class="modal-tag">Supplier Invoice</div>
+    <div class="modal-title" id="inv-modal-title">Submit Invoice</div>
+    <div class="m-info-box" id="inv-order-info"></div>
+    <div class="m-row">
+      <div class="m-field"><label>Gold Used (grams)</label><input id="inv-gold-g" type="number" placeholder="36" oninput="calcInvTotal()"></div>
+      <div class="m-field"><label>Gold Price (₹ per 10g at booking)</label><input id="inv-gold-rate" type="number" placeholder="64200" oninput="calcInvTotal()"></div>
+    </div>
+    <div class="m-row">
+      <div class="m-field"><label>Making Charges (₹)</label><input id="inv-making" type="number" placeholder="8500" oninput="calcInvTotal()"></div>
+      <div class="m-field"><label>Stone / Other Charges (₹)</label><input id="inv-stone" type="number" placeholder="0" oninput="calcInvTotal()"></div>
+    </div>
+    <div class="m-info-box" id="inv-total-box">Enter values above to calculate total</div>
+    <div class="m-field"><label>Notes</label><textarea id="inv-notes" placeholder="Certification numbers, stone supplier details…"></textarea></div>
+    <input type="hidden" id="inv-order-id">
+    <input type="hidden" id="inv-edit-id">
+    <button class="m-btn" onclick="submitInvoice()">Submit Invoice →</button>
+    <div class="m-err" id="inv-err"></div>
+  </div>
+</div>
+
+<!-- Price Revision Request -->
+<div class="ov" id="ov-revision">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-revision')">✕</button>
+    <div class="modal-tag">Pricing</div>
+    <div class="modal-title">Request Price Revision</div>
+    <div class="m-info-box" id="rev-order-info"></div>
+    <div class="m-row">
+      <div class="m-field"><label>Original Quoted Price (USD)</label><input id="rev-orig" type="number" readonly style="opacity:.6;cursor:not-allowed;"></div>
+      <div class="m-field"><label>New Requested Price (USD)</label><input id="rev-new" type="number" placeholder="3400"></div>
+    </div>
+    <div class="m-field"><label>Reason for Revision</label><textarea id="rev-reason" placeholder="Gold price has risen 4.2% since booking. Actual weight came in at 39g vs estimated 36g. Requesting $3,400 to cover material cost."></textarea></div>
+    <input type="hidden" id="rev-order-id">
+    <button class="m-btn" onclick="submitRevision()">Submit for Admin Review →</button>
+    <div class="m-err" id="rev-err"></div>
+  </div>
+</div>
+
+<!-- Admin: Resolve Invoice -->
+<div class="ov" id="ov-appr-inv">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-appr-inv')">✕</button>
+    <div class="modal-tag">Admin Review</div>
+    <div class="modal-title">Invoice Approval</div>
+    <div class="m-info-box" id="appr-inv-info"></div>
+    <div class="m-field"><label>Admin Note (optional)</label><textarea id="appr-inv-note" placeholder="Approved. Cert numbers verified. Payment scheduled for Fri."></textarea></div>
+    <input type="hidden" id="appr-inv-id">
+    <button class="m-btn m-btn-approve" onclick="adminInvoiceAction('approved')">Approve Invoice ✓</button>
+    <button class="m-btn m-btn-approve" style="margin-top:6px;" onclick="adminInvoiceAction('paid')">Mark as Paid ✓</button>
+    <button class="m-btn m-btn-reject" onclick="adminInvoiceAction('disputed')">Dispute / Request Correction ✗</button>
+    <button class="m-btn-ghost" onclick="closeOv('ov-appr-inv')">Cancel</button>
+  </div>
+</div>
+
+<!-- Admin: Resolve Revision -->
+<div class="ov" id="ov-appr-rev">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-appr-rev')">✕</button>
+    <div class="modal-tag">Admin Review</div>
+    <div class="modal-title">Price Revision Request</div>
+    <div class="m-info-box" id="appr-rev-info"></div>
+    <div class="m-row">
+      <div class="m-field"><label>Approved New Price (USD)</label><input id="appr-rev-price" type="number" placeholder="3400"></div>
+    </div>
+    <div class="m-field"><label>Note to Supplier</label><textarea id="appr-rev-note" placeholder="Approved at $3,350. Please update customer."></textarea></div>
+    <input type="hidden" id="appr-rev-id">
+    <button class="m-btn m-btn-approve" onclick="adminRevAction('approved')">Approve Revision ✓</button>
+    <button class="m-btn m-btn-reject" onclick="adminRevAction('rejected')">Reject ✗</button>
+    <button class="m-btn-ghost" onclick="closeOv('ov-appr-rev')">Cancel</button>
+  </div>
+</div>
+
+<!-- Shipping Update -->
+<div class="ov" id="ov-ship">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOv('ov-ship')">✕</button>
+    <div class="modal-tag">Logistics</div>
+    <div class="modal-title">Update Shipping</div>
+    <div class="m-field"><label>Carrier & Tracking Number</label><input id="ship-tracking" type="text" placeholder="FedEx FX789456123US"></div>
+    <div class="m-field"><label>Shipping Instructions / Notes</label><textarea id="ship-notes" placeholder="FedEx Priority Overnight, insured for full value. Adult signature required."></textarea></div>
+    <div class="m-field"><label>Estimated Delivery</label><input id="ship-eta" type="date"></div>
+    <input type="hidden" id="ship-order-id">
+    <button class="m-btn" onclick="saveShipping()">Save & Advance to Shipped →</button>
+    <div class="m-err" id="ship-err"></div>
+  </div>
+</div>
+
+<!-- Manual Price Edit (Admin) -->
+<div class="ov" id="ov-prices">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeOv('ov-prices')">✕</button>
+    <div class="modal-tag">Admin</div>
+    <div class="modal-title">Update Metal Prices</div>
+    <div class="m-row">
+      <div class="m-field"><label>Gold (USD/troy oz)</label><input id="mp-gold-usd" type="number" step="0.01"></div>
+      <div class="m-field"><label>Gold (₹ / 10g)</label><input id="mp-gold-inr" type="number"></div>
+    </div>
+    <div class="m-row">
+      <div class="m-field"><label>Silver (USD/troy oz)</label><input id="mp-silver-usd" type="number" step="0.01"></div>
+      <div class="m-field"><label>Silver (₹ / 10g)</label><input id="mp-silver-inr" type="number"></div>
+    </div>
+    <div class="m-field"><label>1 USD = ₹ (Exchange Rate)</label><input id="mp-fx" type="number" step="0.01"></div>
+    <button class="m-btn" onclick="saveManualPrices()">Save Prices →</button>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="store.js"></script>
+<script src="orders.js"></script>
+<script>
+/* ════════════════════════════════════════
+   INIT & AUTH
+════════════════════════════════════════ */
+const ME    = AUTH.requireAuth(['artisan_ramouji','artisan_kira','site_admin']);
+const IS_ADMIN = ME?.role === 'site_admin';
+let   VIEW_SID = IS_ADMIN ? 'all' : (ME?.username || 'ramouji');
+let   CUR      = 'usd';
+let   PRICES   = ORDERS.getCachedPrices();
+
+if (ME) {
+  const init = ME.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('h-avatar').textContent = init;
+  document.getElementById('h-name').textContent   = ME.name;
+  if (IS_ADMIN) {
+    document.getElementById('supplier-sel').style.display = 'inline-block';
+    document.getElementById('sb-admin-section').style.display = 'block';
+    document.getElementById('sb-approvals').style.display = 'flex';
+    document.getElementById('pb-edit-btn').style.display = 'inline-block';
+  }
+}
+
+/* ════════════════════════════════════════
+   METAL PRICES BANNER
+════════════════════════════════════════ */
+function renderPriceBanner(p) {
+  PRICES = p;
+  const dot = document.getElementById('price-dot');
+  dot.className = 'pb-dot ' + (p.source==='live'?'live':p.source==='manual'?'manual':'stale');
+  document.getElementById('pb-gold').textContent        = `$${p.goldUSDPerOz?.toFixed(0)}/oz`;
+  document.getElementById('pb-gold-sub').textContent    = `₹${Math.round(p.goldINRPer10g).toLocaleString('en-IN')}/10g`;
+  document.getElementById('pb-silver').textContent      = `$${p.silverUSDPerOz?.toFixed(2)}/oz`;
+  document.getElementById('pb-silver-sub').textContent  = `₹${Math.round(p.silverINRPer10g).toLocaleString('en-IN')}/10g`;
+  document.getElementById('pb-fx').textContent          = `₹${p.usdToInr?.toFixed(2)}`;
+  const mins = Math.round((Date.now()-new Date(p.updatedAt).getTime())/60000);
+  document.getElementById('pb-updated').textContent     = `${p.source==='live'?'Live':'Manual'} · ${mins<2?'just now':mins+'m ago'}`;
+}
+
+ORDERS.fetchLivePrices().then(renderPriceBanner);
+
+/* ════════════════════════════════════════
+   CURRENCY TOGGLE
+════════════════════════════════════════ */
+function setCurrency(c) {
+  CUR = c;
+  document.getElementById('cur-usd').classList.toggle('active', c==='usd');
+  document.getElementById('cur-inr').classList.toggle('active', c==='inr');
+  renderAll();
+}
+
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(el) el.classList.add('active');
+  const renders = { overview:renderOverview, orders:renderOrders, invoices:renderInvoices,
+                    payments:renderPayments, revisions:renderRevisions, shipping:renderShipping, approvals:renderApprovals };
+  if(renders[id]) renders[id]();
+}
+
+function switchSupplier(val) { VIEW_SID=val; renderAll(); }
+
+function getOrders() { return VIEW_SID==='all' ? ORDERS.getOrders() : ORDERS.getOrders(VIEW_SID); }
+function getInvoices(){ return VIEW_SID==='all' ? ORDERS.getInvoices() : ORDERS.getInvoices(VIEW_SID); }
+function getPayments(){ return VIEW_SID==='all' ? ORDERS.getPayments() : ORDERS.getPayments(VIEW_SID); }
+function getRevisions(){ return VIEW_SID==='all' ? ORDERS.getRevisions() : ORDERS.getRevisions(VIEW_SID); }
+
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function statusBadge(status, map) {
+  const s = map[status] || {label:status, color:'var(--mist)', bg:'rgba(168,152,128,.06)'};
+  return `<span class="badge" style="color:${s.color};border-color:${s.color}40;background:${s.bg}">${s.label}</span>`;
+}
+
+function dualPrice(usd, inr) {
+  const fx = inr || Math.round((usd||0) * (PRICES.usdToInr||83.7));
+  return `<div class="dual-price">
+    <div class="price-usd ${CUR==='inr'?'':''}">$${Math.round(usd||0).toLocaleString()}</div>
+    <div class="price-inr">₹${Math.round(fx).toLocaleString('en-IN')}</div>
+  </div>`;
+}
+
+function goldDelta(atBooking) {
+  const now   = PRICES.goldUSDPerOz || 2415;
+  const diff  = ((now - atBooking) / atBooking * 100).toFixed(1);
+  const cls   = diff > 1 ? 'delta-up' : diff < -1 ? 'delta-dn' : 'delta-eq';
+  const arrow = diff > 1 ? '▲' : diff < -1 ? '▼' : '—';
+  return `<div class="gold-delta ${cls}">${arrow} ${Math.abs(diff)}%<br><span style="font-size:.6rem;opacity:.7;">Bkd $${atBooking} → Now $${now.toFixed(0)}</span></div>`;
+}
+
+function supplierTag(sid) {
+  return `<span class="supplier-tag tag-${sid}">${esc(STORE.getProfile(sid).name)}</span>`;
+}
+
+function updateSidebarBadges() {
+  const pendingInv = getInvoices().filter(i=>i.status==='submitted'||i.status==='under_review').length;
+  const pendingRev = getRevisions().filter(r=>r.status==='pending').length;
+  const activeOrd  = getOrders().filter(o=>!['completed','cancelled'].includes(o.status)).length;
+  const setB = (id, n) => { const el=document.getElementById(id); if(el){el.textContent=n;el.style.display=n?'inline':'none';} };
+  setB('sb-orders-badge', activeOrd);
+  setB('sb-inv-badge',    pendingInv);
+  setB('sb-rev-badge',    pendingRev);
+  if (IS_ADMIN) {
+    const allPending = ORDERS.getInvoices().filter(i=>i.status==='submitted').length
+                     + ORDERS.getRevisions().filter(r=>r.status==='pending').length;
+    setB('sb-appr-badge', allPending);
+  }
+}
+
+/* ════════════════════════════════════════
+   OVERVIEW
+════════════════════════════════════════ */
+function renderOverview() {
+  const orders   = getOrders();
+  const invoices = getInvoices();
+  const payments = getPayments();
+
+  const inFlight  = orders.filter(o=>!['completed','cancelled','quoted'].includes(o.status)).length;
+  const toShip    = orders.filter(o=>o.status==='ready_to_ship').length;
+  const pendInv   = invoices.filter(i=>i.status==='submitted'||i.status==='under_review').length;
+  const totalRev  = payments.reduce((s,p)=>s+(p.customerAmountUSD||0),0);
+  const collected = payments.reduce((s,p)=>s+(p.depositPaidUSD||0),0);
+
+  const sumCards = [
+    { label:'Active Orders',      val:inFlight,                                                    sub:'In production / en route',   color:'var(--gold)' },
+    { label:'Ready to Ship',      val:toShip,                                                      sub:'Awaiting dispatch',          color:'#7FB069' },
+    { label:'Pending Invoices',   val:pendInv,                                                     sub:'Awaiting admin approval',    color:'#9B72CF' },
+    { label:'Total Booked',       val:'$'+Math.round(totalRev).toLocaleString(),                   sub:CUR==='inr'?'₹'+Math.round(totalRev*PRICES.usdToInr).toLocaleString('en-IN'):'',  color:'var(--gold)' },
+    { label:'Collected',          val:'$'+Math.round(collected).toLocaleString(),                  sub:'Customer deposits + full pays', color:'#7FB069' },
+  ];
+
+  document.getElementById('summary-row').innerHTML = sumCards.map(c=>
+    `<div class="sum-card" style="--accent:${c.color}">
+      <div style="position:absolute;top:0;left:0;right:0;height:2px;background:${c.color}"></div>
+      <div class="sum-label">${c.label}</div>
+      <div class="sum-val" style="color:${c.color}">${c.val}</div>
+      <div class="sum-sub">${c.sub}</div>
+    </div>`
+  ).join('');
+
+  document.getElementById('ov-title').textContent = VIEW_SID==='all' ? 'All Suppliers' : STORE.getProfile(VIEW_SID).name + ' — Dashboard';
+
+  // Recent orders table
+  document.getElementById('ov-orders-body').innerHTML = orders.slice(0,6).map(o=>`
+    <tr>
+      <td><div class="td-name">${esc(o.id)}</div>${IS_ADMIN&&VIEW_SID==='all'?'<div>'+supplierTag(o.supplierId)+'</div>':''}</td>
+      <td><div class="td-name">${esc(o.customerName)}</div><div class="td-sub">${esc(o.designTitle)}</div></td>
+      <td>${dualPrice(o.quotedPriceUSD, o.quotedPriceINR)}</td>
+      <td>${statusBadge(o.status, ORDERS.ORDER_STATUS)}</td>
+    </tr>`).join('') || '<tr class="empty-row"><td colspan="4">No orders yet</td></tr>';
+
+  // Activity feed
+  const events = buildActivityFeed(orders, invoices, payments);
+  document.getElementById('activity-feed').innerHTML = events.length
+    ? events.slice(0,8).map(e=>`
+      <div class="feed-item">
+        <div class="feed-dot" style="background:${e.color}"></div>
+        <div class="feed-content">
+          <div class="feed-title">${e.title}</div>
+          <div class="feed-sub">${e.sub}</div>
+        </div>
+        <div class="feed-time">${e.time}</div>
+      </div>`).join('')
+    : '<div style="font-size:.82rem;color:rgba(168,152,128,.35);font-style:italic;text-align:center;padding:20px;">No activity yet</div>';
+
+  updateSidebarBadges();
+}
+
+function buildActivityFeed(orders, invoices, payments) {
+  const events = [];
+  orders.forEach(o => {
+    const days = Math.round((Date.now()-new Date(o.updatedAt).getTime())/86400000);
+    events.push({ title:`Order ${o.id} — ${o.status.replace(/_/g,' ')}`, sub:`${o.customerName} · ${o.designTitle}`, color:ORDERS.ORDER_STATUS[o.status]?.color||'var(--mist)', time:days===0?'Today':`${days}d ago`, ts:new Date(o.updatedAt).getTime() });
+    if (o.shippedDate) events.push({ title:`Shipped: ${o.id}`, sub:`Tracking: ${o.trackingNumber||'pending'}`, color:'var(--blue)', time:ORDERS.fmtDate(o.shippedDate), ts:new Date(o.shippedDate).getTime() });
+  });
+  invoices.forEach(i => {
+    if (i.submittedAt) events.push({ title:`Invoice ${i.id} submitted`, sub:`${ORDERS.fmt(i.amountUSD,i.amountINR,'usd')} · Order ${i.orderId}`, color:'#9B72CF', time:ORDERS.fmtDate(i.submittedAt), ts:new Date(i.submittedAt).getTime() });
+    if (i.paidAt) events.push({ title:`Invoice ${i.id} paid`, sub:ORDERS.fmt(i.amountUSD,i.amountINR,'usd'), color:'#7FB069', time:ORDERS.fmtDate(i.paidAt), ts:new Date(i.paidAt).getTime() });
+  });
+  payments.forEach(p => {
+    if (p.status==='paid') events.push({ title:`Customer payment received`, sub:`${p.orderId} · $${p.depositPaidUSD?.toLocaleString()}`, color:'#7FB069', time:ORDERS.fmtDate(p.updatedAt), ts:new Date(p.updatedAt).getTime() });
+  });
+  return events.sort((a,b)=>b.ts-a.ts);
+}
+
+/* ════════════════════════════════════════
+   ORDERS
+════════════════════════════════════════ */
+function renderOrders() {
+  // Pipeline legend
+  document.getElementById('pipeline-legend').innerHTML = Object.entries(ORDERS.ORDER_STATUS).map(([k,v])=>
+    `<div class="pipe-step"><div class="pipe-dot" style="background:${v.color};margin-right:6px;"></div><span style="font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:${v.color};">${v.label}</span></div><div class="pipe-line"></div>`
+  ).join('').slice(0,-'<div class="pipe-line"></div>'.length);
+
+  const orders = getOrders();
+  document.getElementById('orders-body').innerHTML = orders.map(o=>{
+    const inv  = ORDERS.getInvoiceForOrder(o.id);
+    const pay  = ORDERS.getPaymentForOrder(o.id);
+    return `<tr>
+      <td>
+        <div class="td-name">${esc(o.id)}</div>
+        ${IS_ADMIN&&VIEW_SID==='all'?'<div style="margin-top:3px;">'+supplierTag(o.supplierId)+'</div>':''}
+      </td>
+      <td><div class="td-name">${esc(o.customerName)}</div><div class="td-sub">${esc(o.customerPhone)}</div></td>
+      <td><div class="td-name">${esc(o.designTitle)}</div><div class="td-sub">${esc(STORE.METALS[o.metal]?.short||o.metal)} · ${esc(STORE.FINISHES[o.finish]||o.finish)}</div></td>
+      <td style="max-width:180px;"><div class="td-sub" style="line-height:1.5;">${esc((o.specifications||'').slice(0,80))}${(o.specifications||'').length>80?'…':''}</div></td>
+      <td>${dualPrice(o.quotedPriceUSD, o.quotedPriceINR)}</td>
+      <td>${goldDelta(o.goldPriceUSD_atBooking||2350)}</td>
+      <td><div class="td-date">${ORDERS.fmtDate(o.bookedAt)}</div></td>
+      <td>${statusBadge(o.status, ORDERS.ORDER_STATUS)}</td>
+      <td><div class="td-actions">
+        <button class="act act-g" onclick="openOrderDetail('${o.id}')">Detail</button>
+        ${ORDERS.ORDER_STATUS[o.status]?.next ? `<button class="act act-green" onclick="advanceOrder('${o.id}')">→ ${ORDERS.ORDER_STATUS[ORDERS.ORDER_STATUS[o.status].next]?.label||''}</button>` : ''}
+        ${!inv && !['quoted','cancelled'].includes(o.status) ? `<button class="act act-b" onclick="openInvoiceModal('${o.id}')">Invoice</button>` : ''}
+        ${!['completed','cancelled'].includes(o.status) ? `<button class="act act-r" onclick="openRevisionModal('${o.id}')">Rev Req</button>` : ''}
+      </div></td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="9">No orders</td></tr>';
+}
+
+function advanceOrder(id) {
+  const sid = IS_ADMIN ? null : VIEW_SID;
+  const o   = ORDERS.getOrderById(id);
+  if (o?.status === 'ready_to_ship') { openShipModal(id); return; }
+  ORDERS.advanceStatus(id, sid);
+  renderOrders();
+  updateSidebarBadges();
+}
+
+function openOrderDetail(id) {
+  const o    = ORDERS.getOrderById(id);
+  const inv  = ORDERS.getInvoiceForOrder(id);
+  const pay  = ORDERS.getPaymentForOrder(id);
+  if (!o) return;
+  document.getElementById('ord-modal-title').textContent = `${o.id} — ${o.customerName}`;
+  document.getElementById('ord-modal-body').innerHTML = `
+    <div class="m-info-box">
+      <strong>${esc(o.designTitle)}</strong> &nbsp;·&nbsp; ${esc(STORE.METALS[o.metal]?.label||o.metal)} &nbsp;·&nbsp; ${esc(STORE.FINISHES[o.finish]||o.finish)} &nbsp;·&nbsp; ${esc(STORE.STONES[o.stone]||o.stone)}<br>
+      <strong>Specifications:</strong> ${esc(o.specifications||'—')}<br>
+      <strong>Weight:</strong> ${esc(o.estimatedWeight||'—')} &nbsp;·&nbsp; <strong>Lead time:</strong> —
+    </div>
+    <div class="m-row" style="margin-bottom:14px;">
+      <div><div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;font-family:'Cinzel',serif;color:rgba(200,151,63,.45);margin-bottom:4px;">Quoted Price</div><div style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);">$${(o.quotedPriceUSD||0).toLocaleString()}</div><div style="font-size:.72rem;color:rgba(168,152,128,.5);">₹${Math.round(o.quotedPriceINR||0).toLocaleString('en-IN')}</div></div>
+      <div><div style="font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;font-family:'Cinzel',serif;color:rgba(200,151,63,.45);margin-bottom:4px;">Gold at Booking</div><div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold-pale);">$${o.goldPriceUSD_atBooking}/oz</div><div style="font-size:.72rem;color:rgba(168,152,128,.5);">₹${(o.goldINRPer10g_atBooking||0).toLocaleString('en-IN')}/10g</div></div>
+    </div>
+    <div class="m-info-box">
+      <strong>Customer:</strong> ${esc(o.customerName)} · ${esc(o.customerPhone)} · ${esc(o.customerEmail||'—')}<br>
+      <strong>Ship to:</strong> ${esc(o.shippingAddress||'—')}<br>
+      <strong>Instructions:</strong> ${esc(o.shippingInstructions||'—')}<br>
+      ${o.trackingNumber?`<strong>Tracking:</strong> ${esc(o.trackingNumber)}`:''}
+    </div>
+    ${inv?`<div class="m-info-box"><strong>Invoice ${inv.id}:</strong> ${statusBadge(inv.status,ORDERS.INVOICE_STATUS)} &nbsp; Amount: $${(inv.amountUSD||0).toLocaleString()} / ₹${(inv.amountINR||0).toLocaleString('en-IN')}</div>`:''}
+    ${pay?`<div class="m-info-box"><strong>Customer Payment:</strong> ${statusBadge(pay.status,ORDERS.PAYMENT_STATUS)} &nbsp; Deposit: $${(pay.depositPaidUSD||0).toLocaleString()} &nbsp; Balance: $${(pay.balanceDueUSD||0).toLocaleString()}<br>${esc(pay.notes||'')}</div>`:''}
+  `;
+  openOv('ov-order');
+}
+
+/* ════════════════════════════════════════
+   INVOICES
+════════════════════════════════════════ */
+function renderInvoices() {
+  const invs = getInvoices();
+  document.getElementById('invoices-body').innerHTML = invs.map(inv=>{
+    const o = ORDERS.getOrderById(inv.orderId);
+    return `<tr>
+      <td><div class="td-name">${esc(inv.id)}</div>${IS_ADMIN&&VIEW_SID==='all'?'<div style="margin-top:3px;">'+supplierTag(inv.supplierId)+'</div>':''}</td>
+      <td><div class="td-name">${esc(inv.orderId)}</div></td>
+      <td><div class="td-name">${esc(o?.customerName||'—')}</div><div class="td-sub">${esc(o?.designTitle||'')}</div></td>
+      <td><div class="td-name">${inv.goldWeightG||0}g</div><div class="td-sub">₹${(inv.goldPriceINRPer10g||0).toLocaleString('en-IN')}/10g</div></td>
+      <td>${dualPrice(inv.amountUSD, inv.amountINR)}</td>
+      <td><div class="td-date">${ORDERS.fmtDate(inv.submittedAt||inv.createdAt)}</div></td>
+      <td>${statusBadge(inv.status, ORDERS.INVOICE_STATUS)}</td>
+      <td><div class="td-actions">
+        ${inv.status==='draft'?`<button class="act act-g" onclick="openInvoiceModal('${inv.orderId}','${inv.id}')">Edit</button><button class="act act-green" onclick="quickSubmitInvoice('${inv.id}')">Submit</button>`:''}
+        ${IS_ADMIN && inv.status==='submitted'?`<button class="act act-green" onclick="openApprInvModal('${inv.id}')">Review</button>`:''}
+        ${IS_ADMIN && inv.status==='approved'?`<button class="act act-g" onclick="markPaid('${inv.id}')">Mark Paid</button>`:''}
+      </div></td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="8">No invoices yet</td></tr>';
+}
+
+function quickSubmitInvoice(id) { ORDERS.submitInvoice(id, VIEW_SID); renderInvoices(); updateSidebarBadges(); }
+function markPaid(id) { ORDERS.markInvoicePaid(id,''); renderInvoices(); }
+
+/* ════════════════════════════════════════
+   PAYMENTS
+════════════════════════════════════════ */
+function renderPayments() {
+  const pays = getPayments();
+  document.getElementById('payments-body').innerHTML = pays.map(p=>{
+    const o = ORDERS.getOrderById(p.orderId);
+    return `<tr>
+      <td><div class="td-name">${esc(p.id)}</div>${IS_ADMIN&&VIEW_SID==='all'?'<div style="margin-top:3px;">'+supplierTag(p.supplierId)+'</div>':''}</td>
+      <td><div class="td-name">${esc(p.orderId)}</div></td>
+      <td><div class="td-name">${esc(o?.customerName||'—')}</div></td>
+      <td>${dualPrice(p.customerAmountUSD, Math.round((p.customerAmountUSD||0)*PRICES.usdToInr))}</td>
+      <td><div style="color:#7FB069;font-family:'Cormorant Garamond',serif;font-size:.95rem;">$${(p.depositPaidUSD||0).toLocaleString()}</div></td>
+      <td><div style="color:${p.balanceDueUSD?'rgba(220,80,80,.7)':'rgba(127,176,105,.7)'};font-family:'Cormorant Garamond',serif;font-size:.95rem;">$${(p.balanceDueUSD||0).toLocaleString()}</div></td>
+      <td>${statusBadge(p.status, ORDERS.PAYMENT_STATUS)}</td>
+      <td><div class="td-sub" style="max-width:160px;">${esc(p.notes||'—')}</div></td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="8">No payments recorded</td></tr>';
+}
+
+/* ════════════════════════════════════════
+   PRICE REVISIONS
+════════════════════════════════════════ */
+function renderRevisions() {
+  const revs = getRevisions();
+  document.getElementById('revisions-body').innerHTML = revs.map(r=>{
+    const o = ORDERS.getOrderById(r.orderId);
+    return `<tr>
+      <td><div class="td-name">${esc(r.id)}</div>${IS_ADMIN&&VIEW_SID==='all'?'<div style="margin-top:3px;">'+supplierTag(r.supplierId)+'</div>':''}</td>
+      <td><div class="td-name">${esc(r.orderId)}</div></td>
+      <td><div class="td-name">${esc(o?.customerName||'—')}</div></td>
+      <td>${dualPrice(r.originalPriceUSD, Math.round((r.originalPriceUSD||0)*PRICES.usdToInr))}</td>
+      <td>${dualPrice(r.requestedPriceUSD, Math.round((r.requestedPriceUSD||0)*PRICES.usdToInr))}</td>
+      <td><div class="td-sub">$${r.goldPriceAtBooking||0}/oz</div></td>
+      <td><div class="td-sub">$${(PRICES.goldUSDPerOz||0).toFixed(0)}/oz</div></td>
+      <td><div class="td-sub" style="max-width:160px;">${esc((r.reason||'').slice(0,80))}</div></td>
+      <td>${statusBadge(r.status, ORDERS.REVISION_STATUS)}${r.adminNote?`<div class="td-sub" style="margin-top:4px;">${esc(r.adminNote)}</div>`:''}</td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="9">No revision requests</td></tr>';
+}
+
+/* ════════════════════════════════════════
+   SHIPPING
+════════════════════════════════════════ */
+function renderShipping() {
+  const orders = getOrders().filter(o=>['ready_to_ship','shipped','delivered'].includes(o.status));
+  document.getElementById('shipping-body').innerHTML = orders.map(o=>`<tr>
+    <td><div class="td-name">${esc(o.id)}</div>${IS_ADMIN&&VIEW_SID==='all'?'<div style="margin-top:3px;">'+supplierTag(o.supplierId)+'</div>':''}</td>
+    <td><div class="td-name">${esc(o.customerName)}</div></td>
+    <td><div class="td-sub" style="max-width:160px;">${esc(o.shippingAddress||'—')}</div></td>
+    <td><div class="td-sub" style="max-width:180px;">${esc(o.shippingInstructions||'—')}</div></td>
+    <td><div class="td-name">${esc(o.trackingNumber||'—')}</div>${o.shippedDate?`<div class="td-sub">Shipped ${ORDERS.fmtDate(o.shippedDate)}</div>`:''}</td>
+    <td>${statusBadge(o.status,ORDERS.ORDER_STATUS)}</td>
+    <td><div class="td-actions">
+      <button class="act act-b" onclick="openShipModal('${o.id}')">Update</button>
+      ${ORDERS.ORDER_STATUS[o.status]?.next?`<button class="act act-green" onclick="advanceOrder('${o.id}')">→ ${ORDERS.ORDER_STATUS[ORDERS.ORDER_STATUS[o.status].next]?.label}</button>`:''}
+    </div></td>
+  </tr>`).join('') || '<tr class="empty-row"><td colspan="7">No active shipments</td></tr>';
+}
+
+/* ════════════════════════════════════════
+   APPROVALS (Admin)
+════════════════════════════════════════ */
+function renderApprovals() {
+  // Invoices needing approval
+  const pendInv = ORDERS.getInvoices().filter(i=>i.status==='submitted');
+  document.getElementById('appr-inv-body').innerHTML = pendInv.map(inv=>{
+    const o = ORDERS.getOrderById(inv.orderId);
+    return `<tr>
+      <td><div class="td-name">${esc(inv.id)}</div></td>
+      <td>${supplierTag(inv.supplierId)}</td>
+      <td><div class="td-name">${esc(inv.orderId)}</div><div class="td-sub">${esc(o?.customerName||'')}</div></td>
+      <td><div class="td-name">${inv.goldWeightG}g @ ₹${(inv.goldPriceINRPer10g||0).toLocaleString('en-IN')}/10g</div><div class="td-sub">Making: ₹${(inv.makingChargesINR||0).toLocaleString('en-IN')} · Stone: ₹${(inv.stoneChargesINR||0).toLocaleString('en-IN')}</div></td>
+      <td>${dualPrice(inv.amountUSD, inv.amountINR)}</td>
+      <td><div class="td-date">${ORDERS.fmtDate(inv.submittedAt)}</div></td>
+      <td><button class="act act-green" onclick="openApprInvModal('${inv.id}')">Review →</button></td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="7">No pending invoices</td></tr>';
+
+  // Revisions needing approval
+  const pendRev = ORDERS.getRevisions().filter(r=>r.status==='pending');
+  document.getElementById('appr-rev-body').innerHTML = pendRev.map(r=>{
+    const o = ORDERS.getOrderById(r.orderId);
+    const delta = ((PRICES.goldUSDPerOz - r.goldPriceAtBooking) / r.goldPriceAtBooking * 100).toFixed(1);
+    return `<tr>
+      <td><div class="td-name">${esc(r.id)}</div></td>
+      <td>${supplierTag(r.supplierId)}</td>
+      <td><div class="td-name">${esc(r.orderId)}</div><div class="td-sub">${esc(o?.customerName||'')}</div></td>
+      <td>${dualPrice(r.originalPriceUSD, Math.round((r.originalPriceUSD||0)*PRICES.usdToInr))}</td>
+      <td>${dualPrice(r.requestedPriceUSD, Math.round((r.requestedPriceUSD||0)*PRICES.usdToInr))}</td>
+      <td>${goldDelta(r.goldPriceAtBooking)}</td>
+      <td><div class="td-sub" style="max-width:140px;">${esc((r.reason||'').slice(0,60))}</div></td>
+      <td><button class="act act-green" onclick="openApprRevModal('${r.id}')">Review →</button></td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="8">No pending revisions</td></tr>';
+
+  // All payments for admin to mark received
+  const allPay = ORDERS.getPayments().filter(p=>p.status!=='paid');
+  document.getElementById('appr-pay-body').innerHTML = allPay.map(p=>{
+    const o = ORDERS.getOrderById(p.orderId);
+    return `<tr>
+      <td><div class="td-name">${esc(p.orderId)}</div></td>
+      <td>${supplierTag(p.supplierId)}</td>
+      <td><div class="td-name">${esc(o?.customerName||'—')}</div></td>
+      <td>${dualPrice(p.customerAmountUSD, Math.round((p.customerAmountUSD||0)*PRICES.usdToInr))}</td>
+      <td><div style="color:#7FB069;">$${(p.depositPaidUSD||0).toLocaleString()}</div></td>
+      <td><div style="color:rgba(220,80,80,.7);">$${(p.balanceDueUSD||0).toLocaleString()}</div></td>
+      <td>${statusBadge(p.status, ORDERS.PAYMENT_STATUS)}</td>
+      <td>
+        ${p.balanceDueUSD>0?`<button class="act act-green" onclick="markBalanceReceived('${p.id}')">Balance Received</button>`:''}
+        <button class="act act-g" onclick="markFullyPaid('${p.id}')">Mark Paid</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr class="empty-row"><td colspan="8">No outstanding payments</td></tr>';
+}
+
+function markBalanceReceived(id) {
+  const p = ORDERS.getPayments().find(p=>p.id===id);
+  if (!p) return;
+  ORDERS.updatePayment(id, { depositPaidUSD:p.customerAmountUSD, balanceDueUSD:0, status:'paid' });
+  renderApprovals();
+}
+function markFullyPaid(id) { ORDERS.updatePayment(id,{status:'paid',balanceDueUSD:0}); renderApprovals(); }
+
+/* ════════════════════════════════════════
+   MODAL HELPERS
+════════════════════════════════════════ */
+function openOv(id)  { document.getElementById(id).classList.add('open');    document.body.style.overflow='hidden'; }
+function closeOv(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+document.querySelectorAll('.ov').forEach(o => { o.addEventListener('click', e=>{ if(e.target===o) closeOv(o.id); }); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('.ov.open').forEach(o=>closeOv(o.id)); });
+
+/* New order */
+function openNewOrderModal() {
+  const p = ORDERS.getCachedPrices();
+  document.getElementById('no-price-info').innerHTML = `<strong>Current Gold:</strong> $${p.goldUSDPerOz?.toFixed(0)}/oz &nbsp;·&nbsp; ₹${Math.round(p.goldINRPer10g).toLocaleString('en-IN')}/10g &nbsp;·&nbsp; <strong>Rate:</strong> ₹${p.usdToInr?.toFixed(2)} per USD`;
+  ['no-name','no-phone','no-email','no-design','no-spec','no-weight','no-addr','no-err'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('no-price').value='';
+  openOv('ov-new-order');
+}
+function submitNewOrder() {
+  const name=document.getElementById('no-name').value.trim();
+  const design=document.getElementById('no-design').value.trim();
+  const priceUSD=parseInt(document.getElementById('no-price').value)||0;
+  if(!name||!design||!priceUSD){ document.getElementById('no-err').textContent='Name, design, and price are required.'; return; }
+  const p=ORDERS.getCachedPrices();
+  ORDERS.addOrder({
+    supplierId:VIEW_SID==='all'?'ramouji':VIEW_SID,
+    designTitle:design, customerName:name,
+    customerPhone:document.getElementById('no-phone').value.trim(),
+    customerEmail:document.getElementById('no-email').value.trim(),
+    metal:document.getElementById('no-metal').value,
+    finish:document.getElementById('no-finish').value,
+    stone:document.getElementById('no-stone').value,
+    estimatedWeight:document.getElementById('no-weight').value.trim(),
+    specifications:document.getElementById('no-spec').value.trim(),
+    quotedPriceUSD:priceUSD, quotedPriceINR:Math.round(priceUSD*p.usdToInr),
+    goldPriceUSD_atBooking:p.goldUSDPerOz, goldINRPer10g_atBooking:p.goldINRPer10g,
+    usdToInr_atBooking:p.usdToInr,
+    status:'confirmed', paymentStatus:'pending', depositPaidUSD:0, balanceDueUSD:priceUSD,
+    shippingAddress:document.getElementById('no-addr').value.trim(),
+    bookedAt:new Date().toISOString(), confirmedAt:new Date().toISOString(),
+  });
+  closeOv('ov-new-order');
+  renderOrders(); updateSidebarBadges();
+}
+
+/* Invoice */
+function openInvoiceModal(orderId, editId) {
+  const o = ORDERS.getOrderById(orderId);
+  if (!o) return;
+  const p = ORDERS.getCachedPrices();
+  document.getElementById('inv-order-id').value = orderId;
+  document.getElementById('inv-edit-id').value  = editId||'';
+  document.getElementById('inv-modal-title').textContent = editId ? 'Edit Invoice' : 'Submit Invoice';
+  document.getElementById('inv-order-info').innerHTML = `<strong>${esc(o.id)}</strong> — ${esc(o.customerName)} — ${esc(o.designTitle)}<br>Quoted: $${(o.quotedPriceUSD||0).toLocaleString()} · Gold at booking: $${o.goldPriceUSD_atBooking||0}/oz (₹${(o.goldINRPer10g_atBooking||0).toLocaleString('en-IN')}/10g)`;
+  if (editId) {
+    const inv = ORDERS.getInvoiceById(editId);
+    if (inv) {
+      document.getElementById('inv-gold-g').value    = inv.goldWeightG||'';
+      document.getElementById('inv-gold-rate').value = inv.goldPriceINRPer10g||'';
+      document.getElementById('inv-making').value    = inv.makingChargesINR||'';
+      document.getElementById('inv-stone').value     = inv.stoneChargesINR||'';
+      document.getElementById('inv-notes').value     = inv.notes||'';
+    }
+  } else {
+    ['inv-gold-g','inv-gold-rate','inv-making','inv-stone','inv-notes'].forEach(id=>{document.getElementById(id).value='';});
+    document.getElementById('inv-gold-rate').value = Math.round(p.goldINRPer10g);
+  }
+  calcInvTotal(); openOv('ov-invoice');
+}
+function calcInvTotal() {
+  const g    = parseFloat(document.getElementById('inv-gold-g').value)||0;
+  const rate = parseFloat(document.getElementById('inv-gold-rate').value)||0;
+  const mak  = parseFloat(document.getElementById('inv-making').value)||0;
+  const sto  = parseFloat(document.getElementById('inv-stone').value)||0;
+  const totalINR = Math.round(g/10*rate + mak + sto);
+  const totalUSD = Math.round(totalINR / (PRICES.usdToInr||83.7));
+  document.getElementById('inv-total-box').innerHTML = `<strong>Total Invoice:</strong> ₹${totalINR.toLocaleString('en-IN')} &nbsp;·&nbsp; $${totalUSD.toLocaleString()}`;
+}
+async function submitInvoice() {
+  const ordId  = document.getElementById('inv-order-id').value;
+  const editId = document.getElementById('inv-edit-id').value;
+  const g      = parseFloat(document.getElementById('inv-gold-g').value)||0;
+  const rate   = parseFloat(document.getElementById('inv-gold-rate').value)||0;
+  const mak    = parseFloat(document.getElementById('inv-making').value)||0;
+  const sto    = parseFloat(document.getElementById('inv-stone').value)||0;
+  if (!g||!rate) { document.getElementById('inv-err').textContent='Gold weight and rate are required.'; return; }
+  const totalINR = Math.round(g/10*rate+mak+sto);
+  const totalUSD = Math.round(totalINR/PRICES.usdToInr);
+  const data = { supplierId:VIEW_SID==='all'?'ramouji':VIEW_SID, orderId:ordId,
+    goldWeightG:g, goldPriceINRPer10g:rate, makingChargesINR:mak, stoneChargesINR:sto,
+    amountINR:totalINR, amountUSD:totalUSD, notes:document.getElementById('inv-notes').value.trim() };
+  if (editId) ORDERS.updateInvoice(editId, data); else ORDERS.addInvoice(data);
+  closeOv('ov-invoice');
+  renderInvoices(); updateSidebarBadges();
+}
+
+/* Price revision */
+function openRevisionModal(ordId) {
+  const o = ORDERS.getOrderById(ordId);
+  if (!o) return;
+  document.getElementById('rev-order-id').value = ordId;
+  document.getElementById('rev-orig').value     = o.quotedPriceUSD||0;
+  document.getElementById('rev-new').value      = '';
+  const delta = ((PRICES.goldUSDPerOz - (o.goldPriceUSD_atBooking||0)) / (o.goldPriceUSD_atBooking||1) * 100).toFixed(1);
+  document.getElementById('rev-order-info').innerHTML = `<strong>${esc(o.id)}</strong> — ${esc(o.customerName)}<br>Gold at booking: $${o.goldPriceUSD_atBooking||0}/oz &nbsp;·&nbsp; Current: $${PRICES.goldUSDPerOz?.toFixed(0)||0}/oz &nbsp;·&nbsp; <strong>Δ ${delta}%</strong>`;
+  document.getElementById('rev-reason').value   = `Gold price has moved ${delta}% since booking ($${o.goldPriceUSD_atBooking||0} → $${PRICES.goldUSDPerOz?.toFixed(0)||0}/oz). Requesting revision to cover actual material cost.`;
+  document.getElementById('rev-err').textContent='';
+  openOv('ov-revision');
+}
+function submitRevision() {
+  const ordId = document.getElementById('rev-order-id').value;
+  const orig  = parseFloat(document.getElementById('rev-orig').value)||0;
+  const reqd  = parseFloat(document.getElementById('rev-new').value)||0;
+  const reason= document.getElementById('rev-reason').value.trim();
+  if (!reqd||reqd<=0) { document.getElementById('rev-err').textContent='Enter requested new price.'; return; }
+  const o = ORDERS.getOrderById(ordId);
+  ORDERS.requestRevision({ supplierId:VIEW_SID==='all'?o?.supplierId:''+VIEW_SID||'ramouji', orderId:ordId, originalPriceUSD:orig, requestedPriceUSD:reqd, reason, goldPriceAtBooking:o?.goldPriceUSD_atBooking||0 });
+  closeOv('ov-revision');
+  renderRevisions(); updateSidebarBadges();
+}
+
+/* Shipping */
+function openShipModal(ordId) {
+  const o = ORDERS.getOrderById(ordId);
+  if (!o) return;
+  document.getElementById('ship-order-id').value   = ordId;
+  document.getElementById('ship-tracking').value   = o.trackingNumber||'';
+  document.getElementById('ship-notes').value      = o.shippingInstructions||'';
+  document.getElementById('ship-eta').value        = '';
+  document.getElementById('ship-err').textContent  = '';
+  openOv('ov-ship');
+}
+function saveShipping() {
+  const id   = document.getElementById('ship-order-id').value;
+  const sid  = IS_ADMIN ? null : VIEW_SID;
+  const track= document.getElementById('ship-tracking').value.trim();
+  if (!track) { document.getElementById('ship-err').textContent='Tracking number required.'; return; }
+  ORDERS.updateOrder(id, { trackingNumber:track, shippingInstructions:document.getElementById('ship-notes').value.trim(), estimatedDelivery:document.getElementById('ship-eta').value, status:'shipped', shippedDate:new Date().toISOString() }, sid);
+  closeOv('ov-ship');
+  renderShipping();
+}
+
+/* Admin: approve/dispute invoice */
+function openApprInvModal(id) {
+  const inv = ORDERS.getInvoiceById(id);
+  const o   = ORDERS.getOrderById(inv?.orderId);
+  document.getElementById('appr-inv-id').value    = id;
+  document.getElementById('appr-inv-note').value  = '';
+  document.getElementById('appr-inv-info').innerHTML = inv
+    ? `<strong>${inv.id}</strong> · ${supplierTag(inv.supplierId)}<br>Order ${esc(inv.orderId)} — ${esc(o?.customerName||'')}<br>Gold: ${inv.goldWeightG}g @ ₹${(inv.goldPriceINRPer10g||0).toLocaleString('en-IN')}/10g · Making: ₹${(inv.makingChargesINR||0).toLocaleString('en-IN')} · Stone: ₹${(inv.stoneChargesINR||0).toLocaleString('en-IN')}<br><strong>Total: ₹${(inv.amountINR||0).toLocaleString('en-IN')} / $${(inv.amountUSD||0).toLocaleString()}</strong>`
+    : '';
+  openOv('ov-appr-inv');
+}
+function adminInvoiceAction(action) {
+  const id   = document.getElementById('appr-inv-id').value;
+  const note = document.getElementById('appr-inv-note').value.trim();
+  if (action==='approved') ORDERS.approveInvoice(id, note);
+  else if (action==='paid') ORDERS.markInvoicePaid(id, note);
+  else ORDERS.disputeInvoice(id, note);
+  closeOv('ov-appr-inv');
+  renderApprovals(); renderInvoices(); updateSidebarBadges();
+}
+
+/* Admin: approve/reject revision */
+function openApprRevModal(id) {
+  const r  = ORDERS.getRevisions().find(r=>r.id===id);
+  const o  = ORDERS.getOrderById(r?.orderId);
+  document.getElementById('appr-rev-id').value    = id;
+  document.getElementById('appr-rev-price').value = r?.requestedPriceUSD||'';
+  document.getElementById('appr-rev-note').value  = '';
+  document.getElementById('appr-rev-info').innerHTML = r
+    ? `<strong>${r.id}</strong> · ${supplierTag(r.supplierId)}<br>Order ${esc(r.orderId)} — ${esc(o?.customerName||'')}<br>Original: $${r.originalPriceUSD?.toLocaleString()} &nbsp;→&nbsp; Requested: $${r.requestedPriceUSD?.toLocaleString()}<br>Gold at booking: $${r.goldPriceAtBooking}/oz &nbsp;·&nbsp; Current: $${PRICES.goldUSDPerOz?.toFixed(0)}/oz<br>${esc(r.reason)}`
+    : '';
+  openOv('ov-appr-rev');
+}
+function adminRevAction(status) {
+  const id    = document.getElementById('appr-rev-id').value;
+  const price = parseFloat(document.getElementById('appr-rev-price').value)||0;
+  const note  = document.getElementById('appr-rev-note').value.trim();
+  ORDERS.resolveRevision(id, status, note, status==='approved'?price:0);
+  closeOv('ov-appr-rev');
+  renderApprovals(); renderRevisions(); updateSidebarBadges();
+}
+
+/* Manual price edit */
+function openPriceModal() {
+  const p=ORDERS.getCachedPrices();
+  document.getElementById('mp-gold-usd').value   = p.goldUSDPerOz||'';
+  document.getElementById('mp-gold-inr').value   = p.goldINRPer10g||'';
+  document.getElementById('mp-silver-usd').value = p.silverUSDPerOz||'';
+  document.getElementById('mp-silver-inr').value = p.silverINRPer10g||'';
+  document.getElementById('mp-fx').value         = p.usdToInr||'';
+  openOv('ov-prices');
+}
+function saveManualPrices() {
+  const p = ORDERS.setManualPrices({
+    goldUSDPerOz:   parseFloat(document.getElementById('mp-gold-usd').value),
+    goldINRPer10g:  parseFloat(document.getElementById('mp-gold-inr').value),
+    silverUSDPerOz: parseFloat(document.getElementById('mp-silver-usd').value),
+    silverINRPer10g:parseFloat(document.getElementById('mp-silver-inr').value),
+    usdToInr:       parseFloat(document.getElementById('mp-fx').value),
+  });
+  renderPriceBanner(p);
+  closeOv('ov-prices');
+}
+
+/* ── RENDER ALL ── */
+function renderAll() { renderOverview(); }
+
+/* ── INIT ── */
+renderAll();
+</script>
+</body>
+</html>
