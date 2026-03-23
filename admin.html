@@ -109,6 +109,13 @@ main{padding:32px 36px; max-width:1300px; margin:0 auto;}
   letter-spacing:.22em; text-transform:uppercase; cursor:pointer; transition:background .3s;
 }
 .btn-add:hover{background:var(--gold-light);}
+.btn-reset-all{
+  background:transparent; color:rgba(184,200,216,.7);
+  border:1px solid rgba(184,200,216,.3); padding:10px 18px;
+  font-family:'Cinzel',serif; font-size:.6rem; letter-spacing:.18em;
+  text-transform:uppercase; cursor:pointer; transition:all .3s;
+}
+.btn-reset-all:hover{border-color:#B8C8D8; color:#B8C8D8; background:rgba(184,200,216,.06);}
 
 /* ── TABLE ── */
 .table-wrap{background:var(--surface2); border:1px solid var(--border); overflow:auto;}
@@ -326,7 +333,10 @@ td{padding:14px 16px; vertical-align:middle;}
       <span class="search-icon">⌕</span>
       <input type="text" id="search-input" placeholder="Search users…" oninput="renderTable()">
     </div>
-    <button class="btn-add" onclick="openAddModal()">+ Add User</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-reset-all" onclick="openResetAllModal()">⟳ Reset All Passwords</button>
+      <button class="btn-add" onclick="openAddModal()">+ Add User</button>
+    </div>
   </div>
 
   <!-- ── TABLE ── -->
@@ -414,6 +424,46 @@ td{padding:14px 16px; vertical-align:middle;}
     </div>
 
     <button class="m-btn" onclick="closeModal('modal-reset')" style="margin-top:20px;">Done</button>
+  </div>
+</div>
+
+<!-- ── RESET ALL PASSWORDS ── -->
+<div class="overlay" id="modal-reset-all">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeModal('modal-reset-all')">✕</button>
+    <div class="modal-tag">Bulk Action</div>
+    <div class="modal-title">Reset All Passwords</div>
+
+    <!-- Step 1: Confirm -->
+    <div id="ra-step1">
+      <div class="del-warn" style="margin-bottom:20px;">
+        This will generate new temporary passwords for every account (except yours).
+        All users will be required to set a new password on next login.
+      </div>
+      <button class="m-btn-del" id="ra-confirm-btn" onclick="confirmResetAll()">Reset All Passwords →</button>
+      <button class="m-btn-ghost" onclick="closeModal('modal-reset-all')">Cancel</button>
+    </div>
+
+    <!-- Step 2: Results table -->
+    <div id="ra-step2" style="display:none;">
+      <p style="font-size:.82rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;margin-bottom:16px;">
+        Temporary passwords generated. Share each securely with the user — they expire on next login.
+      </p>
+      <div style="border:1px solid var(--border);overflow:auto;margin-bottom:16px;">
+        <table style="width:100%;border-collapse:collapse;" id="ra-results-table">
+          <thead>
+            <tr>
+              <th style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface3);white-space:nowrap;">User</th>
+              <th style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface3);white-space:nowrap;">Temp Password</th>
+              <th style="font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface3);">Copy</th>
+            </tr>
+          </thead>
+          <tbody id="ra-results-body"></tbody>
+        </table>
+      </div>
+      <button class="btn-add" style="width:100%;" onclick="copyAllPasswords()">⎘ Copy All to Clipboard</button>
+      <button class="m-btn-ghost" onclick="closeModal('modal-reset-all')" style="margin-top:8px;">Done</button>
+    </div>
   </div>
 </div>
 
@@ -664,6 +714,70 @@ function confirmDelete() {
   _deleteTarget = null;
   closeModal('modal-delete');
   refresh();
+}
+
+// ── RESET ALL PASSWORDS ──
+let _resetAllResults = [];
+
+function openResetAllModal() {
+  document.getElementById('ra-step1').style.display = 'block';
+  document.getElementById('ra-step2').style.display = 'none';
+  document.getElementById('ra-results-body').innerHTML = '';
+  _resetAllResults = [];
+  openModal('modal-reset-all');
+}
+
+async function confirmResetAll() {
+  const btn   = document.getElementById('ra-confirm-btn');
+  btn.textContent = 'Generating…'; btn.disabled = true;
+
+  const users = AUTH.getUsers().filter(u => u.id !== ME.id);
+  _resetAllResults = [];
+
+  for (const u of users) {
+    const tmp = await AUTH.resetPassword(u.id);
+    _resetAllResults.push({ name: u.name, username: u.username, pwd: tmp });
+  }
+
+  // Build results table
+  const tbody = document.getElementById('ra-results-body');
+  tbody.innerHTML = _resetAllResults.map((r, i) => `
+    <tr style="border-bottom:1px solid rgba(200,151,63,.06);">
+      <td style="padding:10px 14px;">
+        <div style="font-size:.85rem;color:var(--gold-pale);">${esc(r.name)}</div>
+        <div style="font-size:.7rem;color:rgba(168,152,128,.55);">@${esc(r.username)}</div>
+      </td>
+      <td style="padding:10px 14px;">
+        <code style="font-family:'Courier New',monospace;font-size:.82rem;color:var(--gold-light);letter-spacing:.06em;" id="ra-pwd-${i}">${esc(r.pwd)}</code>
+      </td>
+      <td style="padding:10px 14px;">
+        <button class="copy-btn" style="padding:4px 10px;font-size:.48rem;" onclick="copySingle(${i})">⎘</button>
+      </td>
+    </tr>`).join('');
+
+  btn.textContent = 'Reset All Passwords →'; btn.disabled = false;
+  document.getElementById('ra-step1').style.display = 'none';
+  document.getElementById('ra-step2').style.display = 'block';
+  refresh();
+}
+
+function copySingle(i) {
+  const r = _resetAllResults[i];
+  navigator.clipboard.writeText(r.pwd).then(() => {
+    const btn = document.querySelector(`#ra-pwd-${i}`).closest('tr').querySelector('.copy-btn');
+    btn.textContent = '✓'; setTimeout(() => { btn.innerHTML = '⎘'; }, 1500);
+  });
+}
+
+function copyAllPasswords() {
+  const text = _resetAllResults.map(r =>
+    `${r.name} (@${r.username}): ${r.pwd}`
+  ).join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('#modal-reset-all .btn-add');
+    btn.textContent = '✓ Copied to Clipboard';
+    setTimeout(() => { btn.textContent = '⎘ Copy All to Clipboard'; }, 2000);
+  });
 }
 
 // ── MODAL HELPERS ──
