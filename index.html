@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bangarams — Exquisite Indian Bridal Jewelry. Silver, Gold & Diamonds. Curated by hand, delivered to your door. Serving Alpharetta, GA and beyond.">
+<title>Bangarams — Indian Bridal Silver, Gold & Diamonds</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   PRIVATE REVIEW GATE
+═══════════════════════════════════════ */
+#preview-gate {
+  position:fixed; inset:0; z-index:10000;
+  background:#0F0A04;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:40px;
+}
+#preview-gate.hidden { display:none; }
+
+.gate-logo {
+  margin-bottom:40px; text-align:center;
+}
+.gate-wordmark {
+  font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;
+  font-size:clamp(1.8rem,5vw,3rem);
+  font-weight:700; color:#E8C97A;
+  letter-spacing:0.18em;
+}
+.gate-rule-top, .gate-rule-bot {
+  width:100%; max-width:340px; height:1px;
+  background:rgba(200,151,63,0.35); margin:8px auto;
+}
+.gate-tagline {
+  font-family:'Palatino Linotype',Palatino,serif;
+  font-size:0.72rem; color:#A89880;
+  letter-spacing:0.35em; font-style:italic;
+  text-align:center; margin-top:4px;
+}
+
+.gate-card {
+  background:rgba(200,151,63,0.04);
+  border:1px solid rgba(200,151,63,0.15);
+  padding:40px; max-width:380px; width:100%;
+  text-align:center;
+}
+.gate-title {
+  font-family:'Cinzel',serif;
+  font-size:0.62rem; letter-spacing:0.45em;
+  text-transform:uppercase; color:rgba(200,151,63,0.5);
+  margin-bottom:8px;
+}
+.gate-subtitle {
+  font-family:'Cormorant Garamond',serif;
+  font-style:italic; font-size:1.05rem;
+  color:rgba(168,152,128,0.7); margin-bottom:28px;
+  line-height:1.6;
+}
+.gate-input {
+  width:100%; background:rgba(200,151,63,0.05);
+  border:1px solid rgba(200,151,63,0.2);
+  padding:12px 16px; color:#F5E6C0;
+  font-family:'Cinzel',serif; font-size:0.8rem;
+  letter-spacing:0.25em; text-align:center;
+  outline:none; margin-bottom:16px;
+  transition:border-color 0.3s;
+}
+.gate-input:focus { border-color:rgba(200,151,63,0.5); }
+.gate-input::placeholder { color:rgba(168,152,128,0.35); letter-spacing:0.2em; }
+.gate-btn {
+  width:100%; background:var(--gold,#C8973F); color:#1C1410;
+  border:none; padding:13px 24px;
+  font-family:'Cinzel',serif; font-size:0.65rem;
+  letter-spacing:0.3em; text-transform:uppercase;
+  transition:background 0.3s; margin-bottom:12px;
+}
+.gate-btn:hover { background:#E8C97A; }
+.gate-error {
+  font-size:0.7rem; color:rgba(200,80,80,0.7);
+  font-family:'Raleway',sans-serif; min-height:18px;
+  letter-spacing:0.05em;
+}
+.gate-hint {
+  margin-top:20px; font-size:0.65rem;
+  color:rgba(168,152,128,0.3); letter-spacing:0.1em;
+  font-family:'Raleway',sans-serif;
+}
+
+/* ═══════════════════════════════════════
+   ROOT VARIABLES
+═══════════════════════════════════════ */
+:root {
+  --gold:#C8973F; --gold-light:#E8C97A; --gold-pale:#F5E6C0; --gold-deep:#8A6420;
+  --silver:#A8B4BC; --silver-light:#D4DDE2; --silver-deep:#6B7C85;
+  --diamond:#B8C8D8; --diamond-ice:#E4EEF5;
+  --ivory:#FDFAF3; --cream:#F7F0E0;
+  --ink:#1C1410; --ink-soft:#3D2E1E; --ink-deep:#0F0A04;
+  --navy:#080C18; --mist:#A89880;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--ivory);color:var(--ink);font-family:'Raleway',sans-serif;font-weight:300;font-size:15px;line-height:1.7;cursor:default;}
+*,*::before,*::after{cursor:none!important;}
+
+/* CURSOR */
+#cursor{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s;mix-blend-mode:multiply;}
+#cursor.big{width:32px;height:32px;background:rgba(200,151,63,.25);}
+
+/* ═══════════════════════════════════════
+   LOGO COMPONENT (reusable)
+═══════════════════════════════════════ */
+.logo-mark {
+  display:inline-flex; flex-direction:column;
+  align-items:center; text-decoration:none;
+  gap:0;
+}
+.logo-rule { height:1px; background:currentColor; opacity:0.45; width:100%; }
+.logo-wordmark {
+  font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;
+  font-weight:700; letter-spacing:0.12em;
+}
+.logo-tagline {
+  font-family:'Palatino Linotype',Palatino,serif;
+  font-style:italic; letter-spacing:0.28em;
+}
+.logo-diamond-tip {
+  width:0; height:0; display:block; margin:0 auto;
+}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(253,250,243,.95);backdrop-filter:blur(14px);border-bottom:1px solid rgba(200,151,63,.12);transition:padding .3s;}
+nav.scrolled{padding:10px 48px;}
+.nav-logo-wrap{text-decoration:none;display:flex;flex-direction:column;align-items:flex-start;gap:2px;}
+.nav-logo-rule{height:0.5px;background:#C8973F;opacity:.5;width:100%;}
+.nav-logo-text{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.25rem;font-weight:700;color:var(--ink);letter-spacing:.12em;}
+.nav-logo-sub{font-family:'Palatino Linotype',serif;font-size:.52rem;color:var(--mist);letter-spacing:.3em;font-style:italic;}
+.nav-links{display:flex;gap:28px;list-style:none;}
+.nav-links a{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;position:relative;padding-bottom:3px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:var(--ink);color:var(--gold-pale);border:none;padding:9px 20px;font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;transition:background .3s,color .3s;}
+.nav-cta:hover{background:var(--gold);color:var(--ink);}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--ink);}
+
+/* MOBILE MENU */
+.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:var(--ivory);flex-direction:column;align-items:center;justify-content:center;gap:28px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--ink);text-decoration:none;}
+.mobile-menu a:hover{color:var(--gold);}
+.mobile-close{position:absolute;top:20px;right:28px;background:none;border:none;font-size:1.8rem;color:var(--ink);}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:72px;overflow:hidden;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:80px 56px 80px 80px;z-index:2;}
+
+/* HERO LOGO */
+.hero-logo{margin-bottom:36px;}
+.hero-logo-rule{height:0.6px;background:var(--gold);opacity:.5;width:100%;max-width:480px;}
+.hero-logo-diamond{display:block;width:8px;height:8px;background:var(--gold);transform:rotate(45deg);margin:0 auto;opacity:.65;}
+.hero-logo-text{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:clamp(2.4rem,4vw,4.2rem);font-weight:700;color:var(--ink);letter-spacing:.12em;line-height:1.05;text-align:left;}
+.hero-logo-tagline{font-family:'Palatino Linotype',Palatino,serif;font-style:italic;font-size:.78rem;color:var(--mist);letter-spacing:.32em;text-align:left;margin-top:3px;}
+
+.hero-eyebrow{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:0.5px;background:var(--gold);}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.6rem,4.5vw,5rem);font-weight:300;line-height:1.06;color:var(--ink);margin-bottom:22px;}
+.hero-title em{font-style:italic;color:var(--gold-deep);}
+.hero-desc{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--mist);max-width:400px;margin-bottom:40px;line-height:1.85;}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-primary{background:var(--gold);color:var(--ink);padding:13px 32px;border:none;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background .3s,transform .2s;}
+.btn-primary:hover{background:var(--gold-deep);transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--ink);padding:12px 32px;border:1px solid rgba(28,20,16,.25);font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:border-color .3s,color .3s;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.hero-right{position:relative;overflow:hidden;background:linear-gradient(135deg,#E8C97A18,#C8973F0A);}
+.hero-right::before{content:'B';position:absolute;bottom:-60px;right:-30px;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:32vw;font-weight:700;color:rgba(200,151,63,.04);line-height:1;pointer-events:none;}
+.hero-img-ph{width:100%;height:100%;min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--mist);}
+.hero-img-ph .ph-icon{font-size:3.5rem;opacity:.3;}
+.hero-img-ph p{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;opacity:.35;}
+.hero-badge{position:absolute;bottom:36px;left:36px;background:var(--ink);color:var(--gold-pale);padding:16px 20px;font-size:.68rem;}
+.hero-badge strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold-light);font-weight:400;}
+
+/* MARQUEE */
+.marquee-strip{background:var(--ink);padding:12px 0;overflow:hidden;border-top:1px solid rgba(200,151,63,.18);border-bottom:1px solid rgba(200,151,63,.18);}
+.marquee-inner{display:flex;gap:48px;width:max-content;animation:marquee 32s linear infinite;}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.mi{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);white-space:nowrap;display:flex;align-items:center;gap:48px;}
+.mi::after{content:'◆';color:var(--gold-deep);font-size:.38rem;}
+
+/* SECTIONS */
+section{padding:96px 80px;}
+.stag{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.stag::before{content:'';display:block;width:22px;height:.5px;background:var(--gold);}
+.sh{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3.2vw,2.8rem);font-weight:300;line-height:1.12;color:var(--ink);margin-bottom:16px;}
+.sh em{font-style:italic;color:var(--gold-deep);}
+.sp{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--mist);line-height:1.85;}
+
+/* TIERS */
+#tiers{background:var(--ink);padding:80px;}
+.tiers-intro{text-align:center;margin-bottom:56px;}
+.tiers-intro-logo{margin-bottom:24px;}
+.tiers-intro h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:300;color:var(--gold-pale);margin-bottom:12px;line-height:1.15;}
+.tiers-intro p{color:rgba(168,152,128,.7);font-family:'Cormorant Garamond',serif;font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.85;}
+.tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.tier{position:relative;padding:48px 36px;overflow:hidden;transition:background .4s;}
+.tier-silver{background:linear-gradient(160deg,#1E262A,#141C20);border:1px solid rgba(168,180,188,.12);}
+.tier-gold{background:linear-gradient(160deg,#241A08,#1A1006);border:1px solid rgba(200,151,63,.18);}
+.tier-diamond{background:linear-gradient(160deg,#141E28,#0C1420);border:1px solid rgba(184,200,216,.18);}
+.tier::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s;}
+.tier-silver::after{background:radial-gradient(ellipse at 50% 0%,rgba(168,180,188,.07),transparent 65%);}
+.tier-gold::after{background:radial-gradient(ellipse at 50% 0%,rgba(200,151,63,.09),transparent 65%);}
+.tier-diamond::after{background:radial-gradient(ellipse at 50% 0%,rgba(184,200,216,.09),transparent 65%);}
+.tier:hover::after{opacity:1;}
+.tier-badge{display:inline-block;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.3em;text-transform:uppercase;padding:3px 12px;margin-bottom:24px;}
+.tier-silver .tier-badge{background:rgba(168,180,188,.1);color:var(--silver-light);}
+.tier-gold .tier-badge{background:rgba(200,151,63,.1);color:var(--gold-light);}
+.tier-diamond .tier-badge{background:rgba(184,200,216,.1);color:var(--diamond-ice);}
+.tier-icon{font-size:2.4rem;margin-bottom:16px;display:block;}
+.tier-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;margin-bottom:6px;}
+.tier-silver .tier-name{color:var(--silver-light);}
+.tier-gold .tier-name{color:var(--gold-light);}
+.tier-diamond .tier-name{color:var(--diamond-ice);}
+.tier-subtitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem;margin-bottom:20px;line-height:1.6;}
+.tier-silver .tier-subtitle{color:rgba(168,180,188,.6);}
+.tier-gold .tier-subtitle{color:rgba(200,151,63,.6);}
+.tier-diamond .tier-subtitle{color:rgba(184,200,216,.6);}
+.tier-price{font-family:'Cormorant Garamond',serif;font-size:1.15rem;margin-bottom:20px;}
+.tier-silver .tier-price{color:var(--silver);}
+.tier-gold .tier-price{color:var(--gold);}
+.tier-diamond .tier-price{color:var(--diamond);}
+.tier-features{list-style:none;margin-bottom:32px;}
+.tier-features li{font-size:.8rem;padding:6px 0 6px 18px;position:relative;border-bottom:1px solid;}
+.tier-silver .tier-features li{color:rgba(168,180,188,.65);border-color:rgba(168,180,188,.07);}
+.tier-gold .tier-features li{color:rgba(200,151,63,.7);border-color:rgba(200,151,63,.07);}
+.tier-diamond .tier-features li{color:rgba(184,200,216,.65);border-color:rgba(184,200,216,.07);}
+.tier-features li::before{content:'◆';position:absolute;left:0;font-size:.32rem;top:10px;}
+.tier-silver .tier-features li::before{color:var(--silver);}
+.tier-gold .tier-features li::before{color:var(--gold);}
+.tier-diamond .tier-features li::before{color:var(--diamond);}
+.btn-tier{display:inline-block;width:100%;text-align:center;padding:11px 20px;border:1px solid;text-decoration:none;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;transition:background .3s,color .3s;}
+.tier-silver .btn-tier{border-color:var(--silver);color:var(--silver-light);}
+.tier-silver .btn-tier:hover{background:var(--silver);color:var(--ink);}
+.tier-gold .btn-tier{border-color:var(--gold);color:var(--gold-light);}
+.tier-gold .btn-tier:hover{background:var(--gold);color:var(--ink);}
+.tier-diamond .btn-tier{border-color:var(--diamond);color:var(--diamond-ice);}
+.tier-diamond .btn-tier:hover{background:var(--diamond);color:var(--ink);}
+.tier-popular{position:absolute;top:0;right:0;background:var(--gold);color:var(--ink);font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;padding:5px 12px;}
+
+/* SILVER SPOTLIGHT */
+#silver-spotlight{background:linear-gradient(135deg,#1A2226,#0E1618);padding:80px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.silver-tag{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--silver);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.silver-tag::before{content:'';display:block;width:22px;height:.5px;background:var(--silver);}
+.silver-h{font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,2.8vw,2.6rem);font-weight:300;color:var(--silver-light);line-height:1.12;margin-bottom:14px;}
+.silver-h em{font-style:italic;color:var(--silver);}
+.silver-desc{font-family:'Cormorant Garamond',serif;font-size:1.02rem;color:rgba(168,180,188,.65);line-height:1.85;margin-bottom:24px;}
+.silver-note{background:rgba(168,180,188,.05);border-left:2px solid var(--silver);padding:14px 18px;margin-bottom:24px;font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(168,180,188,.65);font-size:.92rem;line-height:1.6;}
+.silver-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.silver-pill{border:1px solid rgba(168,180,188,.22);color:var(--silver-light);padding:5px 14px;font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.15em;text-transform:uppercase;}
+.silver-img{background:linear-gradient(145deg,#1E2A30,#131D22);border:1px solid rgba(168,180,188,.08);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;}
+.silver-img-inner{text-align:center;color:rgba(168,180,188,.22);}
+.silver-img-inner span{font-size:3.5rem;display:block;margin-bottom:8px;}
+.silver-img-inner p{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;}
+
+/* COLLECTIONS TABS */
+#collections{background:var(--cream);}
+.collections-intro{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:40px;}
+.tab-bar{display:flex;gap:0;margin-bottom:40px;border-bottom:1px solid rgba(200,151,63,.12);}
+.tab-btn{padding:12px 28px;border:none;background:transparent;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mist);position:relative;transition:color .3s;}
+.tab-btn::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:transparent;transition:background .3s;}
+.tab-btn.active-silver{color:var(--silver-deep);}
+.tab-btn.active-silver::after{background:var(--silver);}
+.tab-btn.active-gold{color:var(--gold-deep);}
+.tab-btn.active-gold::after{background:var(--gold);}
+.tab-btn.active-diamond{color:#4A7A9A;}
+.tab-btn.active-diamond::after{background:var(--diamond);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.catalog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.catalog-card{background:var(--ivory);position:relative;overflow:hidden;transition:transform .4s;}
+.catalog-card:hover{transform:translateY(-5px);}
+.catalog-card:nth-child(2){margin-top:36px;}
+.card-img{aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mist);position:relative;overflow:hidden;}
+.ci-silver{background:linear-gradient(145deg,#E8EDF0,#D0D8DC);}
+.ci-gold{background:linear-gradient(145deg,var(--cream),#E8C97A1A);}
+.ci-diamond{background:linear-gradient(145deg,#E4EEF5,#C8D8E8);}
+.card-img-icon{font-size:2.8rem;opacity:.32;margin-bottom:6px;}
+.card-img-label{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;opacity:.35;}
+.card-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(28,20,16,.5),transparent 50%);opacity:0;transition:opacity .3s;}
+.catalog-card:hover .card-img::after{opacity:1;}
+.card-overlay{position:absolute;bottom:0;left:0;right:0;padding:18px;transform:translateY(8px);opacity:0;transition:all .3s;z-index:2;}
+.catalog-card:hover .card-overlay{transform:translateY(0);opacity:1;}
+.card-overlay .btn-primary{padding:8px 20px;font-size:.58rem;}
+.card-info{padding:16px;}
+.card-cat{font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px;}
+.cc-silver{color:var(--silver-deep);}
+.cc-gold{color:var(--gold);}
+.cc-diamond{color:#4A7A9A;}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);margin-bottom:3px;font-weight:300;}
+.card-price{font-size:.8rem;color:var(--mist);}
+.card-badge{position:absolute;top:12px;right:12px;color:#fff;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;padding:3px 8px;}
+.cb-new{background:var(--silver-deep);}
+.cb-hot{background:#B85A2A;}
+.cb-sig{background:var(--gold-deep);}
+.cb-lab{background:#3A6A8A;}
+.cb-gia{background:#1A3A4A;}
+.cb-bespoke{background:#2A4A5A;}
+.maker-tag{position:absolute;top:12px;left:12px;background:rgba(28,20,16,.72);font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;}
+.mt-gold{color:var(--gold-light);}
+.mt-dia{color:var(--diamond-ice);}
+
+/* ARTISANS */
+#artisans{background:var(--ivory);padding:96px 80px;}
+.artisans-intro{text-align:center;max-width:560px;margin:0 auto 60px;}
+.artisans-intro p{color:var(--mist);font-family:'Cormorant Garamond',serif;font-size:1.02rem;line-height:1.85;margin-top:10px;}
+.artisans-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.artisan-card{padding:52px 44px;position:relative;overflow:hidden;}
+.artisan-ramouji{background:linear-gradient(150deg,#1E1408,#140E04);}
+.artisan-kira{background:linear-gradient(150deg,#0C1824,#081018);}
+.artisan-card::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;opacity:.05;}
+.artisan-ramouji::before{background:var(--gold);}
+.artisan-kira::before{background:var(--diamond);}
+/* Artisan logo mark */
+.artisan-logo-mark{margin-bottom:20px;}
+.artisan-logo-rule{height:.5px;width:100px;}
+.artisan-ramouji .artisan-logo-rule{background:rgba(200,151,63,.35);}
+.artisan-kira .artisan-logo-rule{background:rgba(184,200,216,.3);}
+.artisan-logo-name{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.55rem;font-weight:700;letter-spacing:.1em;margin:4px 0 2px;}
+.artisan-ramouji .artisan-logo-name{color:var(--gold-pale);}
+.artisan-kira .artisan-logo-name{color:var(--diamond-ice);}
+.artisan-label{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.35em;text-transform:uppercase;margin-bottom:6px;}
+.artisan-ramouji .artisan-label{color:rgba(200,151,63,.5);}
+.artisan-kira .artisan-label{color:rgba(184,200,216,.45);}
+.artisan-role{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;margin-bottom:20px;}
+.artisan-ramouji .artisan-role{color:rgba(200,151,63,.55);}
+.artisan-kira .artisan-role{color:rgba(184,200,216,.5);}
+.artisan-desc{font-size:.84rem;line-height:1.8;margin-bottom:24px;}
+.artisan-ramouji .artisan-desc{color:rgba(245,230,192,.55);}
+.artisan-kira .artisan-desc{color:rgba(228,238,245,.5);}
+.artisan-services{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:28px;}
+.artisan-service{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border:1px solid;}
+.artisan-ramouji .artisan-service{border-color:rgba(200,151,63,.18);color:rgba(200,151,63,.65);}
+.artisan-kira .artisan-service{border-color:rgba(184,200,216,.18);color:rgba(184,200,216,.65);}
+.btn-artisan{display:inline-block;padding:11px 24px;border:1px solid;text-decoration:none;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;transition:background .3s,color .3s;}
+.artisan-ramouji .btn-artisan{border-color:var(--gold);color:var(--gold-light);}
+.artisan-ramouji .btn-artisan:hover{background:var(--gold);color:var(--ink);}
+.artisan-kira .btn-artisan{border-color:var(--diamond);color:var(--diamond-ice);}
+.artisan-kira .btn-artisan:hover{background:var(--diamond);color:var(--ink);}
+
+/* FEATURED */
+#featured{background:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;}
+.featured-img{background:linear-gradient(135deg,#2A1F0E,#1C1410);min-height:560px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.featured-img::before{content:'B';position:absolute;bottom:-40px;right:-20px;font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:40vw;font-weight:700;color:rgba(200,151,63,.03);line-height:1;pointer-events:none;}
+.featured-img-inner{text-align:center;color:rgba(200,151,63,.28);z-index:1;position:relative;}
+.featured-img-inner span{font-size:4.5rem;display:block;margin-bottom:10px;}
+.featured-img-inner p{font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;}
+.featured-content{padding:68px 64px;display:flex;flex-direction:column;justify-content:center;}
+.featured-logo-mark{margin-bottom:28px;}
+.featured-logo-rule{height:.5px;background:rgba(200,151,63,.35);width:100%;}
+.featured-logo-text{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.1rem;font-weight:700;color:var(--gold-light);letter-spacing:.12em;margin:6px 0 3px;}
+.featured-logo-tag{font-family:'Palatino Linotype',Palatino,serif;font-style:italic;font-size:.6rem;color:var(--mist);letter-spacing:.3em;}
+.featured-tag{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.featured-tag::before{content:'';display:block;width:20px;height:.5px;background:var(--gold);}
+.featured-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,2.8vw,2.6rem);font-weight:300;color:var(--gold-pale);line-height:1.12;margin-bottom:16px;}
+.featured-desc{font-family:'Cormorant Garamond',serif;font-size:1rem;color:rgba(168,152,128,.75);line-height:1.9;margin-bottom:24px;}
+.featured-specs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:32px;}
+.spec{border:1px solid rgba(200,151,63,.13);padding:10px 14px;}
+.spec-label{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:2px;}
+.spec-val{font-size:.82rem;color:var(--gold-pale);}
+.featured-price{font-family:'Cormorant Garamond',serif;font-size:1.8rem;color:var(--gold-light);margin-bottom:22px;}
+.featured-price span{font-size:.78rem;color:var(--mist);font-family:'Raleway',sans-serif;font-weight:300;}
+.btn-gold{background:var(--gold);color:var(--ink);border:none;padding:12px 32px;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background .3s;}
+.btn-gold:hover{background:var(--gold-light);}
+
+/* HOW */
+#how{background:var(--ivory);}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:56px;border:1px solid rgba(200,151,63,.12);}
+.step{padding:32px 26px;border-right:1px solid rgba(200,151,63,.12);}
+.step:last-child{border-right:none;}
+.step-num{font-family:'Cormorant Garamond',serif;font-size:3.2rem;color:rgba(200,151,63,.1);line-height:1;margin-bottom:14px;font-weight:300;}
+.step-icon{font-size:1.6rem;margin-bottom:12px;}
+.step-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--ink);margin-bottom:7px;font-weight:400;}
+.step-desc{font-size:.78rem;color:var(--mist);line-height:1.7;}
+
+/* WA BANNER */
+.wa-banner{background:linear-gradient(135deg,#1A3326,#0D1F16);padding:52px 80px;display:flex;align-items:center;justify-content:space-between;gap:40px;}
+.wa-title{font-family:'Cormorant Garamond',serif;font-size:1.65rem;color:#E8F5E0;margin-bottom:8px;font-weight:300;}
+.wa-desc{color:rgba(200,230,200,.55);font-size:.84rem;max-width:460px;line-height:1.7;}
+.btn-wa{background:#25D366;color:#fff;border:none;padding:14px 32px;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;display:inline-flex;align-items:center;gap:9px;white-space:nowrap;flex-shrink:0;transition:background .3s,transform .2s;}
+.btn-wa:hover{background:#1EBD56;transform:translateY(-2px);}
+
+/* TRUST */
+.trust-bar{background:var(--ink);padding:40px 80px;display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(200,151,63,.08);}
+.trust-item{text-align:center;padding:16px;border-right:1px solid rgba(200,151,63,.08);}
+.trust-item:last-child{border-right:none;}
+.trust-num{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--gold-light);font-weight:300;display:block;}
+.trust-label{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.17em;text-transform:uppercase;color:rgba(168,152,128,.5);}
+
+/* CONSULT */
+#consult{background:var(--cream);display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.consult-form{display:flex;flex-direction:column;gap:13px;margin-top:24px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group label{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;color:var(--mist);}
+.form-group input,.form-group select,.form-group textarea{background:var(--ivory);border:1px solid rgba(200,151,63,.2);padding:10px 14px;color:var(--ink);font-family:'Raleway',sans-serif;font-size:.85rem;font-weight:300;outline:none;transition:border-color .3s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
+.form-group textarea{resize:vertical;min-height:88px;}
+.form-group select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C8973F' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;}
+.form-submit{background:var(--ink);color:var(--gold-pale);border:none;padding:13px 36px;font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;align-self:flex-start;transition:background .3s;}
+.form-submit:hover{background:var(--gold);color:var(--ink);}
+.consult-right{padding-top:24px;}
+.consult-features{display:flex;flex-direction:column;gap:18px;margin-top:24px;}
+.cf-item{display:flex;gap:16px;align-items:flex-start;}
+.cf-icon{width:42px;height:42px;flex-shrink:0;border:1px solid rgba(200,151,63,.2);display:flex;align-items:center;justify-content:center;font-size:1.15rem;}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--ink);margin-bottom:2px;font-weight:400;}
+.cf-desc{font-size:.78rem;color:var(--mist);line-height:1.6;}
+
+/* FOOTER */
+footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(200,151,63,.08);}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px;margin-bottom:40px;}
+
+/* Footer logo */
+.footer-logo-wrap{margin-bottom:12px;}
+.footer-logo-rule{height:.5px;background:rgba(200,151,63,.3);margin-bottom:4px;width:100%;}
+.footer-logo-rule-bot{margin-top:4px;}
+.footer-logo-text{font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.35rem;font-weight:700;color:var(--gold-pale);letter-spacing:.12em;}
+.footer-logo-tag{font-family:'Palatino Linotype',Palatino,serif;font-style:italic;font-size:.58rem;color:rgba(168,152,128,.45);letter-spacing:.28em;}
+.footer-tagline{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(168,152,128,.55);line-height:1.7;}
+.footer-col h4{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.footer-col ul{list-style:none;}
+.footer-col li{margin-bottom:8px;}
+.footer-col a{color:rgba(168,152,128,.6);text-decoration:none;font-size:.8rem;transition:color .3s;}
+.footer-col a:hover{color:var(--gold-light);}
+.footer-bottom{border-top:1px solid rgba(200,151,63,.08);padding-top:20px;display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-family:'Cinzel',serif;font-size:.52rem;color:rgba(168,152,128,.3);letter-spacing:.1em;}
+.footer-tm{font-family:'Cinzel',serif;font-size:.52rem;color:rgba(200,151,63,.18);letter-spacing:.12em;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.88);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--ivory);max-width:520px;width:100%;padding:40px;position:relative;max-height:90vh;overflow-y:auto;}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.3rem;color:var(--mist);}
+.modal-tier-badge{display:inline-block;font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;padding:3px 10px;margin-bottom:14px;}
+.mt-silver{background:rgba(168,180,188,.1);color:var(--silver-deep);}
+.mt-gold-b{background:rgba(200,151,63,.1);color:var(--gold-deep);}
+.mt-dia-b{background:rgba(184,200,216,.13);color:#3A6A8A;}
+.modal-img{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--cream),#E8C97A18);margin-bottom:18px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;color:rgba(200,151,63,.28);}
+.modal h2{font-family:'Cormorant Garamond',serif;font-size:1.45rem;margin-bottom:5px;color:var(--ink);font-weight:300;}
+.modal-artisan{font-family:'Cinzel',serif;font-size:.6rem;color:var(--mist);letter-spacing:.12em;margin-bottom:10px;text-transform:uppercase;}
+.modal p.modal-desc{color:var(--mist);margin-bottom:18px;font-size:.86rem;line-height:1.7;}
+.modal-price{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold-deep);margin-bottom:16px;}
+.modal .btn-primary{width:100%;text-align:center;margin-bottom:9px;display:block;}
+.modal .btn-wa{width:100%;justify-content:center;}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:12px 20px;} .nav-links,.nav-cta{display:none;} .hamburger{display:flex;}
+  section{padding:60px 24px;}
+  .hero{grid-template-columns:1fr;min-height:auto;} .hero-left{padding:90px 24px 44px;} .hero-right{min-height:280px;}
+  .tiers-grid{grid-template-columns:1fr;} #tiers{padding:60px 24px;}
+  #silver-spotlight{grid-template-columns:1fr;gap:36px;padding:60px 24px;}
+  .catalog-grid{grid-template-columns:1fr 1fr;} .catalog-card:nth-child(2){margin-top:0;}
+  .artisans-grid{grid-template-columns:1fr;} .artisan-card{padding:36px 24px;}
+  #featured{grid-template-columns:1fr;} .featured-img{min-height:260px;} .featured-content{padding:40px 24px;}
+  .wa-banner{flex-direction:column;padding:36px 24px;text-align:center;}
+  .steps-grid{grid-template-columns:1fr 1fr;} .step{border-bottom:1px solid rgba(200,151,63,.08);}
+  .trust-bar{grid-template-columns:repeat(3,1fr);padding:24px;}
+  #consult{grid-template-columns:1fr;gap:0;padding:60px 24px;} .form-row{grid-template-columns:1fr;}
+  .footer-top{grid-template-columns:1fr 1fr;gap:24px;} .footer-bottom{flex-direction:column;gap:8px;text-align:center;}
+  footer{padding:36px 24px 20px;} .collections-intro{grid-template-columns:1fr;}
+  .tab-btn{padding:10px 14px;font-size:.58rem;} #artisans{padding:60px 24px;}
+}
+@media(max-width:520px){
+  .catalog-grid{grid-template-columns:1fr;} .steps-grid{grid-template-columns:1fr;}
+  .trust-bar{grid-template-columns:1fr 1fr;} .footer-top{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     PRIVATE REVIEW GATE
+════════════════════════════════════════════ -->
+<div id="preview-gate">
+  <div class="gate-logo">
+    <div class="gate-rule-top"></div>
+    <div class="gate-wordmark">BANGARAMS</div>
+    <div class="gate-rule-bot"></div>
+    <div class="gate-tagline">SILVER · GOLD · DIAMONDS</div>
+  </div>
+  <div class="gate-card">
+    <div class="gate-title">Private Preview</div>
+    <div class="gate-subtitle">This site is under review.<br>Enter the preview password to continue.</div>
+    <input type="password" id="gate-pwd" class="gate-input" placeholder="PASSWORD" maxlength="30" onkeydown="if(event.key==='Enter')checkPwd()">
+    <button class="gate-btn" onclick="checkPwd()">Enter Site</button>
+    <div class="gate-error" id="gate-err"></div>
+    <div class="gate-hint">Contact hello@bangarams.com for access</div>
+  </div>
+</div>
+
+<div id="cursor"></div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">✕</button>
+  <a href="#tiers" onclick="closeMobile()">Collections</a>
+  <a href="#artisans" onclick="closeMobile()">Our Makers</a>
+  <a href="#how" onclick="closeMobile()">How It Works</a>
+  <a href="#consult" onclick="closeMobile()">Consult</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo-wrap">
+    <div class="nav-logo-rule"></div>
+    <div class="nav-logo-text">BANGARAMS</div>
+    <div class="nav-logo-rule"></div>
+    <div class="nav-logo-sub">Silver · Gold · Diamonds</div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#tiers">Collections</a></li>
+    <li><a href="#artisans">Our Makers</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#consult">Consult</a></li>
+  </ul>
+  <a href="#consult" class="nav-cta">Book Consult</a>
+  <button class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-left">
+
+    <!-- EDITORIAL TYPE HERO LOGO -->
+    <div class="hero-logo reveal">
+      <div class="hero-logo-rule"></div>
+      <div style="text-align:center;padding:2px 0;">
+        <span style="display:inline-block;width:7px;height:7px;background:var(--gold);transform:rotate(45deg);opacity:.6;"></span>
+      </div>
+      <div class="hero-logo-text">BANGARAMS</div>
+      <div class="hero-logo-rule"></div>
+      <div class="hero-logo-tagline">Silver · Gold · Diamonds</div>
+    </div>
+
+    <div class="hero-eyebrow reveal rd1">Indian Bridal Jewelry · Alpharetta, GA</div>
+    <h1 class="hero-title reveal rd1">
+      Three tiers.<br>
+      One <em>sacred</em> day.<br>
+      <em>Your</em> choice.
+    </h1>
+    <p class="hero-desc reveal rd2">
+      Gold-look silver sets, 22K hallmarked gold, and certified diamonds — personally curated and delivered to your door.
+    </p>
+    <div class="hero-actions reveal rd3">
+      <a href="#tiers" class="btn-primary">Explore Collections</a>
+      <a href="#consult" class="btn-outline">Book Free Consult</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-img-ph">
+      <span class="ph-icon">💍</span>
+      <p>Your jewelry photo here</p>
+    </div>
+    <div class="hero-badge"><strong>3 Tiers</strong>Every Budget · Every Dream</div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-inner">
+    <div class="mi">Gold-Look Silver</div><div class="mi">22K Gold Bridal</div>
+    <div class="mi">Lab Diamonds · Kira</div><div class="mi">Natural Diamonds · Kira</div>
+    <div class="mi">Custom by Ramouji</div><div class="mi">Kundan & Temple</div>
+    <div class="mi">Maang Tikka</div><div class="mi">Full Bridal Sets</div>
+    <div class="mi">GIA · IGI Certified</div><div class="mi">White-Glove Delivery</div>
+    <div class="mi">Gold-Look Silver</div><div class="mi">22K Gold Bridal</div>
+    <div class="mi">Lab Diamonds · Kira</div><div class="mi">Natural Diamonds · Kira</div>
+    <div class="mi">Custom by Ramouji</div><div class="mi">Kundan & Temple</div>
+    <div class="mi">Maang Tikka</div><div class="mi">Full Bridal Sets</div>
+    <div class="mi">GIA · IGI Certified</div><div class="mi">White-Glove Delivery</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TIERS
+════════════════════════════════════════════ -->
+<div id="tiers">
+  <div class="tiers-intro reveal">
+    <!-- Mini logo in tier section -->
+    <div class="tiers-intro-logo">
+      <div style="font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:1.1rem;font-weight:700;color:rgba(200,151,63,.45);letter-spacing:.14em;">BANGARAMS</div>
+      <div style="height:.4px;background:rgba(200,151,63,.2);margin:4px auto;width:140px;"></div>
+    </div>
+    <h2>Three Tiers of <em style="font-style:italic;color:var(--gold-light);">Bridal Beauty</em></h2>
+    <p>Gold prices at record highs? We built three tiers so every Indian bride finds her perfect match — in style, in meaning, in budget.</p>
+  </div>
+  <div class="tiers-grid">
+    <div class="tier tier-silver reveal" onclick="switchTab('silver');document.getElementById('collections').scrollIntoView({behavior:'smooth'})">
+      <div class="tier-badge">Smart Value</div>
+      <span class="tier-icon">🪙</span>
+      <div class="tier-name">Silver Splendour</div>
+      <div class="tier-subtitle">Gold-look sterling silver — all the grandeur at a fraction of the cost</div>
+      <div class="tier-price">From $280</div>
+      <ul class="tier-features">
+        <li>925 Sterling Silver, gold-plated finish</li>
+        <li>Indistinguishable from gold in photos</li>
+        <li>Temple, Kundan & Meenakari styles</li>
+        <li>Custom crafted by Ramouji</li>
+        <li>Sangeet, Mehendi & function sets</li>
+      </ul>
+      <a href="#collections" class="btn-tier" onclick="switchTab('silver');event.stopPropagation()">Browse Silver →</a>
+    </div>
+    <div class="tier tier-gold reveal rd1" style="position:relative;" onclick="switchTab('gold');document.getElementById('collections').scrollIntoView({behavior:'smooth'})">
+      <div class="tier-popular">Most Popular</div>
+      <div class="tier-badge">Heirloom Quality</div>
+      <span class="tier-icon">✨</span>
+      <div class="tier-name">Gold Legacy</div>
+      <div class="tier-subtitle">22K BIS hallmarked gold — the timeless Indian bridal standard</div>
+      <div class="tier-price">From $2,800</div>
+      <ul class="tier-features">
+        <li>22K BIS Hallmarked & certified</li>
+        <li>Temple, Polki, Jadau & antique</li>
+        <li>Custom design by Ramouji</li>
+        <li>Full bridal sets: 5–7 pieces</li>
+        <li>Authenticity certificate included</li>
+      </ul>
+      <a href="#collections" class="btn-tier" onclick="switchTab('gold');event.stopPropagation()">Browse Gold →</a>
+    </div>
+    <div class="tier tier-diamond reveal rd2" onclick="switchTab('diamond');document.getElementById('collections').scrollIntoView({behavior:'smooth'})">
+      <div class="tier-badge">Ultimate Luxury</div>
+      <span class="tier-icon">💎</span>
+      <div class="tier-name">Diamond Prestige</div>
+      <div class="tier-subtitle">Lab & natural diamonds via Kira — certified, breathtaking</div>
+      <div class="tier-price">From $4,500</div>
+      <ul class="tier-features">
+        <li>GIA / IGI certified diamonds</li>
+        <li>Lab-grown & natural options</li>
+        <li>Set in 18K or 22K gold</li>
+        <li>B2B sourced through Kira</li>
+        <li>Bespoke stone selection</li>
+      </ul>
+      <a href="#collections" class="btn-tier" onclick="switchTab('diamond');event.stopPropagation()">Browse Diamonds →</a>
+    </div>
+  </div>
+</div>
+
+<!-- SILVER SPOTLIGHT -->
+<div id="silver-spotlight">
+  <div class="silver-content reveal">
+    <div class="silver-tag">Smart Choice · 2025</div>
+    <h2 class="silver-h">Gold prices are up.<br><em>Your look doesn't have to suffer.</em></h2>
+    <p class="silver-desc">925 sterling silver finished with gold plating is virtually indistinguishable in photos. Ramouji's silver work carries the same intricate temple and kundan detailing as his gold pieces — at a fraction of the investment.</p>
+    <div class="silver-note">"My sangeet set was Ramouji's silver and every guest thought it was gold. I saved over $2,000 and the photos are stunning."</div>
+    <div class="silver-pills">
+      <span class="silver-pill">925 Sterling Silver</span>
+      <span class="silver-pill">Gold-Plated</span>
+      <span class="silver-pill">Kundan · Temple</span>
+      <span class="silver-pill">Custom by Ramouji</span>
+    </div>
+    <a href="#consult" class="btn-outline" style="border-color:rgba(168,180,188,.35);color:var(--silver-light);">Consult on Silver →</a>
+  </div>
+  <div class="silver-img reveal rd1">
+    <div class="silver-img-inner"><span>🪙</span><p>Silver collection photos</p></div>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<section id="collections">
+  <div class="collections-intro">
+    <div>
+      <div class="stag reveal">Browse by Tier</div>
+      <h2 class="sh reveal rd1">Curated for<br><em>Every Bride</em></h2>
+    </div>
+    <p class="sp reveal rd2">Every piece is customizable. WhatsApp us or book a consultation to work directly with Ramouji or Kira.</p>
+  </div>
+  <div class="tab-bar reveal">
+    <button class="tab-btn active-silver" id="tab-silver" onclick="switchTab('silver')">🪙 Silver Splendour</button>
+    <button class="tab-btn" id="tab-gold" onclick="switchTab('gold')">✨ Gold Legacy</button>
+    <button class="tab-btn" id="tab-diamond" onclick="switchTab('diamond')">💎 Diamond Prestige</button>
+  </div>
+
+  <!-- SILVER TAB -->
+  <div class="tab-panel active" id="panel-silver">
+    <div class="catalog-grid">
+      <div class="catalog-card reveal">
+        <div class="card-img ci-silver">
+          <span class="card-img-icon">📿</span><span class="card-img-label">Ramouji · Silver</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Silver Temple Necklace Set','925 sterling silver, 22K gold-plated finish. Temple design with jhumka earrings. Custom by Ramouji. Perfect for Mehendi & Sangeet.','From $380','silver','🪙','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-silver">Silver · Temple Style</div><div class="card-name">Gold-Plated Temple Haar</div><div class="card-price">From $380</div></div>
+        <div class="card-badge cb-new">New</div><div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+      <div class="catalog-card reveal rd1">
+        <div class="card-img ci-silver">
+          <span class="card-img-icon">✨</span><span class="card-img-label">Ramouji · Silver</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Kundan Silver Bridal Set','Full 5-piece Kundan set in 925 silver with gold plating. Necklace, earrings, maang tikka, nose ring & bangles. Customizable stones.','From $680','silver','🪙','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-silver">Silver · Kundan Full Set</div><div class="card-name">Kundan Panchset</div><div class="card-price">From $680</div></div>
+        <div class="card-badge cb-hot">Bestseller</div><div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+      <div class="catalog-card reveal rd2">
+        <div class="card-img ci-silver">
+          <span class="card-img-icon">🌸</span><span class="card-img-label">Ramouji · Silver</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Meenakari Choker','Sterling silver choker with hand-painted meenakari enamel. Matching earrings. Multiple color options.','From $290','silver','🪙','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-silver">Silver · Meenakari</div><div class="card-name">Meenakari Choker Set</div><div class="card-price">From $290</div></div>
+        <div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOLD TAB -->
+  <div class="tab-panel" id="panel-gold">
+    <div class="catalog-grid">
+      <div class="catalog-card reveal">
+        <div class="card-img ci-gold">
+          <span class="card-img-icon">📿</span><span class="card-img-label">Ramouji · 22K Gold</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Temple Bridal Haar','22K BIS hallmarked gold. Classic temple-work necklace with jhumka earrings. Customizable length & weight. By Ramouji.','From $3,800','gold','✨','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-gold">Gold · Temple Style</div><div class="card-name">Temple Bridal Haar</div><div class="card-price">From $3,800</div></div>
+        <div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+      <div class="catalog-card reveal rd1">
+        <div class="card-img ci-gold">
+          <span class="card-img-icon">👑</span><span class="card-img-label">Ramouji · 22K Gold</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Maharani Polki Set','Full 6-piece 22K gold Polki set — necklace, earrings, maang tikka, haath phool, nose ring & bangles. BIS certified heirloom quality.','From $9,200','gold','✨','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-gold">Gold · Polki Full Set</div><div class="card-name">Maharani Polki Set</div><div class="card-price">From $9,200</div></div>
+        <div class="card-badge cb-sig">Signature</div><div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+      <div class="catalog-card reveal rd2">
+        <div class="card-img ci-gold">
+          <span class="card-img-icon">🌺</span><span class="card-img-label">Ramouji · 22K Gold</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('South Indian Antique Choker','Oxidized antique-finish 22K gold choker with South Indian motifs. Layered with long necklace. Fully customizable.','From $4,400','gold','✨','Crafted by Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-gold">Gold · Antique Finish</div><div class="card-name">South Indian Antique Choker</div><div class="card-price">From $4,400</div></div>
+        <div class="maker-tag mt-gold">By Ramouji</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAMOND TAB -->
+  <div class="tab-panel" id="panel-diamond">
+    <div class="catalog-grid">
+      <div class="catalog-card reveal">
+        <div class="card-img ci-diamond">
+          <span class="card-img-icon">💎</span><span class="card-img-label">Kira · Lab Diamond</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Lab Diamond Choker Set','IGI certified lab-grown VS clarity diamonds in 18K gold. Ethically grown — identical to natural at 40% lower cost. Sourced by Kira.','From $4,800','diamond','💎','Sourced by Kira')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-diamond">Lab Diamond · Choker</div><div class="card-name">Lab Diamond Choker Set</div><div class="card-price">From $4,800</div></div>
+        <div class="card-badge cb-lab">Lab Grown</div><div class="maker-tag mt-dia">By Kira</div>
+      </div>
+      <div class="catalog-card reveal rd1">
+        <div class="card-img ci-diamond">
+          <span class="card-img-icon">✦</span><span class="card-img-label">Kira · Natural Diamond</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Natural Diamond Bridal Set','GIA certified natural diamonds, F–G color, VS clarity, set in 22K gold. Investment-grade with full appraisal.','From $14,000','diamond','💎','Sourced by Kira')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-diamond">Natural Diamond · Full Set</div><div class="card-name">Natural Diamond Bridal Set</div><div class="card-price">From $14,000</div></div>
+        <div class="card-badge cb-gia">GIA Cert.</div><div class="maker-tag mt-dia">By Kira</div>
+      </div>
+      <div class="catalog-card reveal rd2">
+        <div class="card-img ci-diamond">
+          <span class="card-img-icon">🌟</span><span class="card-img-label">Kira + Ramouji · Custom</span>
+          <div class="card-overlay"><button class="btn-primary" onclick="openModal('Bespoke Diamond Commission','Choose your stone — lab or natural, any cut. Kira sources your certified diamond. Ramouji sets it in a custom Indian bridal design.','By Consultation','diamond','💎','Kira + Ramouji')">Quick View</button></div>
+        </div>
+        <div class="card-info"><div class="card-cat cc-diamond">Bespoke · Custom</div><div class="card-name">Bespoke Diamond Commission</div><div class="card-price">By Consultation</div></div>
+        <div class="card-badge cb-bespoke">Bespoke</div><div class="maker-tag mt-dia">Kira + Ramouji</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:44px;" class="reveal">
+    <a href="#consult" class="btn-outline">Request Full Lookbook →</a>
+  </div>
+</section>
+
+<!-- ARTISANS -->
+<section id="artisans">
+  <div class="artisans-intro reveal">
+    <div class="stag" style="justify-content:center;">The Hands Behind Every Piece</div>
+    <h2 class="sh" style="text-align:center;font-size:clamp(1.7rem,2.8vw,2.6rem);">Meet Our <em>Makers</em></h2>
+    <p>Two trusted specialists — a master goldsmith and a certified diamond supplier — cover every tier and every customization.</p>
+  </div>
+  <div class="artisans-grid">
+    <div class="artisan-card artisan-ramouji reveal">
+      <!-- Artisan logo mark -->
+      <div class="artisan-logo-mark">
+        <div class="artisan-logo-rule"></div>
+        <div class="artisan-logo-name">RAMOUJI</div>
+        <div class="artisan-logo-rule artisan-logo-rule-bot"></div>
+      </div>
+      <div class="artisan-label">Master Goldsmith · Silver & Gold</div>
+      <div class="artisan-role">Silver, Gold & Custom Jewelry Craftsman</div>
+      <p class="artisan-desc">Ramouji is our trusted goldsmith — working in both silver and gold with equal mastery. Whether you want an ornate 22K heirloom bridal set or a gold-plated silver piece that photographs like the real thing, Ramouji brings the same dedication to every design. He is the reason Bangarams can offer genuine customization at every price point.</p>
+      <div class="artisan-services">
+        <span class="artisan-service">925 Sterling Silver</span>
+        <span class="artisan-service">22K Gold Sets</span>
+        <span class="artisan-service">Kundan</span>
+        <span class="artisan-service">Temple Jewelry</span>
+        <span class="artisan-service">Polki & Jadau</span>
+        <span class="artisan-service">Meenakari</span>
+        <span class="artisan-service">Custom Design</span>
+        <span class="artisan-service">Repairs & Resizing</span>
+      </div>
+      <a href="#consult" class="btn-artisan">Commission Ramouji →</a>
+    </div>
+    <div class="artisan-card artisan-kira reveal rd1">
+      <div class="artisan-logo-mark">
+        <div class="artisan-logo-rule" style="background:rgba(184,200,216,.3);"></div>
+        <div class="artisan-logo-name">KIRA</div>
+        <div class="artisan-logo-rule artisan-logo-rule-bot" style="background:rgba(184,200,216,.3);"></div>
+      </div>
+      <div class="artisan-label">Certified Diamond Supplier · B2B</div>
+      <div class="artisan-role">Lab-Grown & Natural Diamond Specialist</div>
+      <p class="artisan-desc">Kira is our exclusive B2B diamond partner — offering both lab-grown and natural diamonds with full GIA and IGI documentation. Lab-grown diamonds are chemically identical to natural stones at 40–60% lower cost. Kira also offers personalized stone selection consultations so you choose the exact cut, clarity, and carat that fits your vision.</p>
+      <div class="artisan-services">
+        <span class="artisan-service">Lab-Grown Diamonds</span>
+        <span class="artisan-service">Natural Diamonds</span>
+        <span class="artisan-service">GIA Certified</span>
+        <span class="artisan-service">IGI Certified</span>
+        <span class="artisan-service">Stone Selection</span>
+        <span class="artisan-service">Investment Pieces</span>
+        <span class="artisan-service">Loose Stones</span>
+        <span class="artisan-service">Appraisal Reports</span>
+      </div>
+      <a href="#consult" class="btn-artisan">Consult on Diamonds →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<div id="featured">
+  <div class="featured-img">
+    <div class="featured-img-inner"><span>👑</span><p>Featured piece photo</p></div>
+  </div>
+  <div class="featured-content">
+    <!-- Featured section logo -->
+    <div class="featured-logo-mark">
+      <div class="featured-logo-rule"></div>
+      <div class="featured-logo-text">BANGARAMS</div>
+      <div class="featured-logo-rule"></div>
+      <div class="featured-logo-tag">Silver · Gold · Diamonds</div>
+    </div>
+    <div class="featured-tag">Piece of the Season</div>
+    <h2 class="featured-title">The Maharani<br>Gold Bridal Set</h2>
+    <p class="featured-desc">A complete 6-piece heirloom set by Ramouji — 22K BIS gold, temple-work necklace, chandelier earrings, maang tikka, haath phool & bangles. Fully customizable.</p>
+    <div class="featured-specs">
+      <div class="spec"><span class="spec-label">Gold Purity</span><span class="spec-val">22K · BIS Hallmarked</span></div>
+      <div class="spec"><span class="spec-label">Craftsman</span><span class="spec-val">Ramouji · Custom</span></div>
+      <div class="spec"><span class="spec-label">Pieces</span><span class="spec-val">6-Piece Full Set</span></div>
+      <div class="spec"><span class="spec-label">Delivery</span><span class="spec-val">Local · Insured</span></div>
+    </div>
+    <div class="featured-price">$14,500 <span>· or custom quote</span></div>
+    <a href="#consult" class="btn-gold">Reserve or Customize →</a>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="stag reveal">The Bangarams Experience</div>
+  <h2 class="sh reveal rd1">From Browse<br><em>to Your Door</em></h2>
+  <div class="steps-grid">
+    <div class="step reveal"><div class="step-num">01</div><div class="step-icon">🔍</div><div class="step-title">Choose Your Tier</div><div class="step-desc">Silver, Gold, or Diamond — browse online or ask us to curate based on your budget and occasion.</div></div>
+    <div class="step reveal rd1"><div class="step-num">02</div><div class="step-icon">💬</div><div class="step-title">Consult Ramouji or Kira</div><div class="step-desc">Book a free consult or WhatsApp. Work with Ramouji on custom designs or Kira on your perfect stone.</div></div>
+    <div class="step reveal rd2"><div class="step-num">03</div><div class="step-icon">🔒</div><div class="step-title">Secure Checkout</div><div class="step-desc">Pay via Stripe — credit card, Apple Pay, or Google Pay. Deposits accepted on custom orders.</div></div>
+    <div class="step reveal rd3"><div class="step-num">04</div><div class="step-icon">🎁</div><div class="step-title">White-Glove Delivery</div><div class="step-desc">Personal local delivery in our signature box. Certificate of authenticity included with every piece.</div></div>
+  </div>
+</section>
+
+<!-- WA BANNER -->
+<div class="wa-banner">
+  <div>
+    <div class="wa-title">Not sure which tier is right for you?</div>
+    <p class="wa-desc">Send us a WhatsApp with your wedding date, outfit colors, or a reference photo. We'll curate options across all three tiers. Reply within 2 hours.</p>
+  </div>
+  <a href="https://wa.me/19999999999?text=Hi%2C%20I%20found%20Bangarams%20and%20need%20help%20choosing%20bridal%20jewelry." class="btn-wa" target="_blank"><span>💬</span>Chat on WhatsApp</a>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-num">3</span><span class="trust-label">Jewelry Tiers</span></div>
+  <div class="trust-item"><span class="trust-num">22K</span><span class="trust-label">BIS Gold Standard</span></div>
+  <div class="trust-item"><span class="trust-num">GIA</span><span class="trust-label">Diamond Certified</span></div>
+  <div class="trust-item"><span class="trust-num">925</span><span class="trust-label">Sterling Silver</span></div>
+  <div class="trust-item"><span class="trust-num">100%</span><span class="trust-label">Insured Delivery</span></div>
+</div>
+
+<!-- CONSULT -->
+<section id="consult">
+  <div>
+    <div class="stag reveal">Personal Styling</div>
+    <h2 class="sh reveal rd1">Book a Free<br><em>Bridal Consultation</em></h2>
+    <p class="sp reveal rd2" style="margin-bottom:4px;">Tell us your tier, your vision, your budget — we'll connect you with Ramouji or Kira.</p>
+    <form class="consult-form reveal rd2" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group"><label>Your Name</label><input type="text" placeholder="Priya Sharma" required></div>
+        <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" placeholder="+1 (404) 000-0000" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label><input type="email" placeholder="priya@email.com"></div>
+        <div class="form-group"><label>Wedding Date</label><input type="date"></div>
+      </div>
+      <div class="form-group">
+        <label>Which Tier?</label>
+        <select>
+          <option>Silver Splendour — from $280</option>
+          <option>Gold Legacy — 22K BIS, from $2,800</option>
+          <option>Diamond Prestige — Lab Grown, from $4,800</option>
+          <option>Diamond Prestige — Natural, from $14,000</option>
+          <option>Mix across tiers</option>
+          <option>Not sure — show me all options</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Pieces Needed</label>
+        <select>
+          <option>Full Bridal Set (5–7 pieces)</option>
+          <option>Necklace + Earrings</option>
+          <option>Maang Tikka + Earrings</option>
+          <option>Bangles / Kadas</option>
+          <option>Custom by Ramouji</option>
+          <option>Diamond via Kira</option>
+          <option>Multiple occasions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Budget</label>
+        <select>
+          <option>Under $500</option>
+          <option>$500 – $2,000</option>
+          <option>$2,000 – $6,000</option>
+          <option>$6,000 – $15,000</option>
+          <option>$15,000+</option>
+          <option>Flexible — guide me</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tell us about your wedding</label>
+        <textarea placeholder="Outfit colors, style (South Indian, North Indian, fusion), inspiration photos, or a custom request for Ramouji or Kira?"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Request Consultation →</button>
+    </form>
+  </div>
+  <div class="consult-right reveal rd1">
+    <div class="stag">Why Bangarams</div>
+    <h3 class="sh" style="font-size:1.85rem;">Every bride.<br><em>Every budget.</em><br>Every dream.</h3>
+    <div class="consult-features">
+      <div class="cf-item"><div class="cf-icon">🪙</div><div><div class="cf-title">Silver That Looks Like Gold</div><div class="cf-desc">Ramouji's silver tier is the smart 2025 choice — stunning in photos, easy on the budget.</div></div></div>
+      <div class="cf-item"><div class="cf-icon">✨</div><div><div class="cf-title">Heirloom Gold by Ramouji</div><div class="cf-desc">22K BIS certified, custom designed. Pieces you'll pass to the next generation.</div></div></div>
+      <div class="cf-item"><div class="cf-icon">💎</div><div><div class="cf-title">Certified Diamonds via Kira</div><div class="cf-desc">Lab-grown or natural, GIA or IGI. Kira finds your stone, we set it beautifully.</div></div></div>
+      <div class="cf-item"><div class="cf-icon">🚚</div><div><div class="cf-title">Personal Local Delivery</div><div class="cf-desc">Delivered personally, fully insured, with every certificate included.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo-wrap">
+        <div class="footer-logo-rule"></div>
+        <div style="text-align:left;padding:2px 0;"><span style="display:inline-block;width:6px;height:6px;background:rgba(200,151,63,.4);transform:rotate(45deg);"></span></div>
+        <div class="footer-logo-text">BANGARAMS</div>
+        <div class="footer-logo-rule footer-logo-rule-bot"></div>
+        <div class="footer-logo-tag">Silver · Gold · Diamonds</div>
+      </div>
+      <div class="footer-tagline">"Gold. For the bride who deserves everything."</div>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="#" onclick="switchTab('silver')">Silver Splendour</a></li>
+        <li><a href="#" onclick="switchTab('gold')">Gold Legacy</a></li>
+        <li><a href="#" onclick="switchTab('diamond')">Diamond Prestige</a></li>
+        <li><a href="#artisans">Bespoke Custom</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Our Makers</h4>
+      <ul>
+        <li><a href="#artisans">Ramouji — Goldsmith</a></li>
+        <li><a href="#artisans">Kira — Diamonds</a></li>
+        <li><a href="#consult">Commission a Piece</a></li>
+        <li><a href="#consult">Free Consultation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="https://wa.me/19999999999" target="_blank">WhatsApp Us</a></li>
+        <li><a href="mailto:hello@bangarams.com">hello@bangarams.com</a></li>
+        <li><a href="#">Alpharetta, GA</a></li>
+        <li><a href="#">@bangarams</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 Bangarams LLC · All Rights Reserved · bangarams.com</span>
+    <span class="footer-tm">BANGARAMS™</span>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModalBtn()">✕</button>
+    <div class="modal-tier-badge mt-gold-b" id="modalTierBadge">Gold Legacy</div>
+    <div class="modal-img" id="modalImg">💎</div>
+    <h2 id="modalTitle"></h2>
+    <div class="modal-artisan" id="modalArtisan"></div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-price" id="modalPrice"></div>
+    <a href="#consult" class="btn-primary" onclick="closeModalBtn()">Reserve or Customize</a>
+    <a href="https://wa.me/19999999999" class="btn-wa" target="_blank" style="margin-top:8px;"><span>💬</span>Inquire on WhatsApp</a>
+  </div>
+</div>
+
+<script>
+/* ── PREVIEW GATE ── */
+const PREVIEW_PWD = 'bangarams2025'; // Change this to your preferred password
+
+function checkPwd() {
+  const val = document.getElementById('gate-pwd').value.trim().toLowerCase();
+  const err = document.getElementById('gate-err');
+  if (val === PREVIEW_PWD) {
+    document.getElementById('preview-gate').classList.add('hidden');
+    sessionStorage.setItem('bgUnlocked','1');
+    err.textContent = '';
+  } else {
+    err.textContent = 'Incorrect password. Please try again.';
+    document.getElementById('gate-pwd').value = '';
+    document.getElementById('gate-pwd').focus();
+  }
+}
+// Auto-unlock if already unlocked this session
+if (sessionStorage.getItem('bgUnlocked') === '1') {
+  document.getElementById('preview-gate').classList.add('hidden');
+}
+
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.catalog-card,.tier').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+});
+
+/* ── NAV SCROLL ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
+
+/* ── MOBILE MENU ── */
+function openMobile(){ document.getElementById('mobileMenu').classList.add('open'); }
+function closeMobile(){ document.getElementById('mobileMenu').classList.remove('open'); }
+
+/* ── REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* ── TABS ── */
+function switchTab(tier) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-silver','active-gold','active-diamond'));
+  document.getElementById('panel-' + tier).classList.add('active');
+  document.getElementById('tab-' + tier).classList.add('active-' + tier);
+}
+
+/* ── MODAL ── */
+const tierMap = {
+  silver:  {label:'Silver Splendour', cls:'mt-silver'},
+  gold:    {label:'Gold Legacy',      cls:'mt-gold-b'},
+  diamond: {label:'Diamond Prestige', cls:'mt-dia-b'}
+};
+function openModal(title, desc, price, tier, icon, artisan) {
+  const t = tierMap[tier] || tierMap.gold;
+  const badge = document.getElementById('modalTierBadge');
+  badge.textContent = t.label;
+  badge.className = 'modal-tier-badge ' + t.cls;
+  document.getElementById('modalImg').textContent = icon;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('modalPrice').textContent = price;
+  document.getElementById('modalArtisan').textContent = artisan;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModalBtn() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) closeModalBtn();
+}
+
+/* ── FORM ── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = "✓ Received — we'll WhatsApp you within 2 hours!";
+  btn.style.background = '#25D366';
+  btn.style.color = '#fff';
+  setTimeout(() => {
+    btn.textContent = 'Request Consultation →';
+    btn.style.background = '';
+    btn.style.color = '';
+    e.target.reset();
+  }, 5000);
+}
+</script>
+</body>
+</html>
