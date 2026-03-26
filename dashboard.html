@@ -209,6 +209,28 @@ td{padding:12px 14px;vertical-align:middle;}
 
 /* ── PRICING PANEL ── */
 .pricing-grid{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start;}
+/* ── FLYER PANEL ── */
+.flyer-grid{display:grid;grid-template-columns:340px 1fr;gap:24px;align-items:start;}
+.flyer-settings{display:flex;flex-direction:column;gap:16px;}
+.settings-card{background:var(--surface2);border:1px solid var(--border);padding:20px 22px;}
+.settings-card-title{font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(200,151,63,.6);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.settings-card-title::before{content:'';display:block;width:12px;height:.5px;background:var(--gold);}
+.markup-preview{background:rgba(200,151,63,.05);border:1px solid rgba(200,151,63,.12);padding:12px 14px;margin-top:12px;font-size:.78rem;}
+.markup-preview-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.markup-preview-row:last-child{margin-bottom:0;padding-top:8px;border-top:1px solid rgba(200,151,63,.12);}
+.discount-toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.flyer-viewer{background:var(--surface2);border:1px solid var(--border);padding:0;overflow:hidden;min-height:600px;display:flex;flex-direction:column;}
+.flyer-viewer-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.flyer-viewer-body{flex:1;position:relative;}
+.flyer-viewer-body iframe{width:100%;height:100%;min-height:580px;border:none;display:block;}
+.flyer-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:400px;color:rgba(168,152,128,.4);gap:12px;}
+.flyer-placeholder-icon{font-size:3rem;opacity:.3;}
+.upload-zone{border:1px dashed rgba(200,151,63,.2);padding:24px;text-align:center;cursor:pointer;transition:all .3s;}
+.upload-zone:hover{border-color:rgba(200,151,63,.5);background:rgba(200,151,63,.03);}
+.upload-zone-label{font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(200,151,63,.5);margin-bottom:6px;}
+.supplier-col{font-size:.65rem;color:rgba(168,152,128,.45);}
+.retail-col{color:var(--gold-pale);}
+.discount-badge{display:inline-block;background:rgba(220,80,80,.15);border:1px solid rgba(220,80,80,.3);color:rgba(220,80,80,.9);padding:1px 7px;font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.1em;text-transform:uppercase;margin-left:6px;}
 .calc-box{background:var(--surface2);border:1px solid var(--border);padding:22px 24px;}
 .calc-result{margin-top:16px;background:rgba(200,151,63,.05);border:1px solid rgba(200,151,63,.15);padding:16px 18px;}
 .calc-big{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);}
@@ -357,6 +379,9 @@ td{padding:12px 14px;vertical-align:middle;}
     </a>
     <a class="sb-item" id="sb-pricing" data-sid="pricing" onclick="showPanel('pricing',this)" style="display:none">
       <span class="sb-icon">◈</span> <span data-i18n="nav-pricing">Kira Pricing</span>
+    </a>
+    <a class="sb-item" id="sb-flyer" data-sid="flyer" onclick="showPanel('flyer',this)" style="display:none">
+      <span class="sb-icon">📋</span> <span>Flyer & Markup</span>
     </a>
 
     <div class="sb-section" id="sb-admin-section" style="display:none">Admin</div>
@@ -608,6 +633,102 @@ td{padding:12px 14px;vertical-align:middle;}
               </table>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FLYER & MARKUP (Admin only) ══ -->
+    <div class="panel" id="panel-flyer">
+      <div class="page-head">
+        <div class="page-tag">Admin · Kira</div>
+        <div class="page-title">Kira Flyer & Markup Settings</div>
+      </div>
+
+      <div class="flyer-grid">
+
+        <!-- LEFT: settings -->
+        <div class="flyer-settings">
+
+          <!-- Markup -->
+          <div class="settings-card">
+            <div class="settings-card-title">Retail Markup</div>
+            <div class="m-field">
+              <label>Markup % over Kira Supplier Price</label>
+              <input type="number" id="fl-markup" min="10" max="300" step="1" placeholder="80"
+                     oninput="previewMarkup()" style="font-size:1rem;">
+              <div style="font-size:.65rem;color:rgba(168,152,128,.4);margin-top:4px;">80% = ×1.80 · 100% = ×2.00 · Current default: 80%</div>
+            </div>
+            <div class="markup-preview" id="fl-markup-preview" style="display:none">
+              <div class="markup-preview-row"><span style="color:rgba(168,152,128,.6);">Example: $1,000 supplier</span><span id="fl-prev-retail" style="color:var(--gold-pale);font-family:'Cormorant Garamond',serif;font-size:1rem;"></span></div>
+              <div class="markup-preview-row"><span style="color:rgba(168,152,128,.6);">Gross margin</span><span id="fl-prev-margin" style="color:var(--green);"></span></div>
+              <div class="markup-preview-row"><span style="font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,151,63,.5);">Effective multiplier</span><span id="fl-prev-mult" style="color:var(--gold);font-weight:600;"></span></div>
+            </div>
+            <button class="h-btn" style="margin-top:14px;width:100%;text-align:center;" onclick="saveMarkupSettings()">Save Markup →</button>
+            <button class="h-btn" style="margin-top:8px;width:100%;text-align:center;border-color:rgba(155,114,207,.3);color:rgba(155,114,207,.7);" onclick="repriceKiraDesigns()">Apply to All Kira Products →</button>
+          </div>
+
+          <!-- Discount -->
+          <div class="settings-card">
+            <div class="settings-card-title">Discount / Sale</div>
+            <div class="discount-toggle-row">
+              <label class="toggle-sw"><input type="checkbox" id="fl-disc-active" onchange="toggleDiscountFields()"><span class="slider"></span></label>
+              <span id="fl-disc-status" style="font-size:.78rem;color:rgba(168,152,128,.55);">Discounts off</span>
+            </div>
+            <div id="fl-disc-fields" style="display:none">
+              <div class="m-field">
+                <label>Global Discount %</label>
+                <input type="number" id="fl-disc-pct" min="1" max="80" step="1" placeholder="10">
+              </div>
+              <div class="m-field">
+                <label>Sale Label (shown on site)</label>
+                <input type="text" id="fl-disc-label" placeholder="e.g. Bridal Season Sale · 10% Off">
+              </div>
+            </div>
+            <button class="h-btn" style="margin-top:10px;width:100%;text-align:center;" onclick="saveDiscountSettings()">Save Discount Settings →</button>
+          </div>
+
+          <!-- PDF Upload -->
+          <div class="settings-card">
+            <div class="settings-card-title">Upload Kira Flyer PDF</div>
+            <div class="upload-zone" onclick="document.getElementById('fl-pdf-input').click()">
+              <div class="upload-zone-label">Click to upload PDF</div>
+              <div style="font-size:.72rem;color:rgba(168,152,128,.35);">Kira price list, catalog flyer, or spec sheet</div>
+            </div>
+            <input type="file" id="fl-pdf-input" accept="application/pdf" style="display:none" onchange="uploadKiraFlyer(this)">
+            <div id="fl-upload-status" style="font-size:.72rem;margin-top:8px;min-height:18px;"></div>
+            <button class="h-btn" id="fl-remove-btn" style="margin-top:8px;border-color:rgba(220,80,80,.3);color:rgba(220,80,80,.6);display:none;" onclick="removeKiraFlyer()">Remove PDF</button>
+          </div>
+
+        </div><!-- /flyer-settings -->
+
+        <!-- RIGHT: PDF viewer -->
+        <div class="flyer-viewer" id="flyer-viewer-wrap">
+          <div class="flyer-viewer-header">
+            <span style="font-family:'Cinzel',serif;font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(200,151,63,.5);">Kira Flyer Preview</span>
+            <span id="fl-pdf-name" style="font-size:.72rem;color:rgba(168,152,128,.5);"></span>
+          </div>
+          <div class="flyer-viewer-body" id="flyer-viewer-body">
+            <div class="flyer-placeholder" id="flyer-placeholder">
+              <div class="flyer-placeholder-icon">📄</div>
+              <div style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.22em;text-transform:uppercase;">No flyer uploaded</div>
+              <div style="font-size:.72rem;color:rgba(168,152,128,.35);">Upload a PDF to view Kira's price list here</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /flyer-grid -->
+
+      <!-- Full Kira Catalog with supplier + retail prices -->
+      <div class="tbl-wrap" style="margin-top:28px;">
+        <div class="tbl-head">
+          <span class="tbl-title">Kira Catalog — Supplier vs Retail Pricing</span>
+          <span id="fl-markup-label" style="font-size:.7rem;color:rgba(168,152,128,.5);"></span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="catalog-mini">
+            <thead><tr><th>SKU</th><th>Piece</th><th>Category</th><th>Carat</th><th>Supplier Price</th><th>Retail Price</th><th>Margin</th><th>Tier</th><th>Discount</th></tr></thead>
+            <tbody id="flyer-catalog-body"></tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -910,6 +1031,18 @@ td{padding:12px 14px;vertical-align:middle;}
       </div>
     </div>
 
+    <!-- Discount -->
+    <div class="m-row" id="des-discount-wrap">
+      <div class="m-field">
+        <label>Discount % <span style="font-size:.58rem;color:rgba(168,152,128,.35);font-family:'Raleway',sans-serif;text-transform:none;letter-spacing:0;">(leave 0 for no discount)</span></label>
+        <input id="des-discount-pct" type="number" min="0" max="80" step="1" placeholder="0">
+      </div>
+      <div class="m-field" style="display:flex;align-items:flex-end;gap:10px;padding-bottom:2px;">
+        <label class="toggle-sw"><input type="checkbox" id="des-discount-active"><span class="slider"></span></label>
+        <span style="font-size:.72rem;color:rgba(168,152,128,.55);">Discount Active</span>
+      </div>
+    </div>
+
     <!-- Publish Toggle -->
     <div class="pub-toggle-row">
       <div>
@@ -960,6 +1093,7 @@ if (ME) {
   if (typeof KIRA !== 'undefined' && (IS_ADMIN || ME.role === 'artisan_kira')) {
     KIRA.seedKiraProducts();
     document.getElementById('sb-pricing').style.display = 'flex';
+    if (IS_ADMIN) document.getElementById('sb-flyer').style.display = 'flex';
   }
 }
 
@@ -1002,7 +1136,7 @@ function showPanel(id, el) {
   const renders = { overview:renderOverview, orders:renderOrders, invoices:renderInvoices,
                     payments:renderPayments, revisions:renderRevisions, shipping:renderShipping,
                     approvals:renderApprovals, catalog:renderCatalog, banking:renderBanking,
-                    pricing:renderPricing };
+                    pricing:renderPricing, flyer:renderFlyerPanel };
   if(renders[id]) renders[id]();
 }
 
@@ -1818,6 +1952,8 @@ function renderCatalog() {
       </td>
       <td>
         <div class="td-price" style="color:var(--gold);">$${(d.basePrice||0).toLocaleString()}</div>
+        ${d.kiraBasePrice && IS_ADMIN ? `<div class="supplier-col">Supplier: $${d.kiraBasePrice.toLocaleString()}</div>` : ''}
+        ${d.discountPercent && d.discountActive ? `<div class="discount-badge">${d.discountPercent}% off</div>` : ''}
         ${d.makingCharges?`<div class="td-sub">+$${d.makingCharges} making</div>`:''}
         ${d.cadFee?`<div class="td-sub">CAD $${d.cadFee}/rev</div>`:''}
       </td>
@@ -1908,11 +2044,16 @@ function openDesignForm(editId) {
     // Publish state
     document.getElementById('des-published').checked = !!d.published;
     updatePubStatus();
+    // Discount
+    document.getElementById('des-discount-pct').value    = d.discountPercent || '';
+    document.getElementById('des-discount-active').checked = !!d.discountActive;
   } else {
     ['des-title','des-desc','des-weight','des-lead','des-price','des-making','des-cad','des-video','des-img1','des-img2','des-img3'].forEach(id=>{
       const el=document.getElementById(id); if(el) el.value='';
     });
     document.getElementById('des-published').checked = false;
+    document.getElementById('des-discount-pct').value = '';
+    document.getElementById('des-discount-active').checked = false;
     updatePubStatus();
   }
   openOv('ov-design');
@@ -1984,8 +2125,10 @@ async function saveDesign() {
     metals, finishes, stones, images, lineItems,
     published:        document.getElementById('des-published').checked,
     descriptionNative: document.getElementById('des-desc-native').value.trim() || undefined,
-    sku:           (document.getElementById('des-sku')?.value||'').trim() || undefined,
-    occasionTags:  [...document.querySelectorAll('[name=des-occasion]:checked')].map(e=>e.value),
+    sku:             (document.getElementById('des-sku')?.value||'').trim() || undefined,
+    occasionTags:    [...document.querySelectorAll('[name=des-occasion]:checked')].map(e=>e.value),
+    discountPercent: parseFloat(document.getElementById('des-discount-pct').value) || 0,
+    discountActive:  document.getElementById('des-discount-active').checked,
   };
 
   const editId = document.getElementById('des-edit-id').value;
@@ -2071,6 +2214,173 @@ function calcKiraPrice() {
   document.getElementById('calc-tier').innerHTML = tier
     ? `<span class="badge tier-${KIRA.getTier(c.finalRetailPrice)}" style="font-size:.44rem;">${tier.label}</span>`
     : '—';
+}
+
+/* ════════════════════════════════════════
+   FLYER & MARKUP PANEL
+════════════════════════════════════════ */
+function renderFlyerPanel() {
+  if (typeof KIRA === 'undefined' || typeof STORE === 'undefined') return;
+
+  const cfg = STORE.getPricingConfig();
+
+  // Populate markup field
+  document.getElementById('fl-markup').value = cfg.kiraMarkupPercent ?? 80;
+  previewMarkup();
+
+  // Populate discount fields
+  document.getElementById('fl-disc-active').checked   = !!cfg.discountActive;
+  document.getElementById('fl-disc-pct').value        = cfg.globalDiscountPercent || '';
+  document.getElementById('fl-disc-label').value      = cfg.discountLabel || '';
+  toggleDiscountFields();
+
+  // Markup label in catalog header
+  const ml = document.getElementById('fl-markup-label');
+  if (ml) ml.textContent = `Current markup: ${cfg.kiraMarkupPercent ?? 80}% (×${((cfg.kiraMarkupPercent??80)/100+1).toFixed(2)})`;
+
+  // Render catalog table
+  renderFlyerCatalog(cfg);
+
+  // Show existing flyer if any
+  renderFlyerPdf();
+}
+
+function previewMarkup() {
+  const pct  = parseFloat(document.getElementById('fl-markup').value) || 0;
+  const prev = document.getElementById('fl-markup-preview');
+  if (!pct) { prev.style.display='none'; return; }
+  const retail = KIRA.getRetailWithMarkup(1000, pct);
+  const margin = Math.round(((retail - 1000) / retail) * 1000) / 10;
+  document.getElementById('fl-prev-retail').textContent   = `$${retail.toLocaleString()} retail`;
+  document.getElementById('fl-prev-margin').textContent   = `${margin}% gross margin`;
+  document.getElementById('fl-prev-mult').textContent     = `×${(pct/100+1).toFixed(2)}`;
+  prev.style.display = 'block';
+}
+
+function saveMarkupSettings() {
+  const pct = parseFloat(document.getElementById('fl-markup').value);
+  if (!pct || pct < 10 || pct > 300) { alert('Enter a markup between 10% and 300%.'); return; }
+  STORE.savePricingConfig({ kiraMarkupPercent: pct });
+  const ml = document.getElementById('fl-markup-label');
+  if (ml) ml.textContent = `Current markup: ${pct}% (×${(pct/100+1).toFixed(2)})`;
+  renderFlyerCatalog(STORE.getPricingConfig());
+  alert(`Markup saved: ${pct}%. Click "Apply to All Kira Products" to update catalog prices.`);
+}
+
+function repriceKiraDesigns() {
+  if (!confirm('This will update the retail price of all Kira designs in the catalog based on the current markup %. Continue?')) return;
+  const cfg = STORE.getPricingConfig();
+  const designs = STORE.getDesignsBySupplier('kira');
+  let count = 0;
+  designs.forEach(d => {
+    if (!d.kiraBasePrice) return;
+    const newRetail = KIRA.getRetailWithMarkup(d.kiraBasePrice, cfg.kiraMarkupPercent);
+    STORE.updateDesign(d.id, { basePrice: newRetail }, 'kira');
+    count++;
+  });
+  alert(`Updated ${count} Kira designs to ${cfg.kiraMarkupPercent}% markup.`);
+  renderFlyerCatalog(cfg);
+}
+
+function saveDiscountSettings() {
+  const active  = document.getElementById('fl-disc-active').checked;
+  const pct     = parseFloat(document.getElementById('fl-disc-pct').value) || 0;
+  const label   = document.getElementById('fl-disc-label').value.trim();
+  STORE.savePricingConfig({ discountActive:active, globalDiscountPercent:pct, discountLabel:label });
+  alert(active && pct ? `Discount saved: ${pct}% off "${label}"` : 'Discount settings saved (inactive).');
+}
+
+function toggleDiscountFields() {
+  const active = document.getElementById('fl-disc-active').checked;
+  document.getElementById('fl-disc-fields').style.display = active ? 'block' : 'none';
+  document.getElementById('fl-disc-status').textContent   = active ? 'Discounts active' : 'Discounts off';
+  document.getElementById('fl-disc-status').style.color   = active ? 'var(--green)' : 'rgba(168,152,128,.55)';
+}
+
+function renderFlyerCatalog(cfg) {
+  const body   = document.getElementById('flyer-catalog-body');
+  if (!body) return;
+  const markup = cfg?.kiraMarkupPercent ?? 80;
+  const discOn = cfg?.discountActive && cfg?.globalDiscountPercent > 0;
+  const discPct = cfg?.globalDiscountPercent || 0;
+  body.innerHTML = KIRA.CATALOG.map(p => {
+    const retail   = KIRA.getRetailWithMarkup(p.kiraBasePrice, markup);
+    const margin   = Math.round(((retail - p.kiraBasePrice) / retail) * 1000) / 10;
+    const tier     = KIRA.TIERS[KIRA.getTier(retail)];
+    const sale     = discOn ? Math.round(retail * (1 - discPct/100)) : null;
+    return `<tr>
+      <td style="font-family:'Cinzel',serif;font-size:.54rem;color:rgba(200,151,63,.55);">${esc(p.sku)}</td>
+      <td>
+        <div class="td-name" style="font-size:.8rem;">${esc(p.name)}</div>
+        <div class="td-sub">${(p.occasionTags||[]).slice(0,2).map(t=>`<span class="occ-chip">${esc(t)}</span>`).join('')}</div>
+      </td>
+      <td class="td-sub">${esc(p.category)}</td>
+      <td class="td-sub">${esc(p.caratWeight)}</td>
+      <td class="supplier-col">$${p.kiraBasePrice.toLocaleString()}</td>
+      <td class="retail-col">$${retail.toLocaleString()}</td>
+      <td style="color:${margin>=35?'var(--green)':'rgba(220,80,80,.8)'};">${margin}%</td>
+      <td><span class="badge tier-${KIRA.getTier(retail)}" style="font-size:.42rem;">${tier?.label.split(' ')[0]||''}</span></td>
+      <td>${sale ? `<span style="color:var(--green);">$${sale.toLocaleString()}</span> <span style="color:rgba(168,152,128,.4);text-decoration:line-through;font-size:.7rem;">$${retail.toLocaleString()}</span>` : '<span style="color:rgba(168,152,128,.3);">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function uploadKiraFlyer(input) {
+  const file = input.files[0];
+  if (!file || file.type !== 'application/pdf') { alert('Please select a PDF file.'); return; }
+  const status = document.getElementById('fl-upload-status');
+  status.style.color = 'rgba(168,152,128,.5)';
+  status.textContent = 'Saving PDF…';
+  try {
+    const key = await STORE.idb.savePdf(file);
+    STORE.saveKiraFlyerKey(key);
+    document.getElementById('fl-pdf-name').textContent = file.name;
+    status.style.color = 'var(--green)';
+    status.textContent = `✓ ${file.name} saved`;
+    document.getElementById('fl-remove-btn').style.display = 'inline-block';
+    renderFlyerPdf();
+  } catch(e) {
+    status.style.color = 'rgba(220,80,80,.7)';
+    status.textContent = 'Upload failed — ' + (e.message || 'unknown error');
+  }
+  input.value = '';
+}
+
+async function renderFlyerPdf() {
+  const key  = STORE.getKiraFlyerKey();
+  const body = document.getElementById('flyer-viewer-body');
+  const ph   = document.getElementById('flyer-placeholder');
+  const rmBtn = document.getElementById('fl-remove-btn');
+  if (!key) { if(ph) ph.style.display='flex'; if(rmBtn) rmBtn.style.display='none'; return; }
+  if(ph) ph.style.display='none';
+  if(rmBtn) rmBtn.style.display='inline-block';
+  try {
+    const blob    = await STORE.idb.getPdf(key);
+    const url     = URL.createObjectURL(blob);
+    const existing = body.querySelector('iframe');
+    if (existing) { URL.revokeObjectURL(existing.src); existing.remove(); }
+    const iframe  = document.createElement('iframe');
+    iframe.src    = url;
+    iframe.title  = 'Kira Flyer';
+    body.appendChild(iframe);
+  } catch(e) {
+    if(ph) { ph.style.display='flex'; ph.querySelector('div:last-child').textContent = 'Could not load PDF — try re-uploading.'; }
+  }
+}
+
+function removeKiraFlyer() {
+  if (!confirm('Remove the uploaded flyer?')) return;
+  const key = STORE.getKiraFlyerKey();
+  if (key) STORE.idb.remove(key);
+  STORE.saveKiraFlyerKey(null);
+  document.getElementById('fl-pdf-name').textContent = '';
+  document.getElementById('fl-upload-status').textContent = '';
+  document.getElementById('fl-remove-btn').style.display = 'none';
+  const body = document.getElementById('flyer-viewer-body');
+  const existing = body.querySelector('iframe');
+  if (existing) { URL.revokeObjectURL(existing.src); existing.remove(); }
+  const ph = document.getElementById('flyer-placeholder');
+  if(ph) { ph.style.display='flex'; ph.querySelector('div:last-child').textContent='Upload a PDF to view Kira\'s price list here'; }
 }
 
 /* ── RENDER ALL ── */

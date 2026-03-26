@@ -93,6 +93,14 @@ const KIRA = (() => {
     };
   }
 
+  // Compute retail from supplier price using a configurable markup %
+  // markupPct=80 → ×1.80 (same as BASE_MULTIPLIER default)
+  function getRetailWithMarkup(supplierPrice, markupPct) {
+    if (!supplierPrice) return 0;
+    const m = typeof markupPct === 'number' ? markupPct : 80;
+    return roundToNearest9(supplierPrice * (1 + m / 100));
+  }
+
   function getTier(retailPrice) {
     if (retailPrice < 2500) return 'entry';
     if (retailPrice < 6500) return 'bridal';
@@ -306,7 +314,7 @@ const KIRA = (() => {
   return {
     BASE_MULTIPLIER, MIN_MARGIN_PERCENT, GA_SALES_TAX,
     METAL_OPTIONS, GRADE_OPTIONS, OCCASIONS, TIERS, CATALOG,
-    calculatePrice, getTier, roundToNearest9,
+    calculatePrice, getTier, roundToNearest9, getRetailWithMarkup,
     seedKiraProducts,
   };
 

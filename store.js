@@ -127,7 +127,14 @@ const STORE = (() => {
       });
       return save(blob);
     }
-    return { save, get, remove, getURL, compressAndSave };
+    async function savePdf(file) {
+      // Store PDF blob directly (no compression)
+      return save(file);
+    }
+    async function getPdf(key) {
+      return get(key);
+    }
+    return { save, get, remove, getURL, compressAndSave, savePdf, getPdf };
   })();
 
   /* ════════════════════════════════════════
@@ -421,6 +428,24 @@ const STORE = (() => {
   }
 
   /* ════════════════════════════════════════
+     PRICING CONFIG
+  ════════════════════════════════════════ */
+  const K_PRICING = 'bg_pricing_cfg';
+  const K_FLYER   = 'bg_kira_flyer_v1';
+
+  function getPricingConfig() {
+    const def = { kiraMarkupPercent:80, discountActive:false, globalDiscountPercent:0, discountLabel:'Special Offer' };
+    return { ...def, ...JSON.parse(localStorage.getItem(K_PRICING) || '{}') };
+  }
+  function savePricingConfig(cfg) {
+    const current = getPricingConfig();
+    localStorage.setItem(K_PRICING, JSON.stringify({ ...current, ...cfg }));
+  }
+  // kiraFlyer stored as an IDB key
+  function getKiraFlyerKey()   { return localStorage.getItem(K_FLYER) || null; }
+  function saveKiraFlyerKey(k) { if(k) localStorage.setItem(K_FLYER, k); else localStorage.removeItem(K_FLYER); }
+
+  /* ════════════════════════════════════════
      INIT
   ════════════════════════════════════════ */
   seedIfEmpty();
@@ -435,6 +460,7 @@ const STORE = (() => {
     buildWAMessage, buildWAUrl, waUrl,
     gdriveSrc, ytEmbedUrl, ytThumb, resolveImgSrc, resolveImgSrcAsync,
     getBanking, saveBanking,
+    getPricingConfig, savePricingConfig, getKiraFlyerKey, saveKiraFlyerKey,
     idb,
   };
 })();

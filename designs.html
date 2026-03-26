@@ -71,6 +71,9 @@ select.filter-sel:focus{border-color:rgba(200,151,63,.4);}
 .no-results p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;}
 .card-tier{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;border:1px solid;display:inline-block;margin-bottom:6px;}
 .card-occ-chip{font-family:'Cinzel',serif;font-size:.43rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;background:rgba(200,151,63,.06);border:1px solid rgba(200,151,63,.15);color:rgba(168,152,128,.7);}
+.sale-badge{display:inline-block;background:rgba(220,80,80,.1);border:1px solid rgba(220,80,80,.25);color:rgba(220,80,80,.85);padding:2px 8px;font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.card-price-was{font-size:.82rem;color:rgba(168,152,128,.45);text-decoration:line-through;margin-right:6px;}
+.card-price-sale{color:rgba(220,80,80,.85);}
 
 /* ══ MODAL ══ */
 .modal-ov{display:none;position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.75);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
@@ -245,14 +248,44 @@ function setFilter(key, val, btn) {
   renderGrid();
 }
 
+// Pricing config cached once per render
+let _pricingCfg = null;
+function getPricingCfg() {
+  if (!_pricingCfg) _pricingCfg = (typeof STORE !== 'undefined') ? STORE.getPricingConfig() : {};
+  return _pricingCfg;
+}
+// Compute the public retail price for a design
+function getRetailPrice(d) {
+  if (typeof KIRA !== 'undefined' && d.kiraBasePrice) {
+    return KIRA.getRetailWithMarkup(d.kiraBasePrice, getPricingCfg().kiraMarkupPercent ?? 80);
+  }
+  return d.basePrice || 0;
+}
+// Compute sale price if discount applies
+function getSalePrice(d, retail) {
+  const cfg = getPricingCfg();
+  // Per-product discount takes precedence over global
+  if (d.discountActive && d.discountPercent > 0) {
+    return Math.round(retail * (1 - d.discountPercent / 100));
+  }
+  if (cfg.discountActive && cfg.globalDiscountPercent > 0) {
+    return Math.round(retail * (1 - cfg.globalDiscountPercent / 100));
+  }
+  return null;
+}
+
 function renderGrid() {
+  _pricingCfg = null; // refresh config on each render
   let designs = STORE.getPublicDesigns();
   if (_filters.supplier !== 'all') designs = designs.filter(d => d.supplierId === _filters.supplier);
   if (_filters.category) designs = designs.filter(d => d.category === _filters.category);
   if (_filters.metal)    designs = designs.filter(d => d.metals && d.metals.includes(_filters.metal));
   if (_filters.occasion) designs = designs.filter(d => (d.occasionTags||[]).includes(_filters.occasion));
   if (_filters.tier && typeof KIRA !== 'undefined') {
-    designs = designs.filter(d => d.basePrice && KIRA.getTier(d.basePrice) === _filters.tier);
+    designs = designs.filter(d => {
+      const r = getRetailPrice(d);
+      return r && KIRA.getTier(r) === _filters.tier;
+    });
   }
 
   const grid = document.getElementById('catalog-grid');
@@ -263,6 +296,7 @@ function renderGrid() {
     return;
   }
 
+  const cfg = getPricingCfg();
   grid.innerHTML = designs.map(d => {
     const img    = d.images && d.images.length
       ? `<img src="${esc(STORE.resolveImgSrc(d.images[0]))}" alt="${esc(d.title)}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-img-ph>💍</span>'">`
@@ -270,24 +304,39 @@ function renderGrid() {
     const chips  = (d.metals||[]).slice(0,2).map(m =>
       `<span class="chip-m" style="color:${STORE.METALS[m]?.color||'#A89880'};border-color:${STORE.METALS[m]?.color||'#A89880'}30">${STORE.METALS[m]?.short||m}</span>`
     ).join('');
-    const prof   = STORE.getProfile(d.supplierId);
-    // Tier badge (only for Kira diamond designs with a price)
-    const tierKey  = (typeof KIRA !== 'undefined' && d.basePrice) ? KIRA.getTier(d.basePrice) : null;
+    const prof    = STORE.getProfile(d.supplierId);
+    const retail  = getRetailPrice(d);
+    const sale    = retail ? getSalePrice(d, retail) : null;
+    // Tier badge
+    const tierKey  = (typeof KIRA !== 'undefined' && retail) ? KIRA.getTier(retail) : null;
     const tierInfo = tierKey ? KIRA.TIERS[tierKey] : null;
     const tierBadge = tierInfo
       ? `<span class="card-tier" style="color:${tierInfo.color};border-color:${tierInfo.border}">${tierInfo.label}</span>`
       : '';
-    // Occasion chips (up to 3)
+    // Sale badge
+    const discPct = (d.discountActive && d.discountPercent > 0) ? d.discountPercent
+                  : (cfg.discountActive && cfg.globalDiscountPercent > 0) ? cfg.globalDiscountPercent : 0;
+    const saleBadge = sale
+      ? `<span class="sale-badge">${discPct}% Off${cfg.discountLabel ? ' · ' + esc(cfg.discountLabel) : ''}</span>`
+      : '';
+    // Occasion chips
     const occChips = (d.occasionTags||[]).slice(0,3).map(o=>`<span class="card-occ-chip">${esc(o)}</span>`).join('');
+    // Price display
+    const priceHtml = retail
+      ? (sale
+          ? `<div class="card-price"><span class="card-price-was">$${retail.toLocaleString()}</span><span class="card-price-sale">$${sale.toLocaleString()}</span></div>`
+          : `<div class="card-price">From $${retail.toLocaleString()}</div>`)
+      : `<div class="card-price">Custom Quote</div>`;
     return `
     <div class="design-card" onclick="openModal('${d.id}')">
       <div class="card-img">
         ${img}
         <div class="card-supplier-tag">${esc(prof.name)}</div>
         ${d.featured ? '<div class="card-featured">Featured</div>' : ''}
+        ${sale ? `<div class="card-featured" style="background:rgba(220,80,80,.85);">${discPct}% Off</div>` : ''}
       </div>
       <div class="card-body">
-        ${tierBadge}
+        ${tierBadge}${saleBadge}
         <div class="card-cat">${esc(d.category)}</div>
         <div class="card-title">${esc(d.title)}</div>
         <div class="card-meta">
@@ -296,7 +345,7 @@ function renderGrid() {
         </div>
         ${occChips ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">${occChips}</div>` : ''}
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="card-price">${d.basePrice ? 'From $'+d.basePrice.toLocaleString() : 'Custom Quote'}</div>
+          ${priceHtml}
           <div class="card-chips">${chips}</div>
         </div>
       </div>
@@ -400,7 +449,13 @@ function buildRightPanel(d, prof) {
   return `
     <div class="m-cat">${esc(d.category)}</div>
     <div class="m-title">${esc(d.title)}</div>
-    ${d.basePrice ? `<div class="m-price">From $${d.basePrice.toLocaleString()} <span style="font-size:.75rem;color:var(--mist);">(depending on metal & stones)</span></div>` : '<div class="m-price" style="font-size:.95rem;">Custom Quote</div>'}
+    ${(() => {
+      const retail = getRetailPrice(d);
+      const sale   = retail ? getSalePrice(d, retail) : null;
+      if (!retail) return '<div class="m-price" style="font-size:.95rem;">Custom Quote</div>';
+      if (sale) return `<div class="m-price"><span style="text-decoration:line-through;opacity:.5;margin-right:8px;">$${retail.toLocaleString()}</span><span style="color:rgba(220,80,80,.85);">$${sale.toLocaleString()}</span> <span style="font-size:.72rem;color:rgba(220,80,80,.6);">${(() => { const cfg=getPricingCfg(); return (d.discountActive&&d.discountPercent)||cfg.globalDiscountPercent; })()}% off</span></div>`;
+      return `<div class="m-price">From $${retail.toLocaleString()} <span style="font-size:.75rem;color:var(--mist);">(depending on metal & stones)</span></div>`;
+    })()}
     <div class="m-meta">
       ${d.weight   ? `<span>⚖ ${esc(d.weight)}</span>`   : ''}
       ${d.leadTime ? `<span>⏱ ${esc(d.leadTime)}</span>` : ''}
