@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bangarams — Supplier Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="theme.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -197,6 +199,32 @@ td{padding:12px 14px;vertical-align:middle;}
 .img-url-row input{flex:1;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.15);padding:8px 11px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.82rem;outline:none;}
 .img-url-row input:focus{border-color:rgba(200,151,63,.45);}
 
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);}
+.lang-btn{padding:4px 10px;background:transparent;border:none;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.14em;color:var(--mist);cursor:pointer;transition:all .2s;}
+.lang-btn.active{background:rgba(200,151,63,.15);color:var(--gold);}
+
+/* ── PREVIEW MODAL ── */
+.preview-card{background:var(--surface2);border:1px solid var(--border);max-width:420px;margin:0 auto;overflow:hidden;}
+.preview-card-img{width:100%;height:220px;object-fit:cover;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:2rem;}
+.preview-card-body{padding:20px 22px;}
+.preview-card-cat{font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(200,151,63,.55);margin-bottom:6px;}
+.preview-card-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--gold-pale);margin-bottom:8px;}
+.preview-card-desc{font-size:.82rem;color:var(--mist);line-height:1.7;margin-bottom:14px;}
+.preview-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.preview-chip{padding:3px 9px;border:1px solid rgba(200,151,63,.25);font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(200,151,63,.7);}
+.preview-price{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold);}
+.preview-supplier{font-size:.65rem;color:rgba(168,152,128,.5);font-family:'Cinzel',serif;letter-spacing:.12em;text-transform:uppercase;margin-top:6px;}
+
+/* ── BANKING ── */
+.bank-type-toggle{display:flex;gap:0;margin-bottom:20px;}
+.bank-type-btn{flex:1;padding:10px;background:transparent;border:1px solid var(--border);font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mist);cursor:pointer;transition:all .3s;}
+.bank-type-btn:first-child{border-right:none;}
+.bank-type-btn.active{background:rgba(200,151,63,.1);border-color:rgba(200,151,63,.4);color:var(--gold);}
+.bank-fields{display:none;}
+.bank-fields.active{display:block;}
+.bank-security{background:rgba(127,176,105,.06);border:1px solid rgba(127,176,105,.2);padding:12px 14px;font-size:.75rem;color:rgba(127,176,105,.8);font-family:'Cormorant Garamond',serif;font-style:italic;line-height:1.6;margin-bottom:18px;}
+
 @media(max-width:900px){
   .sidebar{display:none;}
   .summary-row{grid-template-columns:repeat(3,1fr);}
@@ -220,10 +248,16 @@ td{padding:12px 14px;vertical-align:middle;}
       <option value="ramouji">Ramouji</option>
       <option value="kira">Kira</option>
     </select>
+    <!-- Language toggle (shown per-role) -->
+    <div class="lang-toggle" id="lang-toggle" style="display:none">
+      <button class="lang-btn active" id="lang-en" onclick="setLang('en')" data-i18n-label="lang-en">EN</button>
+      <button class="lang-btn" id="lang-native" onclick="setLang('native')"></button>
+    </div>
     <div class="currency-toggle">
       <button class="cur-btn active" id="cur-usd" onclick="setCurrency('usd')">USD</button>
       <button class="cur-btn" id="cur-inr" onclick="setCurrency('inr')">INR</button>
     </div>
+    <button class="theme-toggle-btn" data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()">☀ Light</button>
     <div class="h-btn" id="h-user" style="display:flex;align-items:center;gap:7px;">
       <div class="h-avatar" id="h-avatar">?</div>
       <span id="h-name">–</span>
@@ -265,35 +299,39 @@ td{padding:12px 14px;vertical-align:middle;}
 
   <!-- SIDEBAR -->
   <nav class="sidebar">
-    <div class="sb-section">Overview</div>
+    <div class="sb-section" data-i18n="sec-overview">Overview</div>
     <a class="sb-item active" onclick="showPanel('overview',this)">
-      <span class="sb-icon">◈</span> Dashboard
+      <span class="sb-icon">◈</span> <span data-i18n="nav-dashboard">Dashboard</span>
     </a>
 
-    <div class="sb-section">Operations</div>
+    <div class="sb-section" data-i18n="sec-ops">Operations</div>
     <a class="sb-item" onclick="showPanel('orders',this)">
-      <span class="sb-icon">◇</span> Orders
+      <span class="sb-icon">◇</span> <span data-i18n="nav-orders">Orders</span>
       <span class="sb-badge gold" id="sb-orders-badge" style="display:none">0</span>
     </a>
     <a class="sb-item" onclick="showPanel('invoices',this)">
-      <span class="sb-icon">◈</span> Invoices
+      <span class="sb-icon">◈</span> <span data-i18n="nav-invoices">Invoices</span>
       <span class="sb-badge" id="sb-inv-badge" style="display:none">0</span>
     </a>
     <a class="sb-item" onclick="showPanel('payments',this)">
-      <span class="sb-icon">◇</span> Customer Payments
+      <span class="sb-icon">◇</span> <span data-i18n="nav-payments">Customer Payments</span>
     </a>
     <a class="sb-item" onclick="showPanel('revisions',this)">
-      <span class="sb-icon">◈</span> Price Revisions
+      <span class="sb-icon">◈</span> <span data-i18n="nav-revisions">Price Revisions</span>
       <span class="sb-badge" id="sb-rev-badge" style="display:none">0</span>
     </a>
     <a class="sb-item" onclick="showPanel('shipping',this)">
-      <span class="sb-icon">◇</span> Shipping
+      <span class="sb-icon">◇</span> <span data-i18n="nav-shipping">Shipping</span>
     </a>
 
-    <div class="sb-section">Catalog</div>
+    <div class="sb-section" data-i18n="sec-catalog">Catalog</div>
     <a class="sb-item" data-sid="catalog" onclick="showPanel('catalog',this)">
-      <span class="sb-icon">◈</span> My Designs
+      <span class="sb-icon">◈</span> <span data-i18n="nav-designs">My Designs</span>
       <span class="sb-badge gold" id="sb-cat-badge" style="display:none">0</span>
+    </a>
+
+    <a class="sb-item" data-sid="banking" onclick="showPanel('banking',this)">
+      <span class="sb-icon">◇</span> <span data-i18n="banking">Banking</span>
     </a>
 
     <div class="sb-section" id="sb-admin-section" style="display:none">Admin</div>
@@ -434,6 +472,66 @@ td{padding:12px 14px;vertical-align:middle;}
           <tbody id="catalog-body"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- ══ BANKING ══ -->
+    <div class="panel" id="panel-banking">
+      <div class="page-head">
+        <div class="page-tag" data-i18n="sec-banking">Banking</div>
+        <div class="page-title" data-i18n="banking-title">Banking Details</div>
+      </div>
+      <div class="bank-security">
+        🔒 Your banking details are stored <strong>only on this device</strong> in your browser's local storage. They are never transmitted to any server. Share this device with caution.
+      </div>
+      <!-- Bank type toggle -->
+      <div class="bank-type-toggle">
+        <button class="bank-type-btn active" id="bk-usa-btn" onclick="setBankType('usa')">🇺🇸 USA Bank / ACH</button>
+        <button class="bank-type-btn" id="bk-india-btn" onclick="setBankType('india')">🇮🇳 India Bank / NEFT</button>
+      </div>
+
+      <div class="m-row">
+        <div class="m-field"><label data-i18n="bk-name">Bank Name</label><input id="bk-bankName" type="text" placeholder="e.g. Bank of America / SBI"></div>
+        <div class="m-field"><label data-i18n="bk-holder">Account Holder Name</label><input id="bk-accountHolder" type="text" placeholder="Full name as on account"></div>
+      </div>
+      <div class="m-field"><label data-i18n="bk-acct">Account Number</label><input id="bk-accountNumber" type="text" placeholder="Account number"></div>
+
+      <!-- USA fields -->
+      <div class="bank-fields active" id="bk-usa-fields">
+        <div class="m-row">
+          <div class="m-field"><label>Routing Number (ABA)</label><input id="bk-routingNumber" type="text" placeholder="9-digit routing number"></div>
+          <div class="m-field"><label>Account Type</label>
+            <select id="bk-accountType">
+              <option value="checking">Checking</option>
+              <option value="savings">Savings</option>
+              <option value="business_checking">Business Checking</option>
+            </select>
+          </div>
+        </div>
+        <div class="m-row">
+          <div class="m-field"><label>Zelle (phone or email)</label><input id="bk-zelle" type="text" placeholder="Phone or email registered with Zelle"></div>
+          <div class="m-field"><label>PayPal / Venmo</label><input id="bk-paypal" type="text" placeholder="@username or email"></div>
+        </div>
+      </div>
+
+      <!-- India fields -->
+      <div class="bank-fields" id="bk-india-fields">
+        <div class="m-row">
+          <div class="m-field"><label>IFSC Code</label><input id="bk-ifscCode" type="text" placeholder="e.g. SBIN0001234"></div>
+          <div class="m-field"><label>Branch Name</label><input id="bk-branchName" type="text" placeholder="e.g. Hyderabad Main Branch"></div>
+        </div>
+        <div class="m-row">
+          <div class="m-field"><label>SWIFT / BIC Code</label><input id="bk-swift" type="text" placeholder="e.g. SBININBB (for intl. transfers)"></div>
+          <div class="m-field"><label>UPI ID</label><input id="bk-upi" type="text" placeholder="yourname@upi"></div>
+        </div>
+      </div>
+
+      <div class="m-field" style="margin-top:8px;">
+        <label>Notes (payment instructions, preferred method, etc.)</label>
+        <textarea id="bk-notes" placeholder="e.g. Please transfer by 5th of each month. Prefer Zelle for amounts under $500."></textarea>
+      </div>
+
+      <button class="m-btn" onclick="saveBankingDetails()" style="max-width:280px;margin-top:8px;" data-i18n="bk-save">Save Banking Details →</button>
+      <div style="font-size:.7rem;color:rgba(127,176,105,.7);margin-top:10px;display:none;" id="bk-saved-msg">✓ Saved successfully</div>
     </div>
 
     <!-- ══ APPROVALS (Admin only) ══ -->
@@ -629,6 +727,23 @@ td{padding:12px 14px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- ══ BANKING PANEL ══ -->
+<!-- (injected into sidebar flow via showPanel, lives outside <main> for now — we add the panel inside <main> via JS injection) -->
+
+<!-- Design Preview Modal -->
+<div class="ov" id="ov-preview">
+  <div class="modal" style="max-width:480px;padding:28px;">
+    <button class="modal-close" onclick="closeOv('ov-preview')">✕</button>
+    <div class="modal-tag">Customer Preview</div>
+    <div class="modal-title" style="margin-bottom:16px;">How it looks on the catalog</div>
+    <div id="preview-card-wrap"></div>
+    <div style="margin-top:16px;display:flex;gap:10px;">
+      <button class="m-btn-ghost" onclick="closeOv('ov-preview')" style="flex:1;">← Back to Edit</button>
+      <button class="m-btn" id="preview-pub-btn" style="flex:1;" onclick="publishFromPreview()">Publish Live →</button>
+    </div>
+  </div>
+</div>
+
 <!-- Design Add/Edit Modal -->
 <div class="ov" id="ov-design">
   <div class="modal cat-modal">
@@ -649,8 +764,12 @@ td{padding:12px 14px;vertical-align:middle;}
           <select id="des-cat"></select>
         </div>
         <div class="m-field">
-          <label>Description</label>
-          <textarea id="des-desc" style="min-height:100px;" placeholder="Describe the design, craftsmanship, occasion, customisation notes…"></textarea>
+          <label data-i18n="des-desc-en">Description (English)</label>
+          <textarea id="des-desc" style="min-height:90px;" placeholder="Describe the design, craftsmanship, occasion, customisation notes…"></textarea>
+        </div>
+        <div class="m-field" id="des-desc-native-wrap" style="display:none">
+          <label id="des-desc-native-label">Description (Native Language)</label>
+          <textarea id="des-desc-native" style="min-height:90px;" placeholder="స్థానిక భాషలో వివరణ…"></textarea>
         </div>
         <div class="m-row">
           <div class="m-field"><label>Weight (approx)</label><input id="des-weight" type="text" placeholder="32–38g approx"></div>
@@ -718,7 +837,10 @@ td{padding:12px 14px;vertical-align:middle;}
       <span style="font-family:'Cinzel',serif;font-size:.56rem;letter-spacing:.18em;color:rgba(168,152,128,.5);">Publish Live</span>
     </div>
 
-    <button class="m-btn" onclick="saveDesign()" style="margin-top:16px;">Save Design →</button>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="m-btn-ghost" onclick="previewDesign()" style="flex:1;" data-i18n="des-preview">Preview as Customer</button>
+      <button class="m-btn" onclick="saveDesign()" style="flex:2;" data-i18n="des-save">Save Design →</button>
+    </div>
     <div class="m-err" id="des-err"></div>
   </div>
 </div>
@@ -746,6 +868,7 @@ if (ME) {
     document.getElementById('sb-approvals').style.display = 'flex';
     document.getElementById('pb-edit-btn').style.display = 'inline-block';
   }
+  initLang();
 }
 
 /* ════════════════════════════════════════
@@ -786,7 +909,7 @@ function showPanel(id, el) {
   if(el) el.classList.add('active');
   const renders = { overview:renderOverview, orders:renderOrders, invoices:renderInvoices,
                     payments:renderPayments, revisions:renderRevisions, shipping:renderShipping,
-                    approvals:renderApprovals, catalog:renderCatalog };
+                    approvals:renderApprovals, catalog:renderCatalog, banking:renderBanking };
   if(renders[id]) renders[id]();
 }
 
@@ -1346,6 +1469,200 @@ function saveManualPrices() {
 }
 
 /* ════════════════════════════════════════
+   I18N — LANGUAGE TOGGLE
+════════════════════════════════════════ */
+const I18N = {
+  te: { // Telugu (for Ramouji)
+    'sec-overview':'అవలోకన విభాగం','sec-ops':'కార్యకలాపాలు','sec-catalog':'కేటలాగ్',
+    'sec-banking':'బ్యాంకింగ్','sec-admin':'నిర్వాహణ',
+    'nav-dashboard':'డాష్‌బోర్డ్','nav-orders':'ఆర్డర్లు','nav-invoices':'ఇన్‌వాయిస్‌లు',
+    'nav-payments':'కస్టమర్ చెల్లింపులు','nav-revisions':'ధర సవరణలు',
+    'nav-shipping':'షిప్పింగ్','nav-designs':'నా డిజైన్లు','banking':'బ్యాంకింగ్',
+    'banking-title':'బ్యాంక్ వివరాలు',
+    'bk-name':'బ్యాంక్ పేరు','bk-holder':'ఖాతా హోల్డర్ పేరు','bk-acct':'ఖాతా నంబర్','bk-save':'సేవ్ చేయి →',
+    'des-desc-en':'వివరణ (ఇంగ్లీష్)','des-preview':'కస్టమర్ ప్రివ్యూ','des-save':'సేవ్ చేయి →',
+  },
+  hi: { // Hindi (for Kira)
+    'sec-overview':'अवलोकन','sec-ops':'संचालन','sec-catalog':'सूची',
+    'sec-banking':'बैंकिंग','sec-admin':'प्रशासन',
+    'nav-dashboard':'डैशबोर्ड','nav-orders':'ऑर्डर','nav-invoices':'चालान',
+    'nav-payments':'ग्राहक भुगतान','nav-revisions':'मूल्य संशोधन',
+    'nav-shipping':'शिपिंग','nav-designs':'मेरे डिज़ाइन','banking':'बैंकिंग',
+    'banking-title':'बैंक विवरण',
+    'bk-name':'बैंक का नाम','bk-holder':'खाताधारक का नाम','bk-acct':'खाता संख्या','bk-save':'सहेजें →',
+    'des-desc-en':'विवरण (अंग्रेज़ी)','des-preview':'ग्राहक पूर्वावलोकन','des-save':'सहेजें →',
+  },
+};
+
+// Which native lang each role gets
+const ROLE_LANG = { artisan_ramouji:'te', artisan_kira:'hi' };
+const NATIVE_LABEL = { te:'తెలుగు', hi:'हिन्दी' };
+const NATIVE_PLACEHOLDER = {
+  te:{ desc:'స్థానిక భాషలో వివరణ రాయండి…' },
+  hi:{ desc:'हिन्दी में विवरण लिखें…' }
+};
+
+let LANG_CURRENT = 'en'; // 'en' | 'te' | 'hi'
+let LANG_NATIVE  = null;  // 'te' | 'hi' | null (set from role)
+
+function initLang() {
+  LANG_NATIVE = ROLE_LANG[ME?.role] || null;
+  const stored = localStorage.getItem('bg_lang_' + ME?.username);
+  if (!LANG_NATIVE) return; // support/sales/admin → no toggle
+
+  // Show toggle
+  const toggle = document.getElementById('lang-toggle');
+  toggle.style.display = 'flex';
+  document.getElementById('lang-native').textContent = NATIVE_LABEL[LANG_NATIVE];
+
+  LANG_CURRENT = stored === LANG_NATIVE ? LANG_NATIVE : 'en';
+  applyLang(LANG_CURRENT);
+}
+
+function setLang(code) {
+  LANG_CURRENT = code === 'native' ? LANG_NATIVE : 'en';
+  localStorage.setItem('bg_lang_' + ME?.username, LANG_CURRENT);
+  applyLang(LANG_CURRENT);
+  // Update native desc field placeholder
+  if (LANG_NATIVE) {
+    const pl = NATIVE_PLACEHOLDER[LANG_NATIVE];
+    document.getElementById('des-desc-native').placeholder = pl?.desc || '';
+  }
+}
+
+function applyLang(lang) {
+  const dict = (lang !== 'en' && I18N[lang]) ? I18N[lang] : {};
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.textContent = dict[key] !== undefined ? dict[key] : el.getAttribute('data-i18n-default') || el.textContent;
+    if (!el.getAttribute('data-i18n-default')) el.setAttribute('data-i18n-default', el.textContent);
+  });
+  // Sync toggle buttons
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-native').classList.toggle('active', lang !== 'en');
+  // Show/hide native description field in design form
+  if (LANG_NATIVE) {
+    const wrap = document.getElementById('des-desc-native-wrap');
+    const lbl  = document.getElementById('des-desc-native-label');
+    wrap.style.display = lang !== 'en' ? 'block' : 'none';
+    if (lbl) lbl.textContent = 'Description (' + NATIVE_LABEL[LANG_NATIVE] + ')';
+  }
+}
+
+/* ════════════════════════════════════════
+   BANKING
+════════════════════════════════════════ */
+let _bankType = 'usa';
+
+function setBankType(type) {
+  _bankType = type;
+  document.getElementById('bk-usa-btn').classList.toggle('active', type === 'usa');
+  document.getElementById('bk-india-btn').classList.toggle('active', type === 'india');
+  document.getElementById('bk-usa-fields').classList.toggle('active', type === 'usa');
+  document.getElementById('bk-india-fields').classList.toggle('active', type === 'india');
+}
+
+function renderBanking() {
+  const sid = IS_ADMIN ? (VIEW_SID === 'all' ? ME.username : VIEW_SID) : ME.username;
+  const b = STORE.getBanking(sid);
+  _bankType = b.bankCountry || 'usa';
+  setBankType(_bankType);
+  const set = (id, val) => { const el=document.getElementById(id); if(el) el.value = val||''; };
+  set('bk-bankName', b.bankName); set('bk-accountHolder', b.accountHolder);
+  set('bk-accountNumber', b.accountNumber); set('bk-routingNumber', b.routingNumber);
+  set('bk-zelle', b.zelle); set('bk-paypal', b.paypal);
+  set('bk-ifscCode', b.ifscCode); set('bk-branchName', b.branchName);
+  set('bk-swift', b.swift); set('bk-upi', b.upi);
+  set('bk-notes', b.notes);
+  if (b.bankCountry === 'checking' || b.accountType) {
+    const sel = document.getElementById('bk-accountType');
+    if (sel) sel.value = b.accountType || 'checking';
+  }
+  document.getElementById('bk-saved-msg').style.display = 'none';
+}
+
+function saveBankingDetails() {
+  const sid = IS_ADMIN ? (VIEW_SID === 'all' ? ME.username : VIEW_SID) : ME.username;
+  const get = id => { const el=document.getElementById(id); return el ? el.value.trim() : ''; };
+  STORE.saveBanking(sid, {
+    bankCountry: _bankType,
+    bankName: get('bk-bankName'), accountHolder: get('bk-accountHolder'),
+    accountNumber: get('bk-accountNumber'), routingNumber: get('bk-routingNumber'),
+    accountType: document.getElementById('bk-accountType')?.value || 'checking',
+    zelle: get('bk-zelle'), paypal: get('bk-paypal'),
+    ifscCode: get('bk-ifscCode'), branchName: get('bk-branchName'),
+    swift: get('bk-swift'), upi: get('bk-upi'),
+    notes: get('bk-notes'),
+  });
+  const msg = document.getElementById('bk-saved-msg');
+  msg.style.display = 'block';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
+}
+
+/* ════════════════════════════════════════
+   DESIGN PREVIEW
+════════════════════════════════════════ */
+let _previewDesignId = null;
+
+function previewDesign() {
+  const title  = document.getElementById('des-title').value.trim();
+  if (!title) { document.getElementById('des-err').textContent = 'Add a title first to preview.'; return; }
+
+  _previewDesignId = document.getElementById('des-edit-id').value || null;
+  const desc     = (LANG_CURRENT !== 'en' && document.getElementById('des-desc-native').value.trim())
+                     ? document.getElementById('des-desc-native').value.trim()
+                     : document.getElementById('des-desc').value.trim();
+  const category = document.getElementById('des-cat').value;
+  const price    = parseFloat(document.getElementById('des-price').value) || 0;
+  const making   = parseFloat(document.getElementById('des-making').value) || 0;
+  const metals   = [...document.querySelectorAll('[name=des-metal]:checked')].map(e=>STORE.METALS[e.value]?.short||e.value);
+  const finishes = [...document.querySelectorAll('[name=des-finish]:checked')].map(e=>STORE.FINISHES[e.value]||e.value);
+  const stones   = [...document.querySelectorAll('[name=des-stone]:checked')].map(e=>STORE.STONES[e.value]||e.value);
+  const img1     = document.getElementById('des-img1').value.trim();
+  const imgSrc   = img1 ? STORE.resolveImgSrc({ type: img1.includes('drive.google')? 'gdrive':'url', src:img1 }) : null;
+  const sid      = IS_ADMIN ? (VIEW_SID==='all'?ME.username:VIEW_SID) : ME.username;
+  const prof     = STORE.getProfile(sid);
+  const isPublished = document.getElementById('des-published').checked;
+
+  const imgHtml = imgSrc
+    ? `<img src="${esc(imgSrc)}" style="width:100%;height:220px;object-fit:cover;display:block;" onerror="this.parentElement.innerHTML='<div class=preview-card-img>◈</div>'">`
+    : `<div class="preview-card-img" style="display:flex;align-items:center;justify-content:center;height:220px;background:var(--surface3);font-size:2rem;">◈</div>`;
+
+  document.getElementById('preview-card-wrap').innerHTML = `
+    <div class="preview-card">
+      ${imgHtml}
+      <div class="preview-card-body">
+        <div class="preview-card-cat">${esc(category)}</div>
+        <div class="preview-card-title">${esc(title)}</div>
+        <div class="preview-card-desc">${esc(desc||'No description yet.').replace(/\n/g,'<br>')}</div>
+        <div class="preview-chips">
+          ${metals.map(m=>`<span class="preview-chip">${esc(m)}</span>`).join('')}
+          ${finishes.slice(0,2).map(f=>`<span class="preview-chip">${esc(f)}</span>`).join('')}
+          ${stones.filter(s=>s!=='No Stone').slice(0,2).map(s=>`<span class="preview-chip">${esc(s)}</span>`).join('')}
+        </div>
+        <div class="preview-price">From $${(price+making).toLocaleString()}</div>
+        <div class="preview-supplier">By ${esc(prof.name)} · ${esc(prof.tagline||'')}</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;font-size:.72rem;color:rgba(168,152,128,.45);text-align:center;font-style:italic;">
+      ${isPublished ? '✓ Currently live on catalog' : 'Currently a draft — not visible to customers'}
+    </div>`;
+
+  document.getElementById('preview-pub-btn').textContent = isPublished ? '✓ Already Live' : 'Publish Live →';
+  document.getElementById('preview-pub-btn').disabled = isPublished;
+  openOv('ov-preview');
+}
+
+function publishFromPreview() {
+  // First save, then publish
+  document.getElementById('des-published').checked = true;
+  updatePubStatus();
+  closeOv('ov-preview');
+  saveDesign();
+}
+
+/* ════════════════════════════════════════
    CATALOG
 ════════════════════════════════════════ */
 function getCatalogSid() {
@@ -1472,6 +1789,8 @@ function openDesignForm(editId) {
     (d.metals||[]).forEach(v => { const el = document.querySelector(`[name=des-metal][value="${v}"]`); if(el) el.checked=true; });
     (d.finishes||[]).forEach(v => { const el = document.querySelector(`[name=des-finish][value="${v}"]`); if(el) el.checked=true; });
     (d.stones||[]).forEach(v => { const el = document.querySelector(`[name=des-stone][value="${v}"]`); if(el) el.checked=true; });
+    // Native description
+    document.getElementById('des-desc-native').value = d.descriptionNative || '';
     // Image URLs
     const urlImgs = (d.images||[]).filter(i=>i.type==='url'||i.type==='gdrive');
     document.getElementById('des-img1').value = urlImgs[0]?.src || '';
@@ -1556,7 +1875,8 @@ async function saveDesign() {
     cadFee:      parseFloat(document.getElementById('des-cad').value) || 0,
     videoUrl:    document.getElementById('des-video').value.trim(),
     metals, finishes, stones, images, lineItems,
-    published:   document.getElementById('des-published').checked,
+    published:        document.getElementById('des-published').checked,
+    descriptionNative: document.getElementById('des-desc-native').value.trim() || undefined,
   };
 
   const editId = document.getElementById('des-edit-id').value;

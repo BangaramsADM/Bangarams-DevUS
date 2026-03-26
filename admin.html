@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bangarams — User Administration</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="theme.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -307,6 +309,7 @@ td{padding:14px 16px; vertical-align:middle;}
   <div class="h-right">
     <a href="dashboard.html" class="h-btn h-btn-site">Dashboard</a>
     <a href="index.html" class="h-btn h-btn-site">View Site →</a>
+    <button class="h-btn theme-toggle-btn" data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()">☀ Light</button>
     <div class="h-user">
       <div class="h-avatar" id="h-avatar">?</div>
       <span id="h-username">–</span>

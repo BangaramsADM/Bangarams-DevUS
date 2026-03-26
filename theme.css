@@ -1,0 +1,132 @@
+/*
+ * theme.css — Bangarams Light Mode Overrides
+ * Applied when <html data-theme="light">
+ * All pages link this after their inline <style> block.
+ */
+
+[data-theme="light"] {
+  --gold:       #8A6010;
+  --gold-light: #6A4808;
+  --gold-pale:  #2C1600;   /* primary text on light bg */
+  --gold-deep:  #4A2800;
+  --silver:     #3A4A54;
+  --ink:        #FDFAF3;
+  --ink-soft:   #F0E8D4;
+  --ink-deep:   #FDFBF5;
+  --mist:       #5A4025;
+  --ivory:      #FDFAF3;
+  --surface:    #FDFBF5;   /* page background */
+  --surface2:   #F5EDDA;   /* card / header background */
+  --surface3:   #EDE0C2;   /* deeper card */
+  --surface4:   #E2D0A4;
+  --border:     rgba(130,85,15,.18);
+  --green:      #2A6E20;
+  --red:        rgba(160,30,30,.85);
+  --blue:       #1A509A;
+}
+
+/* ── Text & body ── */
+[data-theme="light"] body {
+  color: var(--gold-pale);
+}
+
+/* ── Inputs ── */
+[data-theme="light"] input,
+[data-theme="light"] textarea,
+[data-theme="light"] select {
+  color: var(--gold-pale) !important;
+  background: rgba(140,90,15,.05) !important;
+  border-color: rgba(130,85,15,.2) !important;
+}
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: rgba(90,64,37,.35) !important;
+}
+[data-theme="light"] select option {
+  background: var(--surface2) !important;
+  color: var(--gold-pale) !important;
+}
+
+/* ── Nav (index.html) ── */
+[data-theme="light"] nav {
+  background: rgba(253,250,245,.97) !important;
+}
+[data-theme="light"] .nav-links a {
+  color: var(--gold-pale) !important;
+}
+[data-theme="light"] .nav-cta {
+  background: var(--gold-pale) !important;
+  color: #FDFAF3 !important;
+}
+
+/* ── Modal overlays ── */
+[data-theme="light"] .ov {
+  background: rgba(240,225,190,.78) !important;
+}
+[data-theme="light"] .modal {
+  background: var(--surface2) !important;
+}
+
+/* ── Sidebar ── */
+[data-theme="light"] .sidebar {
+  background: var(--surface2) !important;
+}
+[data-theme="light"] .sb-item {
+  color: rgba(90,64,37,.65) !important;
+}
+[data-theme="light"] .sb-item:hover {
+  background: rgba(130,85,15,.06) !important;
+  color: var(--gold-pale) !important;
+}
+[data-theme="light"] .sb-item.active {
+  color: var(--gold) !important;
+  background: rgba(130,85,15,.08) !important;
+  border-left-color: var(--gold) !important;
+}
+
+/* ── Tables ── */
+[data-theme="light"] tbody tr:hover {
+  background: rgba(130,85,15,.04) !important;
+}
+[data-theme="light"] thead th {
+  background: var(--surface3) !important;
+}
+
+/* ── Price banner ── */
+[data-theme="light"] .price-banner {
+  background: #EDE0C2 !important;
+}
+
+/* ── Buttons ── */
+[data-theme="light"] .h-btn {
+  border-color: rgba(130,85,15,.25) !important;
+  color: var(--mist) !important;
+}
+[data-theme="light"] .h-btn:hover,
+[data-theme="light"] .h-btn.active {
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+}
+
+/* ── Gate (index.html login) ── */
+[data-theme="light"] #preview-gate {
+  background: #EDE0C2 !important;
+}
+
+/* ── Theme toggle button ── */
+.theme-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--mist);
+  padding: 5px 12px;
+  font-family: 'Cinzel', serif;
+  font-size: .52rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all .3s;
+}
+.theme-toggle-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}

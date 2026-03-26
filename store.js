@@ -393,6 +393,29 @@ const STORE = (() => {
   }
 
   /* ════════════════════════════════════════
+     BANKING DETAILS
+  ════════════════════════════════════════ */
+  const K_BANKING = 'bg_banking_v1';
+
+  function getBanking(sid) {
+    const all = JSON.parse(localStorage.getItem(K_BANKING) || '{}');
+    return all[sid] || {
+      bankCountry: 'usa',         // 'usa' | 'india'
+      bankName: '', accountHolder: '', accountNumber: '',
+      // USA
+      routingNumber: '', accountType: 'checking', zelle: '', paypal: '',
+      // India
+      ifscCode: '', branchName: '', swift: '', upi: '',
+    };
+  }
+
+  function saveBanking(sid, data) {
+    const all = JSON.parse(localStorage.getItem(K_BANKING) || '{}');
+    all[sid] = { ...getBanking(sid), ...data };
+    localStorage.setItem(K_BANKING, JSON.stringify(all));
+  }
+
+  /* ════════════════════════════════════════
      INIT
   ════════════════════════════════════════ */
   seedIfEmpty();
@@ -406,6 +429,7 @@ const STORE = (() => {
     getInquiries, createInquiry, updateInquiry,
     buildWAMessage, buildWAUrl, waUrl,
     gdriveSrc, ytEmbedUrl, ytThumb, resolveImgSrc, resolveImgSrcAsync,
+    getBanking, saveBanking,
     idb,
   };
 })();

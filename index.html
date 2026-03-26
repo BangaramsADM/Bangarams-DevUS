@@ -6,6 +6,8 @@
 <meta name="description" content="Bangarams — Exquisite Indian Bridal Jewelry. Silver, Gold & Diamonds. Curated by hand, delivered to your door. Serving Alpharetta, GA and beyond.">
 <title>Bangarams — Indian Bridal Silver, Gold & Diamonds</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="theme.css">
 <style>
 /* ═══════════════════════════════════════
    PRIVATE REVIEW GATE
@@ -530,6 +532,7 @@ footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(20
     <li><a href="#consult">Consult</a></li>
   </ul>
   <a href="#consult" class="nav-cta">Book Consult</a>
+  <button data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()" style="background:none;border:1px solid rgba(200,151,63,.2);color:rgba(168,152,128,.6);padding:7px 13px;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;cursor:pointer;margin-left:6px;transition:all .3s;" title="Toggle dark/light mode">☀</button>
   <button class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></button>
 </nav>
 
@@ -1051,16 +1054,30 @@ async function doLogin() {
 
 function unlockSite(sess) {
   document.getElementById('preview-gate').classList.add('hidden');
-  // Inject staff badge into nav
   const nav = document.querySelector('.nav-links');
   if (nav && sess) {
     const role = AUTH.ROLES[sess.role];
-    const li   = document.createElement('li');
+    // Staff name badge
+    const li = document.createElement('li');
     li.innerHTML = `<a href="#" style="color:var(--mist);cursor:default;letter-spacing:.1em;" title="${role?.label||sess.role}">● ${sess.name.split(' ')[0]}</a>`;
     nav.appendChild(li);
+    // Dashboard link for artisans and admin
+    const isArtisan = ['artisan_ramouji','artisan_kira'].includes(sess.role);
+    if (isArtisan || sess.role === 'site_admin') {
+      const dashLi = document.createElement('li');
+      dashLi.innerHTML = '<a href="dashboard.html" style="color:var(--gold)">My Dashboard ↗</a>';
+      nav.appendChild(dashLi);
+    }
+    // Supplier portal link for artisans
+    if (isArtisan) {
+      const supLi = document.createElement('li');
+      supLi.innerHTML = '<a href="supplier.html" style="color:rgba(200,151,63,.7)">Supplier Portal ↗</a>';
+      nav.appendChild(supLi);
+    }
+    // Admin panel link
     if (sess.role === 'site_admin') {
       const adminLi = document.createElement('li');
-      adminLi.innerHTML = '<a href="admin.html" style="color:var(--gold)">Admin ↗</a>';
+      adminLi.innerHTML = '<a href="admin.html" style="color:rgba(200,151,63,.6)">Admin ↗</a>';
       nav.appendChild(adminLi);
     }
   }

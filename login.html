@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bangarams — Staff Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Cinzel:wght@400;600;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="theme.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -195,6 +197,8 @@ input.error-field{border-color:rgba(220,80,80,.5);}
   <a href="index.html">← Back to site</a>
   &nbsp;·&nbsp;
   Need help? <a href="mailto:hello@bangarams.com">hello@bangarams.com</a>
+  &nbsp;·&nbsp;
+  <button data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()" style="background:none;border:none;color:rgba(200,151,63,.45);font-family:'Raleway',sans-serif;font-size:.6rem;cursor:pointer;letter-spacing:.12em;">☀ Light</button>
 </div>
 
 <script src="auth.js"></script>
