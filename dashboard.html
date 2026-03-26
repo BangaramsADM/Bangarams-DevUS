@@ -199,6 +199,28 @@ td{padding:12px 14px;vertical-align:middle;}
 .img-url-row input{flex:1;background:rgba(200,151,63,.04);border:1px solid rgba(200,151,63,.15);padding:8px 11px;color:var(--gold-pale);font-family:'Raleway',sans-serif;font-size:.82rem;outline:none;}
 .img-url-row input:focus{border-color:rgba(200,151,63,.45);}
 
+/* ── TIER BADGES ── */
+.tier-entry   {color:rgba(168,152,128,.9); border-color:rgba(168,152,128,.25); background:rgba(168,152,128,.06);}
+.tier-bridal  {color:var(--gold);          border-color:rgba(200,151,63,.3);   background:rgba(200,151,63,.06);}
+.tier-prestige{color:#9B72CF;              border-color:rgba(155,114,207,.3);  background:rgba(155,114,207,.06);}
+
+/* ── OCCASION CHIPS ── */
+.occ-chip{display:inline-block;padding:2px 8px;font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.12em;text-transform:uppercase;border:1px solid rgba(200,151,63,.2);color:rgba(200,151,63,.65);margin:2px 2px 0 0;}
+
+/* ── PRICING PANEL ── */
+.pricing-grid{display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start;}
+.calc-box{background:var(--surface2);border:1px solid var(--border);padding:22px 24px;}
+.calc-result{margin-top:16px;background:rgba(200,151,63,.05);border:1px solid rgba(200,151,63,.15);padding:16px 18px;}
+.calc-big{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);}
+.calc-row{display:flex;justify-content:space-between;align-items:center;font-size:.78rem;margin-top:6px;color:var(--mist);border-top:1px solid rgba(200,151,63,.08);padding-top:6px;}
+.calc-margin-ok  {color:var(--green);}
+.calc-margin-warn{color:rgba(220,80,80,.8);}
+.catalog-mini{font-size:.72rem;}
+.catalog-mini th{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(200,151,63,.45);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);background:var(--surface3);white-space:nowrap;}
+.catalog-mini td{padding:8px 10px;border-bottom:1px solid rgba(200,151,63,.05);vertical-align:middle;}
+.catalog-mini tr:last-child td{border-bottom:none;}
+.catalog-mini tr:hover td{background:rgba(200,151,63,.03);}
+
 /* ── LANGUAGE TOGGLE ── */
 .lang-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);}
 .lang-btn{padding:4px 10px;background:transparent;border:none;font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:.14em;color:var(--mist);cursor:pointer;transition:all .2s;}
@@ -332,6 +354,9 @@ td{padding:12px 14px;vertical-align:middle;}
 
     <a class="sb-item" data-sid="banking" onclick="showPanel('banking',this)">
       <span class="sb-icon">◇</span> <span data-i18n="banking">Banking</span>
+    </a>
+    <a class="sb-item" id="sb-pricing" data-sid="pricing" onclick="showPanel('pricing',this)" style="display:none">
+      <span class="sb-icon">◈</span> <span data-i18n="nav-pricing">Kira Pricing</span>
     </a>
 
     <div class="sb-section" id="sb-admin-section" style="display:none">Admin</div>
@@ -532,6 +557,59 @@ td{padding:12px 14px;vertical-align:middle;}
 
       <button class="m-btn" onclick="saveBankingDetails()" style="max-width:280px;margin-top:8px;" data-i18n="bk-save">Save Banking Details →</button>
       <div style="font-size:.7rem;color:rgba(127,176,105,.7);margin-top:10px;display:none;" id="bk-saved-msg">✓ Saved successfully</div>
+    </div>
+
+    <!-- ══ KIRA PRICING ══ -->
+    <div class="panel" id="panel-pricing">
+      <div class="page-head">
+        <div class="page-tag">Kira × Bangarams — Jan 2026 Catalog</div>
+        <div class="page-title">Diamond Pricing Calculator</div>
+      </div>
+      <div style="background:rgba(200,151,63,.05);border:1px solid rgba(200,151,63,.15);padding:13px 16px;margin-bottom:24px;font-size:.8rem;color:var(--mist);font-family:'Cormorant Garamond',serif;font-style:italic;line-height:1.7;">
+        <strong style="font-style:normal;color:var(--gold-pale);">Pricing formula:</strong> Bangarams Retail = Kira Base × 1.8 (metal &amp; grade adjustments applied first). Minimum margin: 35%. Georgia Sales Tax (Alpharetta): 8.9%.
+      </div>
+      <div class="pricing-grid">
+        <!-- Calculator -->
+        <div>
+          <div class="calc-box">
+            <div class="tbl-title" style="margin-bottom:14px;">Pricing Calculator</div>
+            <div class="m-field"><label>Kira Wholesale Price (USD)</label>
+              <input id="calc-kira" type="number" placeholder="e.g. 1499" oninput="calcKiraPrice()" style="font-size:1rem;">
+            </div>
+            <div class="m-field"><label>Metal</label>
+              <select id="calc-metal" onchange="calcKiraPrice()"></select>
+            </div>
+            <div class="m-field"><label>Diamond Grade</label>
+              <select id="calc-grade" onchange="calcKiraPrice()"></select>
+            </div>
+            <div class="calc-result" id="calc-result" style="display:none">
+              <div style="font-family:'Cinzel',serif;font-size:.48rem;letter-spacing:.22em;color:rgba(200,151,63,.5);margin-bottom:4px;">BANGARAMS RETAIL PRICE</div>
+              <div class="calc-big" id="calc-retail">—</div>
+              <div style="font-size:.7rem;color:rgba(168,152,128,.5);margin-top:2px;" id="calc-retail-tax"></div>
+              <div class="calc-row"><span>Kira Cost</span><span id="calc-cost">—</span></div>
+              <div class="calc-row"><span>Metal Adjustment</span><span id="calc-metal-adj">—</span></div>
+              <div class="calc-row"><span>Grade Adjustment</span><span id="calc-grade-adj">—</span></div>
+              <div class="calc-row"><span>Gross Margin</span><span id="calc-margin" class="calc-margin-ok">—</span></div>
+              <div class="calc-row"><span>Gross Profit</span><span id="calc-profit">—</span></div>
+              <div class="calc-row"><span>Tier</span><span id="calc-tier">—</span></div>
+            </div>
+          </div>
+        </div>
+        <!-- Catalog table -->
+        <div>
+          <div class="tbl-wrap">
+            <div class="tbl-head">
+              <span class="tbl-title">Full Kira Catalog — Jan 2026 (Base: 14K Yellow / F VS+)</span>
+            </div>
+            <div style="overflow-x:auto;">
+              <table class="catalog-mini">
+                <thead><tr><th>SKU</th><th>Piece</th><th>Carat</th><th>Kira Cost</th><th>Retail (1.8×)</th><th>Margin</th><th>Tier</th></tr></thead>
+                <tbody id="kira-catalog-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ══ APPROVALS (Admin only) ══ -->
@@ -806,6 +884,14 @@ td{padding:12px 14px;vertical-align:middle;}
           <div class="cb-group" id="des-stones"></div>
         </div>
         <div class="m-field">
+          <label>Occasion Tags</label>
+          <div class="cb-group" id="des-occasions"></div>
+        </div>
+        <div class="m-field" id="des-sku-wrap">
+          <label>SKU / Catalog Code <span style="font-size:.62rem;color:rgba(168,152,128,.4);font-family:'Raleway',sans-serif;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <input id="des-sku" type="text" placeholder="e.g. KN-001 or RJ-HRM-22K">
+        </div>
+        <div class="m-field">
           <label>Photo URLs <span style="font-size:.62rem;color:rgba(168,152,128,.4);font-family:'Raleway',sans-serif;text-transform:none;letter-spacing:0;">(direct URL or Google Drive share link)</span></label>
           <div class="img-url-row"><input id="des-img1" type="url" placeholder="https://… or Google Drive share link"></div>
           <div class="img-url-row"><input id="des-img2" type="url" placeholder="Second image (optional)"></div>
@@ -848,6 +934,7 @@ td{padding:12px 14px;vertical-align:middle;}
 <script src="auth.js"></script>
 <script src="store.js"></script>
 <script src="orders.js"></script>
+<script src="kira.js"></script>
 <script>
 /* ════════════════════════════════════════
    INIT & AUTH
@@ -869,6 +956,11 @@ if (ME) {
     document.getElementById('pb-edit-btn').style.display = 'inline-block';
   }
   initLang();
+  // Seed Kira catalog on first load for Kira / admin
+  if (typeof KIRA !== 'undefined' && (IS_ADMIN || ME.role === 'artisan_kira')) {
+    KIRA.seedKiraProducts();
+    document.getElementById('sb-pricing').style.display = 'flex';
+  }
 }
 
 /* ════════════════════════════════════════
@@ -909,7 +1001,8 @@ function showPanel(id, el) {
   if(el) el.classList.add('active');
   const renders = { overview:renderOverview, orders:renderOrders, invoices:renderInvoices,
                     payments:renderPayments, revisions:renderRevisions, shipping:renderShipping,
-                    approvals:renderApprovals, catalog:renderCatalog, banking:renderBanking };
+                    approvals:renderApprovals, catalog:renderCatalog, banking:renderBanking,
+                    pricing:renderPricing };
   if(renders[id]) renders[id]();
 }
 
@@ -1703,13 +1796,20 @@ function renderCatalog() {
     const pubBadge = d.published
       ? `<span class="badge pub-badge-live">Live</span>`
       : `<span class="badge pub-badge-draft">Draft</span>`;
+    const tierKey = (typeof KIRA !== 'undefined' && d.basePrice) ? KIRA.getTier(d.basePrice) : null;
+    const tierInfo = tierKey ? KIRA.TIERS[tierKey] : null;
+    const tierBadge = tierInfo
+      ? `<span class="tier-badge" style="background:${tierInfo.bg};color:${tierInfo.color};border:1px solid ${tierInfo.border};padding:2px 7px;font-size:.5rem;font-family:'Cinzel',serif;letter-spacing:.12em;white-space:nowrap;">${tierInfo.label.split(' ')[0]}</span>`
+      : '';
+    const occChips = (d.occasionTags||[]).slice(0,3).map(o=>`<span class="occ-chip">${esc(o)}</span>`).join('');
     const canEdit = IS_ADMIN || d.supplierId === ME.username;
     return `<tr>
       <td style="width:50px;">${thumb}</td>
       <td>
-        <div class="td-name">${esc(d.title)}</div>
+        <div class="td-name">${esc(d.title)}${d.sku?` <span style="font-size:.55rem;color:rgba(168,152,128,.4);">#${esc(d.sku)}</span>`:''}</div>
         ${IS_ADMIN && sid==='all' ? '<div style="margin-top:3px;">'+supplierTag(d.supplierId)+'</div>' : ''}
         <div class="td-sub">${esc((d.description||'').slice(0,60))}${(d.description||'').length>60?'…':''}</div>
+        ${occChips?`<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">${occChips}</div>`:''}
       </td>
       <td><div class="td-sub">${esc(d.category||'—')}</div></td>
       <td>
@@ -1721,7 +1821,7 @@ function renderCatalog() {
         ${d.makingCharges?`<div class="td-sub">+$${d.makingCharges} making</div>`:''}
         ${d.cadFee?`<div class="td-sub">CAD $${d.cadFee}/rev</div>`:''}
       </td>
-      <td>${pubBadge}</td>
+      <td>${pubBadge}${tierBadge?`<div style="margin-top:4px;">${tierBadge}</div>`:''}</td>
       <td><div class="td-actions">
         ${canEdit ? `<button class="act act-g" onclick="openDesignForm('${d.id}')">Edit</button>` : ''}
         ${canEdit ? (d.published
@@ -1769,6 +1869,9 @@ function openDesignForm(editId) {
   // Populate stone checkboxes
   document.getElementById('des-stones').innerHTML = Object.entries(STORE.STONES).map(([k,v])=>
     `<label class="cb-item"><input type="checkbox" value="${k}" name="des-stone"> ${esc(v)}</label>`).join('');
+  // Populate occasion tag checkboxes
+  document.getElementById('des-occasions').innerHTML = (STORE.OCCASIONS||[]).map(occ=>
+    `<label class="cb-item"><input type="checkbox" value="${occ}" name="des-occasion"> ${esc(occ)}</label>`).join('');
 
   // Clear line items
   document.getElementById('des-li-rows').innerHTML = '';
@@ -1789,6 +1892,10 @@ function openDesignForm(editId) {
     (d.metals||[]).forEach(v => { const el = document.querySelector(`[name=des-metal][value="${v}"]`); if(el) el.checked=true; });
     (d.finishes||[]).forEach(v => { const el = document.querySelector(`[name=des-finish][value="${v}"]`); if(el) el.checked=true; });
     (d.stones||[]).forEach(v => { const el = document.querySelector(`[name=des-stone][value="${v}"]`); if(el) el.checked=true; });
+    // SKU
+    const skuEl = document.getElementById('des-sku'); if(skuEl) skuEl.value = d.sku || '';
+    // Occasion tags
+    (d.occasionTags||[]).forEach(v => { const el = document.querySelector(`[name=des-occasion][value="${v}"]`); if(el) el.checked=true; });
     // Native description
     document.getElementById('des-desc-native').value = d.descriptionNative || '';
     // Image URLs
@@ -1877,6 +1984,8 @@ async function saveDesign() {
     metals, finishes, stones, images, lineItems,
     published:        document.getElementById('des-published').checked,
     descriptionNative: document.getElementById('des-desc-native').value.trim() || undefined,
+    sku:           (document.getElementById('des-sku')?.value||'').trim() || undefined,
+    occasionTags:  [...document.querySelectorAll('[name=des-occasion]:checked')].map(e=>e.value),
   };
 
   const editId = document.getElementById('des-edit-id').value;
@@ -1889,6 +1998,79 @@ async function saveDesign() {
   }
   closeOv('ov-design');
   renderCatalog();
+}
+
+/* ════════════════════════════════════════
+   KIRA PRICING PANEL
+════════════════════════════════════════ */
+function renderPricing() {
+  if (typeof KIRA === 'undefined') return;
+
+  // Populate metal select
+  const mSel = document.getElementById('calc-metal');
+  if (mSel && !mSel.options.length) {
+    KIRA.METAL_OPTIONS.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.key; opt.textContent = `${m.label} — ${m.note}`;
+      mSel.appendChild(opt);
+    });
+  }
+  // Populate grade select
+  const gSel = document.getElementById('calc-grade');
+  if (gSel && !gSel.options.length) {
+    KIRA.GRADE_OPTIONS.forEach(g => {
+      const opt = document.createElement('option');
+      opt.value = g.key; opt.textContent = `${g.label} — ${g.note}`;
+      if (g.key === 'F/VS+') opt.selected = true;
+      gSel.appendChild(opt);
+    });
+  }
+
+  // Render catalog table
+  const body = document.getElementById('kira-catalog-body');
+  if (body) {
+    body.innerHTML = KIRA.CATALOG.map(p => {
+      const c = KIRA.calculatePrice(p.kiraBasePrice);
+      const tier = KIRA.TIERS[c.tier || KIRA.getTier(c.finalRetailPrice)];
+      return `<tr>
+        <td style="font-family:'Cinzel',serif;font-size:.56rem;color:rgba(200,151,63,.55);">${esc(p.sku)}</td>
+        <td>
+          <div class="td-name" style="font-size:.82rem;">${esc(p.name)}</div>
+          <div class="td-sub">${esc(p.caratWeight)} · ${(p.occasionTags||[]).map(t=>`<span class="occ-chip">${esc(t)}</span>`).join('')}</div>
+        </td>
+        <td class="td-date">${esc(p.caratWeight)}</td>
+        <td class="td-price" style="color:var(--mist);">$${p.kiraBasePrice.toLocaleString()}</td>
+        <td class="td-price" style="color:var(--gold);">$${c.finalRetailPrice.toLocaleString()}</td>
+        <td style="font-size:.75rem;color:${c.meetsMinimum?'var(--green)':'rgba(220,80,80,.8)'};">${c.grossMarginPercent}%</td>
+        <td><span class="badge tier-${KIRA.getTier(c.finalRetailPrice)}" style="font-size:.42rem;">${tier?.label||''}</span></td>
+      </tr>`;
+    }).join('');
+  }
+}
+
+function calcKiraPrice() {
+  const base  = parseFloat(document.getElementById('calc-kira').value) || 0;
+  const metal = document.getElementById('calc-metal').value;
+  const grade = document.getElementById('calc-grade').value;
+  const res   = document.getElementById('calc-result');
+  if (!base) { res.style.display = 'none'; return; }
+
+  const c    = KIRA.calculatePrice(base, metal, grade);
+  const tier = KIRA.TIERS[KIRA.getTier(c.finalRetailPrice)];
+  res.style.display = 'block';
+
+  document.getElementById('calc-retail').textContent     = `$${c.finalRetailPrice.toLocaleString()}`;
+  document.getElementById('calc-retail-tax').textContent = `With GA sales tax (8.9%): $${c.withTax.toLocaleString()}`;
+  document.getElementById('calc-cost').textContent       = `$${base.toLocaleString()}`;
+  document.getElementById('calc-metal-adj').textContent  = c.metalAdjustment ? `+$${c.metalAdjustment.toLocaleString()}` : 'None';
+  document.getElementById('calc-grade-adj').textContent  = c.gradeAdjustment ? (c.gradeAdjustment > 0 ? '+' : '') + `$${c.gradeAdjustment.toLocaleString()}` : 'None';
+  const mEl = document.getElementById('calc-margin');
+  mEl.textContent = `${c.grossMarginPercent}%`;
+  mEl.className   = 'calc-margin-ok ' + (c.meetsMinimum ? 'calc-margin-ok' : 'calc-margin-warn');
+  document.getElementById('calc-profit').textContent = `$${c.grossMarginDollars.toLocaleString()}`;
+  document.getElementById('calc-tier').innerHTML = tier
+    ? `<span class="badge tier-${KIRA.getTier(c.finalRetailPrice)}" style="font-size:.44rem;">${tier.label}</span>`
+    : '—';
 }
 
 /* ── RENDER ALL ── */

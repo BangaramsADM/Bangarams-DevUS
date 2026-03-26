@@ -38,6 +38,11 @@ const STORE = (() => {
     colored:         'Colored Gemstone (Emerald, Ruby, etc.)',
   };
 
+  const OCCASIONS = [
+    'Bridal','Engagement','Mehendi','Sangeet','Reception',
+    'Everyday','Fashion','Gift',
+  ];
+
   const CATEGORIES = [
     'Necklace / Haram','Choker','Earrings','Maang Tikka',
     'Bangles / Kadas','Waist Belt / Vaddanam',
@@ -421,7 +426,7 @@ const STORE = (() => {
   seedIfEmpty();
 
   return {
-    METALS, FINISHES, STONES, CATEGORIES, BUDGET_RANGES, TIME_SLOTS, DAYS,
+    METALS, FINISHES, STONES, CATEGORIES, OCCASIONS, BUDGET_RANGES, TIME_SLOTS, DAYS,
     getProfile, saveProfile,
     getDesigns, getPublicDesigns, getDesignById, getDesignsBySupplier,
     addDesign, updateDesign, deleteDesign, publishDesign, unpublishDesign,

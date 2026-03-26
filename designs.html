@@ -69,6 +69,8 @@ select.filter-sel:focus{border-color:rgba(200,151,63,.4);}
 .chip-m{font-family:'Cinzel',serif;font-size:.46rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border:1px solid;}
 .no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mist);}
 .no-results p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;}
+.card-tier{font-family:'Cinzel',serif;font-size:.44rem;letter-spacing:.14em;text-transform:uppercase;padding:2px 7px;border:1px solid;display:inline-block;margin-bottom:6px;}
+.card-occ-chip{font-family:'Cinzel',serif;font-size:.43rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;background:rgba(200,151,63,.06);border:1px solid rgba(200,151,63,.15);color:rgba(168,152,128,.7);}
 
 /* ══ MODAL ══ */
 .modal-ov{display:none;position:fixed;inset:0;z-index:200;background:rgba(28,20,16,.75);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;}
@@ -175,6 +177,15 @@ select.filter-sel:focus{border-color:rgba(200,151,63,.4);}
   <select class="filter-sel" id="metal-filter" onchange="setFilter('metal',this.value)">
     <option value="">All Metals</option>
   </select>
+  <select class="filter-sel" id="tier-filter" onchange="setFilter('tier',this.value)">
+    <option value="">All Tiers</option>
+    <option value="entry">Entry Diamond</option>
+    <option value="bridal">Bridal Diamond</option>
+    <option value="prestige">Prestige Diamond</option>
+  </select>
+  <select class="filter-sel" id="occ-filter" onchange="setFilter('occasion',this.value)">
+    <option value="">All Occasions</option>
+  </select>
   <span class="results-count" id="results-count"></span>
 </div>
 
@@ -207,19 +218,22 @@ select.filter-sel:focus{border-color:rgba(200,151,63,.4);}
 
 <script src="auth.js"></script>
 <script src="store.js"></script>
+<script src="kira.js"></script>
 <script>
 
 /* ════════════════════════════════════════
    FILTERS & RENDER
 ════════════════════════════════════════ */
-const _filters = { supplier:'all', category:'', metal:'' };
+const _filters = { supplier:'all', category:'', metal:'', tier:'', occasion:'' };
 
 // Populate filter dropdowns
 (function() {
   const catSel   = document.getElementById('cat-filter');
   const metalSel = document.getElementById('metal-filter');
+  const occSel   = document.getElementById('occ-filter');
   STORE.CATEGORIES.forEach(c => { const o=document.createElement('option'); o.value=c; o.textContent=c; catSel.appendChild(o); });
   Object.entries(STORE.METALS).forEach(([k,v]) => { const o=document.createElement('option'); o.value=k; o.textContent=v.short; metalSel.appendChild(o); });
+  (STORE.OCCASIONS||[]).forEach(occ => { const o=document.createElement('option'); o.value=occ; o.textContent=occ; occSel.appendChild(o); });
 })();
 
 function setFilter(key, val, btn) {
@@ -236,6 +250,10 @@ function renderGrid() {
   if (_filters.supplier !== 'all') designs = designs.filter(d => d.supplierId === _filters.supplier);
   if (_filters.category) designs = designs.filter(d => d.category === _filters.category);
   if (_filters.metal)    designs = designs.filter(d => d.metals && d.metals.includes(_filters.metal));
+  if (_filters.occasion) designs = designs.filter(d => (d.occasionTags||[]).includes(_filters.occasion));
+  if (_filters.tier && typeof KIRA !== 'undefined') {
+    designs = designs.filter(d => d.basePrice && KIRA.getTier(d.basePrice) === _filters.tier);
+  }
 
   const grid = document.getElementById('catalog-grid');
   document.getElementById('results-count').textContent = `${designs.length} design${designs.length!==1?'s':''}`;
@@ -253,6 +271,14 @@ function renderGrid() {
       `<span class="chip-m" style="color:${STORE.METALS[m]?.color||'#A89880'};border-color:${STORE.METALS[m]?.color||'#A89880'}30">${STORE.METALS[m]?.short||m}</span>`
     ).join('');
     const prof   = STORE.getProfile(d.supplierId);
+    // Tier badge (only for Kira diamond designs with a price)
+    const tierKey  = (typeof KIRA !== 'undefined' && d.basePrice) ? KIRA.getTier(d.basePrice) : null;
+    const tierInfo = tierKey ? KIRA.TIERS[tierKey] : null;
+    const tierBadge = tierInfo
+      ? `<span class="card-tier" style="color:${tierInfo.color};border-color:${tierInfo.border}">${tierInfo.label}</span>`
+      : '';
+    // Occasion chips (up to 3)
+    const occChips = (d.occasionTags||[]).slice(0,3).map(o=>`<span class="card-occ-chip">${esc(o)}</span>`).join('');
     return `
     <div class="design-card" onclick="openModal('${d.id}')">
       <div class="card-img">
@@ -261,12 +287,14 @@ function renderGrid() {
         ${d.featured ? '<div class="card-featured">Featured</div>' : ''}
       </div>
       <div class="card-body">
+        ${tierBadge}
         <div class="card-cat">${esc(d.category)}</div>
         <div class="card-title">${esc(d.title)}</div>
         <div class="card-meta">
           ${d.weight ? '<span>⚖ '+esc(d.weight)+'</span>' : ''}
           ${d.leadTime ? '<span>⏱ '+esc(d.leadTime)+'</span>' : ''}
         </div>
+        ${occChips ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">${occChips}</div>` : ''}
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div class="card-price">${d.basePrice ? 'From $'+d.basePrice.toLocaleString() : 'Custom Quote'}</div>
           <div class="card-chips">${chips}</div>
