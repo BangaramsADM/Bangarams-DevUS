@@ -102,12 +102,11 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--ivory);color:var(--ink);font-family:'Raleway',sans-serif;font-weight:300;font-size:15px;line-height:1.7;cursor:default;}
-*,*::before,*::after{cursor:none!important;}
+body{background:var(--ivory);color:var(--ink);font-family:'Raleway',sans-serif;font-weight:300;font-size:15px;line-height:1.7;}
 
-/* CURSOR */
-#cursor{width:10px;height:10px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s,background .18s;mix-blend-mode:multiply;}
-#cursor.big{width:32px;height:32px;background:rgba(200,151,63,.25);}
+/* CURSOR — decorative accent dot; pointer/text cursors restored in theme.css */
+#cursor{width:8px;height:8px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .18s,height .18s,opacity .18s;opacity:.55;mix-blend-mode:multiply;}
+#cursor.big{width:28px;height:28px;opacity:.2;}
 
 /* ═══════════════════════════════════════
    LOGO COMPONENT (reusable)
@@ -482,7 +481,7 @@ footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(20
 }
 </style>
 </head>
-<body>
+<body class="page-public">
 
 <!-- ═══════════════════════════════════════════
      PRIVATE REVIEW GATE
@@ -532,7 +531,7 @@ footer{background:var(--ink);padding:52px 80px 24px;border-top:1px solid rgba(20
     <li><a href="#consult">Consult</a></li>
   </ul>
   <a href="#consult" class="nav-cta">Book Consult</a>
-  <button data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()" style="background:none;border:1px solid rgba(200,151,63,.2);color:rgba(168,152,128,.6);padding:7px 13px;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.14em;cursor:pointer;margin-left:6px;transition:all .3s;" title="Toggle dark/light mode">☀</button>
+  <button data-theme-toggle onclick="THEME.toggle();THEME.syncButtons()" style="margin-left:6px;" title="Toggle dark/light mode">☀ Light</button>
   <button class="hamburger" onclick="openMobile()"><span></span><span></span><span></span></button>
 </nav>
 
