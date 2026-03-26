@@ -431,6 +431,32 @@ td{padding:14px 16px; vertical-align:middle;}
   </div>
 </div>
 
+<!-- ── SET SPECIFIC PASSWORD ── -->
+<div class="overlay" id="modal-set-pwd">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" onclick="closeModal('modal-set-pwd')">✕</button>
+    <div class="modal-tag">Set Password</div>
+    <div class="modal-title" id="sp-name" style="margin-bottom:16px;"></div>
+    <div class="m-field">
+      <label class="m-label">New Password</label>
+      <input type="password" id="sp-pwd" class="m-input" placeholder="Min. 8 characters" autocomplete="new-password">
+    </div>
+    <div class="m-field">
+      <label class="m-label">Confirm Password</label>
+      <input type="password" id="sp-pwd2" class="m-input" placeholder="Repeat password" autocomplete="new-password"
+             onkeydown="if(event.key==='Enter')doSetPwd()">
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--mist);margin-bottom:18px;cursor:pointer;">
+      <input type="checkbox" id="sp-mustreset"> Require user to change password on next login
+    </label>
+    <input type="hidden" id="sp-uid">
+    <button class="m-btn" onclick="doSetPwd()">Set Password →</button>
+    <button class="m-btn-ghost" onclick="closeModal('modal-set-pwd')">Cancel</button>
+    <div class="m-err" id="sp-err"></div>
+    <div class="success-msg" id="sp-ok" style="margin-top:10px;font-size:.72rem;color:rgba(127,176,105,.9);text-align:center;min-height:20px;"></div>
+  </div>
+</div>
+
 <!-- ── RESET ALL PASSWORDS ── -->
 <div class="overlay" id="modal-reset-all">
   <div class="modal" style="max-width:520px;">
@@ -581,6 +607,7 @@ function renderTable() {
         <div class="t-actions">
           <button class="act-btn act-edit"  onclick="openEditModal('${u.id}')">Edit</button>
           <button class="act-btn act-reset" onclick="doReset('${u.id}')">Reset Pwd</button>
+          <button class="act-btn act-edit"  onclick="openSetPwdModal('${u.id}')">Set Pwd</button>
           ${u.id !== ME.id
             ? `<button class="act-btn act-del" onclick="openDeleteModal('${u.id}')">Delete</button>`
             : ''}
@@ -690,6 +717,42 @@ async function doReset(id) {
   document.getElementById('mr-name').textContent = u.name;
   document.getElementById('mr-pwd').textContent  = tmp;
   openModal('modal-reset');
+}
+
+// ── SET SPECIFIC PASSWORD ──
+function openSetPwdModal(id) {
+  const u = AUTH.getUsers().find(u=>u.id===id);
+  if (!u) return;
+  document.getElementById('sp-name').textContent = u.name + ' (@' + u.username + ')';
+  document.getElementById('sp-uid').value = id;
+  document.getElementById('sp-pwd').value = '';
+  document.getElementById('sp-pwd2').value = '';
+  document.getElementById('sp-mustreset').checked = false;
+  document.getElementById('sp-err').textContent = '';
+  document.getElementById('sp-ok').textContent = '';
+  openModal('modal-set-pwd');
+}
+
+async function doSetPwd() {
+  const p1  = document.getElementById('sp-pwd').value;
+  const p2  = document.getElementById('sp-pwd2').value;
+  const uid = document.getElementById('sp-uid').value;
+  const err = document.getElementById('sp-err');
+  const ok  = document.getElementById('sp-ok');
+  err.textContent = ''; ok.textContent = '';
+  if (p1.length < 8) { err.textContent = 'Password must be at least 8 characters.'; return; }
+  if (p1 !== p2)     { err.textContent = 'Passwords do not match.'; return; }
+  await AUTH.changePassword(uid, p1);
+  // optionally set mustReset flag
+  if (document.getElementById('sp-mustreset').checked) {
+    const users = AUTH.getUsers();
+    const u = users.find(u=>u.id===uid);
+    if (u) { u.mustReset = true; localStorage.setItem('bg_users_v1', JSON.stringify(users)); }
+  }
+  ok.textContent = '✓ Password updated.';
+  document.getElementById('sp-pwd').value = '';
+  document.getElementById('sp-pwd2').value = '';
+  setTimeout(() => closeModal('modal-set-pwd'), 1400);
 }
 
 function copyTempPwd() {
